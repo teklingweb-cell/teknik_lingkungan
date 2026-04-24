@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staf & Alumni – Universitas Lorem Ipsum</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">U</div><div class="nav-logo-text"><div class="nav-logo-name">Universitas</div><div class="nav-logo-sub">Lorem Ipsum</div></div></a><ul class="nav-links"><li><a href="index.html">Beranda</a></li><li><a href="penelitian.html">Penelitian</a></li><li><a href="pencapaian.html">Pencapaian</a></li><li><a href="fasilitas.html">Fasilitas</a></li><li><a href="profile.html">Profil</a></li><li><a href="staf.html">Staf &amp; Alumni</a></li><li><a href="mitra.html">Mitra</a></li><li><a href="berita.html">Berita</a></li><li><a href="kontak.html">Kontak</a></li></ul><div class="nav-right"><a href="#" class="nav-cta">Portal Mahasiswa</a><button class="hamburger"><span></span><span></span><span></span></button></div></div></nav>
+<div class="mobile-overlay"><div class="mobile-drawer"><a href="index.html">Beranda</a><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a><a href="fasilitas.html">Fasilitas</a><a href="profile.html">Profil</a><a href="staf.html">Staf &amp; Alumni</a><a href="mitra.html">Mitra</a><a href="berita.html">Berita</a><a href="kontak.html">Kontak</a></div></div>
+
+<div class="page-hero">
+  <div class="page-hero-glow"></div>
+  <div class="container" style="position:relative;">
+    <div class="page-hero-tag">Komunitas Kami</div>
+    <h1 class="page-hero-title">Staf, Dosen &amp; Alumni</h1>
+    <p class="page-hero-subtitle">Mengenal individu-individu luar biasa yang membentuk komunitas akademik institusi kami.</p>
+    <div class="breadcrumb"><a href="index.html">Beranda</a><span>›</span><span>Staf &amp; Alumni</span></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px;" class="fade-up">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="dosen">Dosen <span class="tab-count">6</span></button>
+          <button class="tab-btn" data-tab="alumni">Alumni <span class="tab-count">4</span></button>
+          <button class="tab-btn" data-tab="staf">Staf <span class="tab-count">4</span></button>
+        </div>
+        <div class="search-wrap" style="position:relative;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari..." style="width:220px;padding-left:36px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- DOSEN -->
+    <div class="tab-panel" data-panel="dosen">
+      <div class="grid-3">
+        <div class="staff-card staff-searchable fade-up" data-search="prof. dr. lorem ipsum kimia organik">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">L</div>
+            <div><div class="staff-name">Prof. Dr. Lorem Ipsum, M.Si.</div><div class="staff-pos">Guru Besar · Kimia Organik</div></div>
+          </div>
+          <div class="staff-expertise">Sintesis organik, katalisis heterogen, dan pengembangan material fungsional.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">42 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:lorem@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-1" data-search="dr. adipiscing elit mikrobiologi">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">A</div>
+            <div><div class="staff-name">Dr. Adipiscing Elit, M.Pd.</div><div class="staff-pos">Lektor Kepala · Mikrobiologi</div></div>
+          </div>
+          <div class="staff-expertise">Mikrobiologi lingkungan, biodegradasi polutan, dan bioteknologi.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">28 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:adipiscing@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-2" data-search="prof. consectetur amet kesehatan lingkungan">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">C</div>
+            <div><div class="staff-name">Prof. Consectetur Amet, Ph.D.</div><div class="staff-pos">Guru Besar · Kesehatan Lingkungan</div></div>
+          </div>
+          <div class="staff-expertise">Epidemiologi lingkungan, analisis risiko kesehatan, dan toksikologi.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">67 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:consectetur@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up" data-search="dr. dolor sit atmosfer">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">D</div>
+            <div><div class="staff-name">Dr. Dolor Sit, M.Sc.</div><div class="staff-pos">Lektor · Ilmu Atmosfer</div></div>
+          </div>
+          <div class="staff-expertise">Pemodelan kualitas udara, dispersi polutan, dan perubahan iklim.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">19 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:dolor@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-1" data-search="dr. incididunt labore biokimia">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">I</div>
+            <div><div class="staff-name">Dr. Incididunt Labore, M.Kes.</div><div class="staff-pos">Lektor Kepala · Biokimia</div></div>
+          </div>
+          <div class="staff-expertise">Biokimia klinis, metabolomik, dan diagnostik molekuler.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">33 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:incididunt@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-2" data-search="dr. tempor dolore sosial humaniora">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar">T</div>
+            <div><div class="staff-name">Dr. Tempor Dolore, M.Soc.</div><div class="staff-pos">Lektor · Sosiologi Lingkungan</div></div>
+          </div>
+          <div class="staff-expertise">Sosiologi lingkungan, perubahan sosial, dan pemberdayaan komunitas.</div>
+          <div class="staff-footer">
+            <span class="staff-pubs">15 Publikasi</span>
+            <div class="staff-actions">
+              <a href="mailto:tempor@unilorem.ac.id" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALUMNI -->
+    <div class="tab-panel" data-panel="alumni" style="display:none;">
+      <div class="grid-3">
+        <div class="staff-card staff-searchable fade-up" data-search="magna aliqua 2005 kementerian">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar alumni">M</div>
+            <div><div class="staff-name">Magna Aliqua, S.T., M.T.</div><div style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Angkatan 2005</div></div>
+          </div>
+          <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Direktur Teknis</div>
+          <div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Kementerian Lingkungan Hidup</div>
+          <div class="staff-footer" style="margin-top:12px;">
+            <span></span>
+            <div class="staff-actions">
+              <a href="#" class="staff-btn">✉</a>
+              <button class="staff-btn">in</button>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-1" data-search="enim ad minim 2008 BRIN">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar alumni">E</div>
+            <div><div class="staff-name">Enim Ad Minim, Ph.D.</div><div style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Angkatan 2008</div></div>
+          </div>
+          <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Kepala Pusat Riset</div>
+          <div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Badan Riset dan Inovasi Nasional</div>
+          <div class="staff-footer" style="margin-top:12px;"><span></span><div class="staff-actions"><a href="#" class="staff-btn">✉</a><button class="staff-btn">in</button></div></div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-2" data-search="nostrud exercitation 2012 startup">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar alumni">N</div>
+            <div><div class="staff-name">Nostrud Exercitation, M.B.A.</div><div style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Angkatan 2012</div></div>
+          </div>
+          <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Co-Founder &amp; CEO</div>
+          <div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">GreenTech Indonesia</div>
+          <div class="staff-footer" style="margin-top:12px;"><span></span><div class="staff-actions"><a href="#" class="staff-btn">✉</a><button class="staff-btn">in</button></div></div>
+        </div>
+        <div class="staff-card staff-searchable fade-up" data-search="ullamco laboris 2015 WHO">
+          <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+            <div class="staff-avatar alumni">U</div>
+            <div><div class="staff-name">Ullamco Laboris, M.P.H.</div><div style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Angkatan 2015</div></div>
+          </div>
+          <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Health Program Officer</div>
+          <div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">World Health Organization</div>
+          <div class="staff-footer" style="margin-top:12px;"><span></span><div class="staff-actions"><a href="#" class="staff-btn">✉</a><button class="staff-btn">in</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAF -->
+    <div class="tab-panel" data-panel="staf" style="display:none;">
+      <div class="grid-2">
+        <div class="staff-card staff-searchable fade-up" data-search="nisi ut aliquip administrasi akademik">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(45,58,46,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:500;color:var(--charcoal);">N</div>
+            <div style="flex:1;">
+              <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Nisi Ut Aliquip</div>
+              <div style="font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Kepala Biro Akademik</div>
+            </div>
+            <span style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">Administrasi</span>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-1" data-search="ex ea commodo keuangan">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(45,58,46,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:500;color:var(--charcoal);">E</div>
+            <div style="flex:1;">
+              <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Ex Ea Commodo</div>
+              <div style="font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Bendahara Pengeluaran</div>
+            </div>
+            <span style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">Keuangan</span>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up" data-search="consequat duis aute IT sistem informasi">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(45,58,46,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:500;color:var(--charcoal);">C</div>
+            <div style="flex:1;">
+              <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Consequat Duis Aute</div>
+              <div style="font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Staff IT &amp; Sistem Informasi</div>
+            </div>
+            <span style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">IT</span>
+          </div>
+        </div>
+        <div class="staff-card staff-searchable fade-up delay-1" data-search="irure dolor reprehenderit humas">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(45,58,46,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:500;color:var(--charcoal);">I</div>
+            <div style="flex:1;">
+              <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">Irure Dolor Reprehenderit</div>
+              <div style="font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">Humas &amp; Protokol</div>
+            </div>
+            <span style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">Humas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="index.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Beranda</a></div></div></footer>
+<script src="main.js"></script>
+</body>
+</html>
