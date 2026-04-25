@@ -1441,3 +1441,95 @@ textarea.form-input { resize: none; }
 .bg-cream { background: var(--cream); }
 .bg-white { background: #fff; }
 .hidden { display: none !important; }
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE FIXES
+   ═══════════════════════════════════════════════ */
+
+/* ─── Nav: tighter padding on small screens ─── */
+@media(max-width:767px) {
+  .nav-inner { padding: 0 1.25rem; }
+}
+
+/* ─── Footer: mobile padding & stacking gap ─── */
+@media(max-width:1023px) {
+  .footer-inner { padding: 48px 20px 32px; }
+  .footer-grid  { display: flex; flex-direction: column; gap: 32px; }
+  .footer-brand { margin-bottom: 0; }
+}
+
+/* ─── CTA Banner: reduce padding on mobile ─── */
+@media(max-width:767px) {
+  .cta-banner { padding: 32px 24px; }
+}
+
+/* ─── Tab Bar: wrap on narrow screens ─── */
+.tab-bar { flex-wrap: wrap; }
+
+/* ─── Page hero: tighter on very small screens ─── */
+@media(max-width:479px) {
+  .page-hero { padding: 110px 16px 60px; }
+  .section    { padding: 60px 16px; }
+}
+
+/* ─── Responsive utility grids used by inline styles ─── */
+
+/* 2-col that collapses to 1-col on mobile */
+.grid-2-resp {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media(min-width:540px) { .grid-2-resp { grid-template-columns: 1fr 1fr; } }
+
+/* form row: 2-col above 540px */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media(min-width:540px) { .form-row { grid-template-columns: 1fr 1fr; } }
+
+/* stats/hero mini grids */
+.grid-3-resp {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media(min-width:640px)  { .grid-3-resp { grid-template-columns: repeat(2,1fr); } }
+@media(min-width:1024px) { .grid-3-resp { grid-template-columns: repeat(3,1fr); } }
+
+/* mitra-stats & stats-mini: start 1-col, scale up */
+.mitra-stats, .stats-mini {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 24px;
+}
+@media(min-width:768px) {
+  .mitra-stats, .stats-mini { grid-template-columns: repeat(4,1fr) !important; }
+}
+
+/* penelitian 3-col stats strip */
+.penelitian-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media(min-width:640px)  { .penelitian-stats { grid-template-columns: repeat(2,1fr); } }
+@media(min-width:1024px) { .penelitian-stats { grid-template-columns: repeat(3,1fr); } }
+
+/* ─── Touch-friendly tap targets ─── */
+@media(max-width:767px) {
+  .filter-btn { min-height: 40px; padding: 8px 16px; }
+  .tab-btn    { min-height: 40px; }
+  .btn-primary, .btn-gold, .btn-navy, .btn-white { min-height: 44px; }
+}
+
+/* ─── Prevent horizontal overflow on small screens ─── */
+@media(max-width:479px) {
+  .hero-buttons { flex-direction: column; align-items: center; }
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
+  .featured-body { padding: 20px; }
+  .cta-banner-title { font-size: 1.6rem; }
+}
