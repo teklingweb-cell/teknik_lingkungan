@@ -218,49 +218,11 @@
       </div>
       <a href="berita.html" style="font-size:0.85rem;color:rgba(26,46,30,0.5);text-decoration:none;font-family:var(--font-body);">Semua Berita ›</a>
     </div>
-    <div class="grid-3">
-      <a href="berita.html" class="news-card fade-up">
-        <article>
-          <div class="news-thumb"><span class="news-thumb-num">1</span></div>
-          <div class="news-body">
-            <div class="news-meta">
-              <span class="tag">Penelitian</span>
-              <span class="news-date">15 April 2025</span>
-            </div>
-            <div class="news-title">Inovasi Terbaru Tim Riset Kami dalam Pengembangan Material Ramah Lingkungan</div>
-            <div class="news-excerpt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tim peneliti kami berhasil mengembangkan material komposit berbasis biomassa lokal.</div>
-            <div class="news-read-more">Baca Selengkapnya →</div>
-          </div>
-        </article>
-      </a>
-      <a href="berita.html" class="news-card fade-up delay-1">
-        <article>
-          <div class="news-thumb"><span class="news-thumb-num">2</span></div>
-          <div class="news-body">
-            <div class="news-meta">
-              <span class="tag">Pencapaian</span>
-              <span class="news-date">10 April 2025</span>
-            </div>
-            <div class="news-title">Universitas Raih Akreditasi Internasional dari Lembaga Bergengsi Dunia</div>
-            <div class="news-excerpt">Sebuah pencapaian bersejarah bagi institusi kami dalam meraih pengakuan bertaraf internasional.</div>
-            <div class="news-read-more">Baca Selengkapnya →</div>
-          </div>
-        </article>
-      </a>
-      <a href="berita.html" class="news-card fade-up delay-2">
-        <article>
-          <div class="news-thumb"><span class="news-thumb-num">3</span></div>
-          <div class="news-body">
-            <div class="news-meta">
-              <span class="tag">Acara</span>
-              <span class="news-date">5 April 2025</span>
-            </div>
-            <div class="news-title">Seminar Nasional Lingkungan 2025: Menuju Kampus Hijau Berkelanjutan</div>
-            <div class="news-excerpt">Seminar tahunan kami menghadirkan pakar-pakar dari seluruh Indonesia untuk membahas isu lingkungan terkini.</div>
-            <div class="news-read-more">Baca Selengkapnya →</div>
-          </div>
-        </article>
-      </a>
+    <div class="grid-3" id="homeNewsGrid">
+      <!-- loaded from Supabase -->
+      <div class="news-card fade-up" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
+      <div class="news-card fade-up delay-1" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
+      <div class="news-card fade-up delay-2" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
     </div>
   </div>
 </section>
@@ -355,5 +317,41 @@
 </style>
 
 <script src="main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+(async () => {
+  const grid = document.getElementById('homeNewsGrid');
+  const { data, error } = await sb.from('news').select('*').order('date', { ascending: false }).limit(3);
+  if (error || !data || !data.length) return; // keep skeleton on failure
+
+  const delays = ['', ' delay-1', ' delay-2'];
+  const formatDate = d => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  grid.innerHTML = data.map((item, i) => `
+    <a href="berita.html" class="news-card fade-up${delays[i]}">
+      <article>
+        <div class="news-thumb"><span class="news-thumb-num">${i + 1}</span></div>
+        <div class="news-body">
+          <div class="news-meta">
+            <span class="tag">${esc(item.category)}</span>
+            <span class="news-date">${formatDate(item.date)}</span>
+          </div>
+          <div class="news-title">${esc(item.title)}</div>
+          <div class="news-excerpt">${esc(item.excerpt)}</div>
+          <div class="news-read-more">Baca Selengkapnya →</div>
+        </div>
+      </article>
+    </a>`).join('');
+
+  // Re-observe for fade-up animation (cards injected after main.js observer ran)
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05 });
+  grid.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+})();
+</script>
 </body>
 </html>
