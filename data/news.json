@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "title": "Inovasi Terbaru Tim Riset Kami dalam Pengembangan Material Ramah Lingkungan",
+    "excerpt": "Tim peneliti kami berhasil mengembangkan material komposit berbasis biomassa lokal yang mampu mengurangi ketergantungan pada bahan sintetis impor.",
+    "category": "Penelitian",
+    "date": "2025-04-15",
+    "author": "Dr. Lorem Ipsum",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "Universitas Raih Akreditasi Internasional dari Lembaga Bergengsi Dunia",
+    "excerpt": "Sebuah pencapaian bersejarah bagi institusi kami dalam meraih pengakuan bertaraf internasional untuk tiga program studi unggulan.",
+    "category": "Pencapaian",
+    "date": "2025-04-10",
+    "author": "Humas",
+    "featured": false
+  },
+  {
+    "id": 3,
+    "title": "Seminar Nasional Lingkungan 2025: Menuju Kampus Hijau Berkelanjutan",
+    "excerpt": "Seminar tahunan kami menghadirkan pakar dari seluruh Indonesia untuk membahas isu lingkungan terkini dan solusinya.",
+    "category": "Acara",
+    "date": "2025-04-05",
+    "author": "Panitia Acara",
+    "featured": false
+  },
+  {
+    "id": 4,
+    "title": "Pendaftaran Beasiswa Unggulan Semester Genap 2025/2026 Dibuka",
+    "excerpt": "Tersedia 50 kuota beasiswa penuh untuk mahasiswa berprestasi dari seluruh Indonesia. Daftar sebelum 30 Mei 2025.",
+    "category": "Beasiswa",
+    "date": "2025-04-01",
+    "author": "Biro Kemahasiswaan",
+    "featured": false
+  },
+  {
+    "id": 5,
+    "title": "Jadwal Ujian Akhir Semester Genap 2024/2025 Telah Diumumkan",
+    "excerpt": "Biro Akademik mengumumkan jadwal resmi UAS yang dapat diakses melalui portal mahasiswa mulai hari ini.",
+    "category": "Pengumuman",
+    "date": "2025-03-28",
+    "author": "Biro Akademik",
+    "featured": false
+  },
+  {
+    "id": 6,
+    "title": "Publikasi di Jurnal Q1 Scopus Meningkat 40% Tahun Ini",
+    "excerpt": "Produktivitas riset kami terus meningkat dengan bertambahnya jumlah publikasi bereputasi internasional sepanjang 2025.",
+    "category": "Penelitian",
+    "date": "2025-03-20",
+    "author": "Pusat Riset",
+    "featured": false
+  },
+  {
+    "id": 7,
+    "title": "Wisuda Periode II Tahun 2025 Dihadiri 800 Lulusan",
+    "excerpt": "Sebanyak 800 mahasiswa resmi diwisuda dalam upacara yang penuh khidmat di Gedung Auditorium utama kampus.",
+    "category": "Acara",
+    "date": "2025-03-15",
+    "author": "Humas",
+    "featured": false
+  }
+]

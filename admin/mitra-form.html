@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Form Mitra</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+    :root{--navy:#1a2e1e;--green:#4e8c5a;--light:#68b077;--cream:#f2f5ef;--white:#ffffff;--border:rgba(26,46,30,0.1);--text:#2d3a2e;--muted:rgba(45,58,46,0.55);--danger:#dc2626;--dangerBg:#fef2f2;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+    .sidebar{position:fixed;top:0;left:0;height:100vh;width:220px;background:var(--navy);display:flex;flex-direction:column;padding:0 0 24px;z-index:10;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .logo-icon{width:34px;height:34px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--cream);}
+    .logo-text{font-size:0.8rem;font-weight:600;color:#fff;} .logo-sub{font-size:0.6rem;color:var(--light);letter-spacing:0.1em;text-transform:uppercase;}
+    .nav-section{padding:16px 12px 8px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,255,255,0.3);}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;margin:2px 8px;border-radius:8px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.65);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none;border:none;width:calc(100% - 16px);text-align:left;}
+    .nav-item:hover{background:rgba(255,255,255,0.07);color:#fff;} .nav-item.active{background:var(--green);color:#fff;}
+    .sidebar-footer{margin-top:auto;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,0.08);}
+    .back-link{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.4);text-decoration:none;} .back-link:hover{color:rgba(255,255,255,0.8);}
+    .logout-btn{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.4);background:none;border:none;cursor:pointer;width:100%;} .logout-btn:hover{color:#ff8080;}
+    .main{margin-left:220px;min-height:100vh;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5;}
+    .topbar-title{font-size:1rem;font-weight:600;color:var(--navy);}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:0.82rem;font-family:'DM Sans',sans-serif;font-weight:500;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;}
+    .btn-green{background:var(--green);color:#fff;} .btn-green:hover{background:var(--light);}
+    .btn-ghost{background:none;border:1px solid var(--border);color:var(--text);} .btn-ghost:hover{background:var(--cream);}
+    .content{padding:28px 32px;}
+    .form-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:28px;max-width:680px;}
+    .form-section{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+    .form-section:first-child{margin-top:0;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+    label{font-size:0.78rem;font-weight:500;}
+    .form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);}
+    .form-textarea{resize:vertical;min-height:90px;}
+    .form-hint{font-size:0.72rem;color:var(--muted);}
+    .alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:0.85rem;font-weight:500;}
+    .alert-error{background:var(--dangerBg);border:1px solid #fecaca;color:var(--danger);}
+    @media(max-width:640px){.sidebar{display:none;}.main{margin-left:0;}.topbar,.content{padding-left:16px;padding-right:16px;}.form-row{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">U</div><div><div class="logo-text">Universitas</div><div class="logo-sub">Admin Panel</div></div></div>
+  <div class="nav-section">Konten</div>
+  <a class="nav-item" href="index.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Berita</a>
+  <a class="nav-item" href="staff.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>Staf & Alumni</a>
+  <a class="nav-item" href="penelitian.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>Penelitian</a>
+  <a class="nav-item" href="pencapaian.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Pencapaian</a>
+  <a class="nav-item active" href="mitra.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Mitra</a>
+  <div class="sidebar-footer">
+    <a class="back-link" href="../mitra.html"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Lihat Situs</a>
+    <button class="logout-btn" onclick="doLogout()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Keluar</button>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-title" id="pageTitle">Tambah Mitra</div>
+    <a href="mitra.html" class="btn btn-ghost">← Kembali</a>
+  </header>
+  <div class="content">
+    <div id="alertBox" style="display:none;"></div>
+    <div class="form-card">
+      <div class="form-section">Informasi Mitra</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nama Institusi / Perusahaan *</label>
+          <input class="form-input" id="f_name" placeholder="cth: PT Pertamina Persero" maxlength="150">
+        </div>
+        <div class="form-group">
+          <label>Kategori *</label>
+          <select class="form-select" id="f_category">
+            <option>Industri</option>
+            <option>Akademik</option>
+            <option>Pemerintah</option>
+            <option>Internasional</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Deskripsi Kerjasama *</label>
+        <textarea class="form-textarea" id="f_description" placeholder="Deskripsi singkat bentuk kerjasama..."></textarea>
+      </div>
+      <div class="form-section">Detail Tambahan</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tahun Bergabung</label>
+          <input class="form-input" id="f_since_year" type="number" min="1900" max="2100" placeholder="2015">
+        </div>
+        <div class="form-group">
+          <label>Website</label>
+          <input class="form-input" id="f_website_url" placeholder="https://www.contoh.com">
+          <span class="form-hint">Opsional</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
+        <a href="mitra.html" class="btn btn-ghost">Batal</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let editId = null;
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('edit')) {
+    editId = parseInt(p.get('edit'));
+    document.getElementById('pageTitle').textContent = 'Edit Mitra';
+    const { data, error } = await sb.from('mitra').select('*').eq('id', editId).single();
+    if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
+    document.getElementById('f_name').value        = data.name || '';
+    document.getElementById('f_category').value    = data.category || 'Industri';
+    document.getElementById('f_description').value = data.description || '';
+    document.getElementById('f_since_year').value  = data.since_year || '';
+    document.getElementById('f_website_url').value = data.website_url || '';
+  }
+})();
+async function doLogout() { await sb.auth.signOut(); window.location.href = 'login.html'; }
+
+async function doSave() {
+  const name        = document.getElementById('f_name').value.trim();
+  const category    = document.getElementById('f_category').value;
+  const description = document.getElementById('f_description').value.trim();
+  const since_year  = document.getElementById('f_since_year').value ? parseInt(document.getElementById('f_since_year').value) : null;
+  const website_url = document.getElementById('f_website_url').value.trim() || null;
+
+  const errors = [];
+  if (!name)        errors.push('Nama wajib diisi.');
+  if (!description) errors.push('Deskripsi wajib diisi.');
+  if (errors.length) { showAlert(errors.join(' ')); return; }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true; btn.textContent = 'Menyimpan…';
+  const payload = { name, category, description, since_year, website_url };
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('mitra').update(payload).eq('id', editId));
+  } else {
+    ({ error } = await sb.from('mitra').insert([payload]));
+  }
+  btn.disabled = false; btn.textContent = 'Simpan';
+  if (error) { showAlert('Gagal menyimpan: ' + error.message); return; }
+  window.location.href = 'mitra.html?msg=' + (editId ? 'updated' : 'added');
+}
+function showAlert(msg) {
+  const box = document.getElementById('alertBox');
+  box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
+}
+</script>
+</body>
+</html>

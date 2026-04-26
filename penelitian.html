@@ -50,103 +50,70 @@
 </div>
 
 <!-- PENELITIAN LIST -->
-<section class="section">
+<section class="section" style="background:var(--cream);">
   <div class="container">
-    <div class="fade-up" style="margin-bottom:32px;">
-      <div class="section-tag">— Program Penelitian</div>
-      <h2 class="section-title">Penelitian Berjalan</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;" class="fade-up" id="filterBar">
+      <button class="filter-chip active" data-cat="all">Semua</button>
+      <button class="filter-chip" data-cat="Sains &amp; Teknologi">Sains &amp; Teknologi</button>
+      <button class="filter-chip" data-cat="Lingkungan">Lingkungan</button>
+      <button class="filter-chip" data-cat="Kesehatan">Kesehatan</button>
+      <button class="filter-chip" data-cat="Sosial &amp; Humaniora">Sosial &amp; Humaniora</button>
+      <button class="filter-chip" data-cat="Ekonomi">Ekonomi</button>
     </div>
-    <div class="filter-bar fade-up delay-1">
-      <button class="filter-btn active" data-filter="all">Semua</button>
-      <button class="filter-btn" data-filter="Sains &amp; Teknologi">Sains &amp; Teknologi</button>
-      <button class="filter-btn" data-filter="Lingkungan">Lingkungan</button>
-      <button class="filter-btn" data-filter="Kesehatan">Kesehatan</button>
-      <button class="filter-btn" data-filter="Sosial &amp; Humaniora">Sosial &amp; Humaniora</button>
-    </div>
-    <div class="grid-3">
-      <div class="research-card-wrap" data-cat="Sains &amp; Teknologi" style="display:flex;">
-        <div class="research-card fade-up">
-          <div class="research-card-header"><span class="tag">Sains &amp; Teknologi</span><span class="research-year">2024</span></div>
-          <div class="research-title">Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing</div>
-          <div class="research-author">Dr. Lorem Ipsum</div>
-          <div class="research-footer"><span class="research-funded">Rp 450 Juta</span><span>→</span></div>
-        </div>
-      </div>
-      <div class="research-card-wrap" data-cat="Lingkungan" style="display:flex;">
-        <div class="research-card fade-up delay-1">
-          <div class="research-card-header"><span class="tag">Lingkungan</span><span class="research-year">2024</span></div>
-          <div class="research-title">Analisis Kualitas Udara Ambien di Wilayah Perkotaan</div>
-          <div class="research-author">Dr. Adipiscing Elit</div>
-          <div class="research-footer"><span class="research-funded">Rp 320 Juta</span><span>→</span></div>
-        </div>
-      </div>
-      <div class="research-card-wrap" data-cat="Kesehatan" style="display:flex;">
-        <div class="research-card fade-up delay-2">
-          <div class="research-card-header"><span class="tag">Kesehatan</span><span class="research-year">2023</span></div>
-          <div class="research-title">Studi Epidemiologi Penyakit Menular pada Komunitas Rural</div>
-          <div class="research-author">Prof. Consectetur</div>
-          <div class="research-footer"><span class="research-funded">Rp 680 Juta</span><span>→</span></div>
-        </div>
-      </div>
-      <div class="research-card-wrap" data-cat="Sosial &amp; Humaniora" style="display:flex;">
-        <div class="research-card fade-up">
-          <div class="research-card-header"><span class="tag">Sosial &amp; Humaniora</span><span class="research-year">2023</span></div>
-          <div class="research-title">Transformasi Sosial Masyarakat Digital Pasca Pandemi</div>
-          <div class="research-author">Dr. Dolores Sit</div>
-          <div class="research-footer"><span class="research-funded">Rp 280 Juta</span><span>→</span></div>
-        </div>
-      </div>
-      <div class="research-card-wrap" data-cat="Sains &amp; Teknologi" style="display:flex;">
-        <div class="research-card fade-up delay-1">
-          <div class="research-card-header"><span class="tag">Sains &amp; Teknologi</span><span class="research-year">2024</span></div>
-          <div class="research-title">Pengembangan Material Komposit Berbasis Biomassa Lokal</div>
-          <div class="research-author">Dr. Amet Tempor</div>
-          <div class="research-footer"><span class="research-funded">Rp 520 Juta</span><span>→</span></div>
-        </div>
-      </div>
-      <div class="research-card-wrap" data-cat="Lingkungan" style="display:flex;">
-        <div class="research-card fade-up delay-2">
-          <div class="research-card-header"><span class="tag">Lingkungan</span><span class="research-year">2023</span></div>
-          <div class="research-title">Monitoring Keanekaragaman Hayati Ekosistem Hutan Tropis</div>
-          <div class="research-author">Prof. Incididunt</div>
-          <div class="research-footer"><span class="research-funded">Rp 410 Juta</span><span>→</span></div>
-        </div>
-      </div>
-    </div>
+    <div id="researchGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;min-height:200px;"></div>
   </div>
 </section>
 
-<!-- PENGABDIAN -->
-<section class="section bg-navy">
-  <div class="container">
-    <div class="fade-up" style="margin-bottom:40px;">
-      <div class="section-tag">— Pengabdian Masyarakat</div>
-      <h2 class="section-title light">Program Pengabdian</h2>
-      <div class="gold-divider"></div>
-      <p style="color:rgba(242,245,239,0.6);font-family:var(--font-body);font-weight:300;margin-top:16px;max-width:480px;">Kami berkomitmen untuk memberikan dampak positif langsung kepada masyarakat sekitar.</p>
-    </div>
-    <div class="grid-3">
-      <div class="card-dark fade-up" style="padding:24px;">
-        <div style="font-size:1.3rem;margin-bottom:16px;">🌐</div>
-        <h3 style="font-family:var(--font-display);font-size:1.2rem;color:var(--cream);margin-bottom:12px;">Program Literasi Digital Masyarakat Pedesaan</h3>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">📍 Kabupaten Lorem</p>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">👥 480 Peserta</p>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+let allData = [], activeFilter = 'all';
+const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Kesehatan':'#dc2626','Sosial & Humaniora':'#9333ea','Ekonomi':'#d97706'};
+
+(async () => {
+  const { data, error } = await sb.from('penelitian').select('*').order('year', { ascending: false });
+  if (error) { document.getElementById('researchGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
+  allData = data;
+  render();
+})();
+
+document.querySelectorAll('.filter-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.cat;
+    render();
+  });
+});
+
+function render() {
+  const items = activeFilter === 'all' ? allData : allData.filter(d => d.category === activeFilter);
+  const grid = document.getElementById('researchGrid');
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(45,58,46,0.5);">Tidak ada penelitian ditemukan.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(item => {
+    const color = CAT_COLORS[item.category] || '#6b7a6c';
+    return `<div class="research-card-wrap" style="display:flex;">
+      <div class="research-card fade-up">
+        <div class="research-card-header">
+          <span class="tag">${esc(item.category)}</span>
+          <span class="research-year">${item.year}</span>
+        </div>
+        <div class="research-title">${esc(item.title)}</div>
+        <div class="research-author">${esc(item.author)}</div>
+        ${item.abstract ? `<div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);margin-top:8px;line-height:1.6;">${esc(item.abstract.substring(0,120))}${item.abstract.length>120?'…':''}</div>` : ''}
+        <div class="research-footer">
+          <span class="research-funded">${esc(item.funding||'–')}</span>
+          ${item.publication_url ? `<a href="${esc(item.publication_url)}" target="_blank" style="color:inherit;text-decoration:none;">→</a>` : '<span>→</span>'}
+        </div>
       </div>
-      <div class="card-dark fade-up delay-1" style="padding:24px;">
-        <div style="font-size:1.3rem;margin-bottom:16px;">🌐</div>
-        <h3 style="font-family:var(--font-display);font-size:1.2rem;color:var(--cream);margin-bottom:12px;">Pemberdayaan UMKM melalui Teknologi Tepat Guna</h3>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">📍 Kota Ipsum</p>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">👥 220 UMKM</p>
-      </div>
-      <div class="card-dark fade-up delay-2" style="padding:24px;">
-        <div style="font-size:1.3rem;margin-bottom:16px;">🌐</div>
-        <h3 style="font-family:var(--font-display);font-size:1.2rem;color:var(--cream);margin-bottom:12px;">Penyuluhan Kesehatan Lingkungan &amp; Sanitasi Dasar</h3>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">📍 Kecamatan Dolor</p>
-        <p style="font-size:0.78rem;color:rgba(242,245,239,0.5);font-family:var(--font-body);">👥 1.200 KK</p>
-      </div>
-    </div>
-  </div>
-</section>
+    </div>`;
+  }).join('');
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="index.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Beranda</a></div></div></footer>
 <script src="main.js"></script>

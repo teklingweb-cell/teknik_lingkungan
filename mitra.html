@@ -36,113 +36,61 @@
 <!-- INDUSTRI -->
 <section class="section" style="background:var(--cream);">
   <div class="container">
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-      <div style="width:36px;height:36px;background:#fffbeb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🏢</div>
-      <div>
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--gold);font-family:var(--font-body);font-weight:500;">— Kategori</div>
-        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">Industri &amp; Korporat</h2>
-      </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;" class="fade-up">
+      <button class="filter-chip active" data-cat="all">Semua</button>
+      <button class="filter-chip" data-cat="Industri">Industri</button>
+      <button class="filter-chip" data-cat="Akademik">Akademik</button>
+      <button class="filter-chip" data-cat="Pemerintah">Pemerintah</button>
+      <button class="filter-chip" data-cat="Internasional">Internasional</button>
     </div>
-    <div class="grid-2">
-      <div class="partner-card fade-up">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">P</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#fffbeb;color:#d97706;font-family:var(--font-body);font-weight:500;">R&amp;D Partner</span>
-        </div>
-        <div class="partner-name">PT Pertamina Persero</div>
-        <div class="partner-desc">Kolaborasi penelitian energi terbarukan dan pengembangan bahan bakar ramah lingkungan.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2015</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-      <div class="partner-card fade-up delay-1">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">U</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#fffbeb;color:#d97706;font-family:var(--font-body);font-weight:500;">Magang</span>
-        </div>
-        <div class="partner-name">Unilever Indonesia</div>
-        <div class="partner-desc">Program magang dan penelitian bersama di bidang ilmu bahan dan formulasi produk.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2018</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-    </div>
+    <div id="mitraGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;min-height:200px;"></div>
   </div>
 </section>
 
-<!-- AKADEMISI -->
-<section class="section bg-white">
-  <div class="container">
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-      <div style="width:36px;height:36px;background:#eff6ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🎓</div>
-      <div>
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--gold);font-family:var(--font-body);font-weight:500;">— Kategori</div>
-        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">Akademisi &amp; Riset</h2>
-      </div>
-    </div>
-    <div class="grid-2">
-      <div class="partner-card fade-up">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">U</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#eff6ff;color:#2563eb;font-family:var(--font-body);font-weight:500;">MoU Aktif</span>
-        </div>
-        <div class="partner-name">Universitas Indonesia</div>
-        <div class="partner-desc">Kerjasama riset bersama, pertukaran dosen, dan program joint degree pascasarjana.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2010</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-      <div class="partner-card fade-up delay-1">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">B</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#eff6ff;color:#2563eb;font-family:var(--font-body);font-weight:500;">Riset Bersama</span>
-        </div>
-        <div class="partner-name">BRIN – Badan Riset Inovasi</div>
-        <div class="partner-desc">Hibah riset nasional dan kolaborasi pengembangan teknologi prioritas nasional.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2021</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-    </div>
-  </div>
-</section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+let allData = [], activeFilter = 'all';
 
-<!-- INTERNASIONAL -->
-<section class="section" style="background:var(--cream);">
-  <div class="container">
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-      <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🌐</div>
-      <div>
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--gold);font-family:var(--font-body);font-weight:500;">— Kategori</div>
-        <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">Internasional</h2>
-      </div>
-    </div>
-    <div class="grid-2">
-      <div class="partner-card fade-up">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">U</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#16a34a;font-family:var(--font-body);font-weight:500;">Double Degree</span>
-        </div>
-        <div class="partner-name">Universität Leipzig</div>
-        <div class="partner-desc">Program double degree dan pertukaran mahasiswa di bidang ilmu lingkungan dan kimia.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2013</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-      <div class="partner-card fade-up delay-1">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
-          <div class="partner-avatar">N</div>
-          <span style="font-size:0.72rem;padding:4px 10px;border-radius:999px;background:#f0fdf4;color:#16a34a;font-family:var(--font-body);font-weight:500;">Riset Bersama</span>
-        </div>
-        <div class="partner-name">Nanyang Technological University</div>
-        <div class="partner-desc">Kolaborasi penelitian teknologi lingkungan dan pengembangan smart monitoring system.</div>
-        <div class="partner-footer"><span class="partner-since">Mitra sejak 2019</span><a href="#" class="partner-link">Website →</a></div>
-      </div>
-    </div>
-  </div>
-</section>
+(async () => {
+  const { data, error } = await sb.from('mitra').select('*').order('since_year', { ascending: true });
+  if (error) { document.getElementById('mitraGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
+  allData = data;
+  render();
+})();
 
-<!-- CTA -->
-<section class="section bg-navy">
-  <div class="container" style="text-align:center;">
-    <div class="fade-up">
-      <div class="section-tag">— Bergabung</div>
-      <h2 class="section-title light" style="margin-bottom:16px;">Jadilah Mitra Kami</h2>
-      <p style="color:rgba(242,245,239,0.6);font-family:var(--font-body);font-weight:300;max-width:480px;margin:0 auto 32px;line-height:1.7;">Kami terbuka untuk kolaborasi baru yang saling menguntungkan di berbagai bidang riset dan pendidikan.</p>
-      <a href="kontak.html" class="btn-gold">Hubungi Tim Kemitraan →</a>
-    </div>
-  </div>
-</section>
+document.querySelectorAll('.filter-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.cat;
+    render();
+  });
+});
+
+function render() {
+  const items = activeFilter === 'all' ? allData : allData.filter(d => d.category === activeFilter);
+  const grid = document.getElementById('mitraGrid');
+  if (!items.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(45,58,46,0.5);">Tidak ada mitra ditemukan.</div>';
+    return;
+  }
+  grid.innerHTML = items.map((item, i) => `
+    <div class="partner-card fade-up${i%3===1?' delay-1':i%3===2?' delay-2':''}">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <div class="partner-avatar">${(item.name||'?')[0].toUpperCase()}</div>
+        <div style="flex:1;"></div>
+      </div>
+      <div class="partner-name">${esc(item.name)}</div>
+      <div class="partner-desc">${esc(item.description||'')}</div>
+      <div class="partner-footer">
+        <span class="partner-since">${item.since_year ? 'Mitra sejak ' + item.since_year : item.category}</span>
+        ${item.website_url ? `<a href="${esc(item.website_url)}" target="_blank" class="partner-link">Website →</a>` : ''}
+      </div>
+    </div>`).join('');
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="index.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Beranda</a></div></div></footer>
 <script src="main.js"></script>

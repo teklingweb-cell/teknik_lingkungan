@@ -8,7 +8,7 @@
 </head>
 <body>
 <nav class="navbar"><div class="nav-inner"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">U</div><div class="nav-logo-text"><div class="nav-logo-name">Universitas</div><div class="nav-logo-sub">Lorem Ipsum</div></div></a><ul class="nav-links"><li><a href="index.html">Beranda</a></li><li><a href="penelitian.html">Penelitian</a></li><li><a href="pencapaian.html">Pencapaian</a></li><li><a href="fasilitas.html">Fasilitas</a></li><li><a href="profile.html">Profil</a></li><li><a href="staf.html">Staf &amp; Alumni</a></li><li><a href="mitra.html">Mitra</a></li><li><a href="berita.html">Berita</a></li><li><a href="kontak.html">Kontak</a></li></ul><div class="nav-right"><a href="#" class="nav-cta">Portal Mahasiswa</a><button class="hamburger"><span></span><span></span><span></span></button></div></div></nav>
-<div class="mobile-overlay"><div class="mobile-drawer"><a href="index.html">Beranda</a><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a><a href="fasilitas.html">Fasilitas</a><a href="profile.html">Profil</a><a href="staf.html">Staf &amp; Alumni</a><a href="mitra.html">Mitra</a><a href="berita.html">Berita</a><a href="kontak.html">Kontak</a></div></div>
+<div class="mobile-overlay"><div class="mobile-drawer"><a href="index.html">Beranda</a><a href="penelitian.html">Penelitian</a><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a><a href="fasilitas.html">Fasilitas</a><a href="profile.html">Profil</a><a href="staf.html">Staf &amp; Alumni</a><a href="mitra.html">Mitra</a><a href="berita.html">Berita</a><a href="kontak.html">Kontak</a></div></div>
 
 <div class="page-hero">
   <div class="page-hero-glow"></div>
@@ -21,8 +21,7 @@
 
 <section class="section">
   <div class="container">
-    <!-- FILTER -->
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;" class="fade-up">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;" class="fade-up" id="filterBar">
       <button class="filter-btn active" data-filter="all">Semua</button>
       <button class="filter-btn" data-filter="Penelitian">Penelitian</button>
       <button class="filter-btn" data-filter="Pencapaian">Pencapaian</button>
@@ -30,124 +29,108 @@
       <button class="filter-btn" data-filter="Pengumuman">Pengumuman</button>
       <button class="filter-btn" data-filter="Beasiswa">Beasiswa</button>
     </div>
-
-    <!-- FEATURED -->
-    <a href="#" class="featured-card fade-up" style="text-decoration:none;">
-      <div class="featured-thumb">
-        <span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">1</span>
-        <span class="featured-badge">Featured</span>
-      </div>
-      <div class="featured-body">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-          <span class="tag">Penelitian</span>
-          <span style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">📅 15 April 2025</span>
-        </div>
-        <div class="featured-title">Inovasi Terbaru Tim Riset Kami dalam Pengembangan Material Ramah Lingkungan</div>
-        <div class="featured-excerpt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tim peneliti kami berhasil mengembangkan material komposit berbasis biomassa lokal yang mampu mengurangi ketergantungan pada bahan sintetis impor.</div>
-        <div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;">
-          <span>👤 Dr. Lorem Ipsum</span>
-          <span>#material #riset #biomassa</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;color:var(--gold-light);font-size:0.875rem;font-weight:500;font-family:var(--font-body);">Baca Selengkapnya ›</div>
-      </div>
-    </a>
-
-    <!-- GRID -->
-    <div class="grid-3">
-      <div class="research-card-wrap" data-cat="Pencapaian" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">2</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Pencapaian</span><span class="news-date">10 Apr 2025</span></div>
-              <div class="news-title">Universitas Raih Akreditasi Internasional dari Lembaga Bergengsi Dunia</div>
-              <div class="news-excerpt">Sebuah pencapaian bersejarah bagi institusi kami dalam meraih pengakuan bertaraf internasional untuk tiga program studi unggulan.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
-      <div class="research-card-wrap" data-cat="Acara" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">3</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Acara</span><span class="news-date">5 Apr 2025</span></div>
-              <div class="news-title">Seminar Nasional Lingkungan 2025: Menuju Kampus Hijau Berkelanjutan</div>
-              <div class="news-excerpt">Seminar tahunan kami menghadirkan pakar dari seluruh Indonesia untuk membahas isu lingkungan terkini dan solusinya.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
-      <div class="research-card-wrap" data-cat="Beasiswa" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">4</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Beasiswa</span><span class="news-date">1 Apr 2025</span></div>
-              <div class="news-title">Pendaftaran Beasiswa Unggulan Semester Genap 2025/2026 Dibuka</div>
-              <div class="news-excerpt">Tersedia 50 kuota beasiswa penuh untuk mahasiswa berprestasi dari seluruh Indonesia. Daftar sebelum 30 Mei 2025.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
-      <div class="research-card-wrap" data-cat="Pengumuman" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">5</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Pengumuman</span><span class="news-date">28 Mar 2025</span></div>
-              <div class="news-title">Jadwal Ujian Akhir Semester Genap 2024/2025 Telah Diumumkan</div>
-              <div class="news-excerpt">Biro Akademik mengumumkan jadwal resmi UAS yang dapat diakses melalui portal mahasiswa mulai hari ini.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
-      <div class="research-card-wrap" data-cat="Penelitian" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">6</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Penelitian</span><span class="news-date">20 Mar 2025</span></div>
-              <div class="news-title">Publikasi di Jurnal Q1 Scopus Meningkat 40% Tahun Ini</div>
-              <div class="news-excerpt">Produktivitas riset kami terus meningkat dengan bertambahnya jumlah publikasi bereputasi internasional sepanjang 2025.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
-      <div class="research-card-wrap" data-cat="Acara" style="display:flex;">
-        <a href="#" class="news-card" style="width:100%;">
-          <article>
-            <div class="news-thumb"><span class="news-thumb-num">7</span></div>
-            <div class="news-body">
-              <div class="news-meta"><span class="tag">Acara</span><span class="news-date">15 Mar 2025</span></div>
-              <div class="news-title">Wisuda Periode II Tahun 2025 Dihadiri 800 Lulusan</div>
-              <div class="news-excerpt">Sebanyak 800 mahasiswa resmi diwisuda dalam upacara yang penuh khidmat di Gedung Auditorium utama kampus.</div>
-              <div class="news-read-more">Baca Selengkapnya →</div>
-            </div>
-          </article>
-        </a>
-      </div>
+    <div id="featuredWrap"></div>
+    <div class="grid-3" id="newsGrid"></div>
+    <div id="emptyState" style="display:none;text-align:center;padding:60px 0;">
+      <div style="font-size:3rem;opacity:0.3;margin-bottom:12px;">📰</div>
+      <div style="font-size:1rem;font-weight:500;color:var(--navy);">Belum ada berita</div>
+      <div style="font-size:0.83rem;color:var(--muted);margin-top:6px;">Tidak ada berita untuk kategori ini.</div>
     </div>
   </div>
 </section>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="index.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Beranda</a></div></div></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
 <script src="main.js"></script>
 <script>
-// Override filter for berita — also hides featured when filtered
-document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-    const featured = document.querySelector('.featured-card');
-    if (featured) featured.style.display = (filter === 'all' || filter === 'Penelitian') ? 'grid' : 'none';
+(function () {
+  var allNews = [];
+  var activeFilter = 'all';
+
+  function fmtDate(str) {
+    var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+    var parts = str.split('-');
+    return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+  }
+
+  function renderFeatured(item, visible) {
+    var wrap = document.getElementById('featuredWrap');
+    if (!item) { wrap.innerHTML = ''; return; }
+    wrap.style.display = visible ? '' : 'none';
+    if (!visible) return;
+    wrap.innerHTML = '<a href="#" class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'
+      + '<div class="featured-thumb">'
+      + '<span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">'+item.id+'</span>'
+      + '<span class="featured-badge">Featured</span>'
+      + '</div>'
+      + '<div class="featured-body">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">'
+      + '<span class="tag">'+item.category+'</span>'
+      + '<span style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);">📅 '+fmtDate(item.date)+'</span>'
+      + '</div>'
+      + '<div class="featured-title">'+item.title+'</div>'
+      + '<div class="featured-excerpt">'+item.excerpt+'</div>'
+      + '<div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;"><span>👤 '+item.author+'</span></div>'
+      + '<div style="display:flex;align-items:center;gap:6px;color:var(--gold-light);font-size:0.875rem;font-weight:500;font-family:var(--font-body);">Baca Selengkapnya ›</div>'
+      + '</div></a>';
+    setTimeout(function(){ var el = wrap.querySelector('.featured-card'); if(el) el.classList.add('visible'); }, 50);
+  }
+
+  function newsCardHTML(item) {
+    return '<div class="research-card-wrap" data-cat="'+item.category+'" style="display:flex;">'
+      + '<a href="#" class="news-card" style="width:100%;"><article>'
+      + '<div class="news-thumb"><span class="news-thumb-num">'+item.id+'</span></div>'
+      + '<div class="news-body">'
+      + '<div class="news-meta"><span class="tag">'+item.category+'</span><span class="news-date">'+fmtDate(item.date)+'</span></div>'
+      + '<div class="news-title">'+item.title+'</div>'
+      + '<div class="news-excerpt">'+item.excerpt+'</div>'
+      + '<div class="news-read-more">Baca Selengkapnya →</div>'
+      + '</div></article></a></div>';
+  }
+
+  function render() {
+    var f = activeFilter;
+    var sorted = allNews.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+    var featured = null;
+    var grid = [];
+    for (var i=0; i<sorted.length; i++) {
+      if (sorted[i].featured && !featured) featured = sorted[i];
+      else grid.push(sorted[i]);
+    }
+    var showFeatured = featured && (f === 'all' || f === featured.category);
+    renderFeatured(featured, !!showFeatured);
+
+    var filtered = f === 'all' ? grid : grid.filter(function(n){ return n.category === f; });
+    var gridEl = document.getElementById('newsGrid');
+    gridEl.innerHTML = filtered.map(newsCardHTML).join('');
+    gridEl.querySelectorAll('.news-card').forEach(function(el, i){
+      el.classList.add('fade-up');
+      setTimeout(function(){ el.classList.add('visible'); }, 60 + i*60);
+    });
+
+    var isEmpty = !showFeatured && filtered.length === 0;
+    document.getElementById('emptyState').style.display = isEmpty ? '' : 'none';
+  }
+
+  document.getElementById('filterBar').addEventListener('click', function(e) {
+    var btn = e.target.closest ? e.target.closest('.filter-btn') : e.target;
+    if (!btn || !btn.classList.contains('filter-btn')) return;
+    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
   });
-});
+
+  sb.from('news').select('*').order('date', { ascending: false })
+    .then(function(res){
+      if (res.error) throw res.error;
+      allNews = res.data;
+      render();
+    })
+    .catch(function(){ document.getElementById('emptyState').style.display = ''; });
+})();
 </script>
 </body>
 </html>
