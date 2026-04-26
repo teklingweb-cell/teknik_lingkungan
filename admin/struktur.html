@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Struktur Organisasi</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+    :root {
+      --navy:#1a2e1e;--green:#4e8c5a;--light:#68b077;
+      --cream:#f2f5ef;--white:#ffffff;--border:rgba(26,46,30,0.1);
+      --text:#2d3a2e;--muted:rgba(45,58,46,0.55);
+      --danger:#dc2626;--dangerBg:#fef2f2;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+    /* ── Sidebar ── */
+    .sidebar{position:fixed;top:0;left:0;height:100vh;width:220px;background:var(--navy);display:flex;flex-direction:column;padding:0 0 24px;z-index:10;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .logo-icon{width:34px;height:34px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--cream);}
+    .logo-text{font-size:0.8rem;font-weight:600;color:#fff;line-height:1.2;}
+    .logo-sub{font-size:0.6rem;color:var(--light);letter-spacing:0.1em;text-transform:uppercase;}
+    .nav-section{padding:16px 12px 8px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.15em;color:rgba(255,255,255,0.3);}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;margin:2px 8px;border-radius:8px;font-size:0.82rem;font-weight:500;color:rgba(255,255,255,0.65);text-decoration:none;transition:all 0.2s;cursor:pointer;background:none;border:none;width:calc(100% - 16px);text-align:left;}
+    .nav-item:hover{background:rgba(255,255,255,0.07);color:#fff;}
+    .nav-item.active{background:var(--green);color:#fff;}
+    .sidebar-footer{margin-top:auto;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,0.08);}
+    .back-link{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.2s;}
+    .back-link:hover{color:rgba(255,255,255,0.8);}
+    .logout-btn{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.4);background:none;border:none;cursor:pointer;width:100%;transition:color 0.2s;}
+    .logout-btn:hover{color:#ff8080;}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9;}
+    .sidebar-overlay.open{display:block;}
+    .mob-menu-btn{display:none;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;color:var(--navy);}
+    .mob-menu-btn:hover{background:var(--cream);}
+
+    /* ── Layout ── */
+    .main{margin-left:220px;min-height:100vh;}
+    .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5;}
+    .topbar-title{font-size:1rem;font-weight:600;color:var(--navy);}
+    .topbar-right{display:flex;align-items:center;gap:10px;}
+    .content{padding:28px 32px;}
+
+    /* ── Buttons ── */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:0.82rem;font-family:'DM Sans',sans-serif;font-weight:500;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;}
+    .btn-green{background:var(--green);color:#fff;} .btn-green:hover{background:var(--light);}
+    .btn-danger{background:var(--dangerBg);color:var(--danger);border:1px solid #fecaca;} .btn-danger:hover{background:#fee2e2;}
+    .btn-ghost{background:none;border:1px solid var(--border);color:var(--text);} .btn-ghost:hover{background:var(--cream);}
+    .btn-sm{padding:5px 12px;font-size:0.75rem;}
+
+    /* ── Alert ── */
+    .alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:0.85rem;font-weight:500;}
+    .alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;}
+    .alert-error{background:var(--dangerBg);border:1px solid #fecaca;color:var(--danger);}
+
+    /* ── Info banner ── */
+    .info-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;}
+    .info-banner-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+    .info-banner-text{font-size:0.82rem;color:#1e40af;line-height:1.55;}
+    .info-banner-text strong{font-weight:600;}
+
+    /* ── Tier sections ── */
+    .tier-grid{display:flex;flex-direction:column;gap:20px;}
+    .tier-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+    .tier-card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+    .tier-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+    .tier-card-title{font-size:0.88rem;font-weight:600;color:var(--navy);flex:1;}
+    .tier-count{font-size:0.72rem;color:var(--muted);background:var(--cream);padding:2px 10px;border-radius:999px;}
+    .tier-empty{padding:28px 20px;text-align:center;font-size:0.82rem;color:var(--muted);font-style:italic;}
+
+    /* ── Org table ── */
+    table{width:100%;border-collapse:collapse;}
+    th{padding:9px 16px;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;background:#fafafa;white-space:nowrap;}
+    td{padding:12px 16px;font-size:0.83rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;} tr:hover td{background:#fafaf8;}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:0.65rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
+    .actions-cell{display:flex;gap:6px;align-items:center;white-space:nowrap;justify-content:flex-end;}
+    .avatar-circle{width:36px;height:36px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:#fff;flex-shrink:0;}
+
+    /* ── Edit inline modal ── */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(26,46,30,0.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--white);border-radius:16px;padding:28px 32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.15);}
+    .modal-title{font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:4px;}
+    .modal-sub{font-size:0.8rem;color:var(--muted);margin-bottom:20px;}
+    .form-label{font-size:0.75rem;font-weight:600;color:var(--navy);display:block;margin-bottom:6px;letter-spacing:0.02em;}
+    .form-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232d3a2e' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;}
+    .form-select:focus{border-color:var(--green);}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+    /* ── Delete modal ── */
+    .modal-icon{font-size:2rem;margin-bottom:12px;}
+    .modal-body{font-size:0.85rem;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+
+    /* ── Unassigned section ── */
+    .unassigned-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:28px;}
+    .unassigned-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .unassigned-title{font-size:0.88rem;font-weight:600;color:var(--muted);}
+
+    /* ── Skeleton loading ── */
+    .skel{background:linear-gradient(90deg,#e8ede8 25%,#f2f5ef 50%,#e8ede8 75%);background-size:200%;animation:shimmer 1.4s infinite;border-radius:8px;}
+    @keyframes shimmer{from{background-position:200%}to{background-position:-200%}}
+
+    @media(max-width:900px){th.hide-mobile,td.hide-mobile{display:none;}}
+    @media(max-width:640px){
+      .main{margin-left:0;}
+      .topbar,.content{padding-left:16px;padding-right:16px;}
+      .sidebar{transform:translateX(-100%);transition:transform 0.28s cubic-bezier(.4,0,.2,1);}
+      .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.18);}
+      .mob-menu-btn{display:flex;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">U</div>
+    <div><div class="logo-text">Universitas</div><div class="logo-sub">Admin Panel</div></div>
+  </div>
+  <div class="nav-section">Konten</div>
+  <a class="nav-item" href="/admin">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>
+    Berita
+  </a>
+  <a class="nav-item" href="/admin/staff">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+    Staf & Alumni
+  </a>
+  <a class="nav-item active" href="/admin/struktur">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="8" y="16" width="8" height="5" rx="1"/><path d="M6.5 8v4h11V8"/><path d="M12 12v4"/></svg>
+    Struktur Organisasi
+  </a>
+  <a class="nav-item" href="/admin/penelitian">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+    Penelitian
+  </a>
+  <a class="nav-item" href="/admin/pencapaian">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+    Pencapaian
+  </a>
+  <a class="nav-item" href="/admin/mitra">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Mitra
+  </a>
+  <div class="sidebar-footer">
+    <a class="back-link" href="../struktur.html">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Lihat Situs
+    </a>
+    <button class="logout-btn" onclick="doLogout()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Keluar
+    </button>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="topbar-title">Struktur Organisasi</div>
+    <div class="topbar-right">
+      <a href="/admin/staff-form" class="btn btn-green">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Anggota
+      </a>
+    </div>
+  </header>
+
+  <div class="content">
+    <div id="alertBox" style="display:none;"></div>
+
+    <div class="info-banner">
+      <span class="info-banner-icon">ℹ️</span>
+      <div class="info-banner-text">
+        Halaman ini mengelola <strong>tampilan bagan organisasi</strong> di situs publik. Atur posisi hierarki setiap anggota, atau klik <strong>Tambah Anggota</strong> untuk mendaftarkan orang baru. Anggota tanpa level hierarki tidak akan muncul di bagan.
+      </div>
+    </div>
+
+    <!-- Tier sections will render here -->
+    <div id="tierGrid" class="tier-grid">
+      <!-- skeleton -->
+      <div class="tier-card">
+        <div class="tier-card-header">
+          <div class="skel" style="width:12px;height:12px;border-radius:50%;"></div>
+          <div class="skel" style="width:120px;height:14px;"></div>
+        </div>
+        <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px;">
+          <div class="skel" style="height:44px;border-radius:8px;"></div>
+          <div class="skel" style="height:44px;border-radius:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unassigned staff -->
+    <div class="unassigned-card">
+      <div class="unassigned-header">
+        <span class="unassigned-title">Tidak Tampil di Bagan</span>
+        <span id="unassignedCount" class="tier-count" style="font-size:0.72rem;color:var(--muted);background:var(--cream);padding:2px 10px;border-radius:999px;">—</span>
+      </div>
+      <div id="unassignedWrap">
+        <div class="tier-empty">Memuat data…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Level Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title" id="editModalName">—</div>
+    <div class="modal-sub" id="editModalSub">—</div>
+    <label class="form-label">Level Hierarki di Bagan Organisasi</label>
+    <select class="form-select" id="editLevelSelect">
+      <option value="">— Tidak tampil di bagan —</option>
+      <option value="rektor">Rektor</option>
+      <option value="wakil">Wakil Rektor</option>
+      <option value="dekan">Dekan / Ketua Lembaga</option>
+      <option value="dosen">Dosen / Profesor</option>
+      <option value="staf">Staf Administrasi</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEditModal()">Batal</button>
+      <button class="btn btn-green" id="saveEditBtn" onclick="saveLevel()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Hapus dari Bagan?</div>
+    <div class="modal-body" id="deleteModalBody">Anggota ini akan dihapus dari bagan organisasi (level hierarki akan dikosongkan). Data staf tetap ada.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Batal</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" onclick="doRemoveFromOrg()">Ya, Keluarkan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TIERS = [
+  { key: 'rektor', label: 'Rektor',                 color: '#1a2e1e' },
+  { key: 'wakil',  label: 'Wakil Rektor',            color: '#2d6a40' },
+  { key: 'dekan',  label: 'Dekan / Ketua Lembaga',  color: '#4e8c5a' },
+  { key: 'dosen',  label: 'Dosen / Profesor',        color: '#2563eb' },
+  { key: 'staf',   label: 'Staf Administrasi',       color: '#9333ea' },
+];
+
+const TYPE_LABELS = { dosen:'Dosen', alumni:'Alumni', staf:'Staf' };
+const TYPE_COLORS = { dosen:'#2563eb', alumni:'#16a34a', staf:'#9333ea' };
+
+let allStaff = [];
+let editTargetId = null;
+let deleteTargetId = null;
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = '/admin/login'; return; }
+  await loadData();
+})();
+
+async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
+
+async function loadData() {
+  const { data, error } = await sb.from('staff').select('*').order('name', { ascending: true });
+  if (error) { showAlert('error', 'Gagal memuat data: ' + error.message); return; }
+  allStaff = data || [];
+  renderAll();
+
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('msg') === 'added')   showAlert('success', '✓ Anggota baru berhasil ditambahkan.');
+  if (p.get('msg') === 'updated') showAlert('success', '✓ Data berhasil diperbarui.');
+  window.history.replaceState({}, '', 'struktur.html');
+}
+
+function renderAll() {
+  const grid = document.getElementById('tierGrid');
+
+  const tiersHtml = TIERS.map(tier => {
+    const members = allStaff.filter(s => s.org_level === tier.key);
+    const rows = members.length ? members.map(m => memberRow(m, tier.color)).join('') : '';
+    return `
+      <div class="tier-card">
+        <div class="tier-card-header">
+          <div class="tier-dot" style="background:${tier.color};"></div>
+          <span class="tier-card-title">${tier.label}</span>
+          <span class="tier-count">${members.length} orang</span>
+        </div>
+        ${members.length
+          ? `<div style="overflow-x:auto;"><table>
+               <thead><tr>
+                 <th>Nama</th>
+                 <th class="hide-mobile">Jabatan</th>
+                 <th class="hide-mobile">Tipe</th>
+                 <th style="text-align:right;">Aksi</th>
+               </tr></thead>
+               <tbody>${rows}</tbody>
+             </table></div>`
+          : `<div class="tier-empty">Belum ada anggota di tingkat ini.</div>`
+        }
+      </div>`;
+  }).join('');
+
+  grid.innerHTML = tiersHtml;
+
+  // Unassigned
+  const unassigned = allStaff.filter(s => !s.org_level);
+  document.getElementById('unassignedCount').textContent = unassigned.length + ' orang';
+  if (!unassigned.length) {
+    document.getElementById('unassignedWrap').innerHTML = '<div class="tier-empty">Semua staf sudah memiliki posisi di bagan.</div>';
+  } else {
+    const rows = unassigned.map(m => memberRow(m, '#9ca3af')).join('');
+    document.getElementById('unassignedWrap').innerHTML = `<div style="overflow-x:auto;"><table>
+      <thead><tr>
+        <th>Nama</th>
+        <th class="hide-mobile">Jabatan</th>
+        <th class="hide-mobile">Tipe</th>
+        <th style="text-align:right;">Aksi</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  }
+}
+
+function memberRow(m, color) {
+  const initial = (m.name || '?')[0].toUpperCase();
+  const tipeColor = TYPE_COLORS[m.type] || '#6b7a6c';
+  const tipeBg = tipeColor + '18';
+  const tipeLabel = TYPE_LABELS[m.type] || m.type || '—';
+  return `<tr>
+    <td><div style="display:flex;align-items:center;gap:12px;">
+      <div class="avatar-circle" style="background:${color};">${initial}</div>
+      <div>
+        <div style="font-weight:500;color:var(--navy);">${escHtml(m.name)}</div>
+        <div style="font-size:0.73rem;color:var(--muted);">${escHtml(m.bidang || '—')}</div>
+      </div>
+    </div></td>
+    <td class="hide-mobile" style="color:var(--muted);font-size:0.82rem;">${escHtml(m.position || '—')}</td>
+    <td class="hide-mobile"><span class="badge" style="background:${tipeBg};color:${tipeColor};">${tipeLabel}</span></td>
+    <td><div class="actions-cell">
+      <button class="btn btn-ghost btn-sm" onclick="openEditModal(${m.id})">Atur Level</button>
+      <a href="/admin/staff-form?edit=${m.id}" class="btn btn-ghost btn-sm">Edit</a>
+      ${m.org_level
+        ? `<button class="btn btn-danger btn-sm" onclick="confirmRemove(${m.id},'${escAttr(m.name)}')">Keluarkan</button>`
+        : ''}
+    </div></td>
+  </tr>`;
+}
+
+/* ── Edit Modal ── */
+function openEditModal(id) {
+  const m = allStaff.find(s => s.id === id);
+  if (!m) return;
+  editTargetId = id;
+  document.getElementById('editModalName').textContent = m.name;
+  document.getElementById('editModalSub').textContent = (m.position || '') + (m.bidang ? ' · ' + m.bidang : '');
+  document.getElementById('editLevelSelect').value = m.org_level || '';
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editTargetId = null; }
+
+async function saveLevel() {
+  if (!editTargetId) return;
+  const btn = document.getElementById('saveEditBtn');
+  btn.textContent = 'Menyimpan…'; btn.disabled = true;
+  const level = document.getElementById('editLevelSelect').value || null;
+  const { error } = await sb.from('staff').update({ org_level: level }).eq('id', editTargetId);
+  btn.textContent = 'Simpan'; btn.disabled = false;
+  closeEditModal();
+  if (error) { showAlert('error', 'Gagal menyimpan: ' + error.message); return; }
+  showAlert('success', '✓ Level hierarki berhasil diperbarui.');
+  await loadData();
+}
+document.getElementById('editModal').addEventListener('click', e => { if (e.target === document.getElementById('editModal')) closeEditModal(); });
+
+/* ── Delete (remove from org) Modal ── */
+function confirmRemove(id, name) {
+  deleteTargetId = id;
+  document.getElementById('deleteModalBody').textContent = `"${name}" akan dikeluarkan dari bagan organisasi. Data staf tetap tersimpan.`;
+  document.getElementById('deleteModal').classList.add('open');
+}
+function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); deleteTargetId = null; }
+
+async function doRemoveFromOrg() {
+  if (!deleteTargetId) return;
+  document.getElementById('confirmDeleteBtn').textContent = 'Memproses…';
+  const { error } = await sb.from('staff').update({ org_level: null }).eq('id', deleteTargetId);
+  closeDeleteModal();
+  if (error) { showAlert('error', 'Gagal memproses.'); return; }
+  showAlert('success', '✓ Anggota dikeluarkan dari bagan organisasi.');
+  await loadData();
+}
+document.getElementById('deleteModal').addEventListener('click', e => { if (e.target === document.getElementById('deleteModal')) closeDeleteModal(); });
+
+/* ── Helpers ── */
+function showAlert(type, msg) {
+  const box = document.getElementById('alertBox');
+  box.className = `alert alert-${type}`; box.textContent = msg; box.style.display = 'flex';
+  setTimeout(() => { box.style.display = 'none'; }, 4000);
+}
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+</script>
+<script>
+function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+</script>
+</body>
+</html>

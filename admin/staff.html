@@ -97,6 +97,10 @@
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
     Staf & Alumni
   </a>
+  <a class="nav-item" href="/admin/struktur">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="8" y="16" width="8" height="5" rx="1"/><path d="M6.5 8v4h11V8"/><path d="M12 12v4"/></svg>
+    Struktur Organisasi
+  </a>
   <a class="nav-item" href="/admin/penelitian">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
     Penelitian
@@ -233,7 +237,7 @@ function renderTable() {
   }).join('');
 
   document.getElementById('tableWrap').innerHTML = `<div style="overflow-x:auto;"><table>
-    <thead><tr><th>Nama</th><th class="hide-mobile">Tipe</th><th class="hide-mobile">Bagan Org</th><th class="hide-mobile">Publikasi</th><th class="hide-mobile">Email</th><th style="text-align:right;">Aksi</th></tr></thead>
+    <thead><tr><th>Nama</th><th class="hide-mobile">Tipe</th><th class="hide-mobile"><a href="/admin/struktur" style="color:var(--green);text-decoration:none;font-size:0.68rem;" title="Kelola di halaman Struktur Organisasi">Bagan Org ↗</a></th><th class="hide-mobile">Publikasi</th><th class="hide-mobile">Email</th><th style="text-align:right;">Aksi</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
 }

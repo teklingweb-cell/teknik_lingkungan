@@ -6,6 +6,7 @@
     { "source": "/admin/add",              "destination": "/admin/add.html" },
     { "source": "/admin/login",            "destination": "/admin/login.html" },
     { "source": "/admin/staff",            "destination": "/admin/staff.html" },
+    { "source": "/admin/struktur",         "destination": "/admin/struktur.html" },
     { "source": "/admin/staff-form",       "destination": "/admin/staff-form.html" },
     { "source": "/admin/penelitian",       "destination": "/admin/penelitian.html" },
     { "source": "/admin/penelitian-form",  "destination": "/admin/penelitian-form.html" },
