@@ -214,6 +214,13 @@
             <div class="checkbox-sub">Berita ini akan tampil sebagai artikel utama. Hanya satu berita yang dapat menjadi featured.</div>
           </div>
         </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="f_show_on_home">
+          <div>
+            <div class="checkbox-label">🏠 Tampilkan di Beranda</div>
+            <div class="checkbox-sub">Berita ini akan muncul di seksi berita halaman utama (maks. 3 berita terbaru yang dipilih).</div>
+          </div>
+        </label>
       </div>
 
       <div class="form-footer">
@@ -261,6 +268,7 @@ async function loadEditItem() {
   document.getElementById('f_date').value     = data.date;
   document.getElementById('f_author').value   = data.author;
   document.getElementById('f_featured').checked = data.featured;
+  document.getElementById('f_show_on_home').checked = data.show_on_home || false;
   document.getElementById('f_link_url').value = data.link_url || '';
     if (data.image_url) {
       document.getElementById('f_image_url_raw').value = data.image_url;
@@ -346,6 +354,7 @@ async function doSubmit() {
   const date     = document.getElementById('f_date').value;
   const author   = document.getElementById('f_author').value.trim();
   const featured = document.getElementById('f_featured').checked;
+  const show_on_home = document.getElementById('f_show_on_home').checked;
   const image_url = document.getElementById('f_image_url').value || null;
   const link_url  = document.getElementById('f_link_url').value.trim() || null;
 
@@ -376,9 +385,9 @@ async function doSubmit() {
 
   let error;
   if (editId) {
-    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured, image_url, link_url }).eq('id', editId));
+    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url }).eq('id', editId));
   } else {
-    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured, image_url, link_url }]));
+    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url }]));
   }
 
   if (error) {
