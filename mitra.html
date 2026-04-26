@@ -36,12 +36,12 @@
 <!-- INDUSTRI -->
 <section class="section" style="background:var(--cream);">
   <div class="container">
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;" class="fade-up">
-      <button class="filter-chip active" data-cat="all">Semua</button>
-      <button class="filter-chip" data-cat="Industri">Industri</button>
-      <button class="filter-chip" data-cat="Akademik">Akademik</button>
-      <button class="filter-chip" data-cat="Pemerintah">Pemerintah</button>
-      <button class="filter-chip" data-cat="Internasional">Internasional</button>
+    <div class="tab-bar fade-up" style="margin-bottom:36px;">
+      <button class="tab-btn active" data-cat="all">Semua</button>
+      <button class="tab-btn" data-cat="Industri">Industri</button>
+      <button class="tab-btn" data-cat="Akademik">Akademik</button>
+      <button class="tab-btn" data-cat="Pemerintah">Pemerintah</button>
+      <button class="tab-btn" data-cat="Internasional">Internasional</button>
     </div>
     <div id="mitraGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;min-height:200px;"></div>
   </div>
@@ -59,9 +59,9 @@ let allData = [], activeFilter = 'all';
   render();
 })();
 
-document.querySelectorAll('.filter-chip').forEach(btn => {
+document.querySelectorAll('.tab-btn[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn[data-cat]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.cat;
     render();
