@@ -5,6 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Struktur Organisasi – Universitas Lorem Ipsum</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <style>
+    .org-section{padding:60px 0 80px;}
+    .org-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;justify-content:center;}
+    .org-legend-item{display:flex;align-items:center;gap:7px;font-size:0.78rem;font-weight:500;color:var(--text-muted);font-family:var(--font-body);}
+    .org-legend-dot{width:10px;height:10px;border-radius:50%;}
+    .org-tree{display:flex;flex-direction:column;align-items:center;gap:0;position:relative;}
+    .org-tier{display:flex;flex-direction:column;align-items:center;width:100%;position:relative;}
+    .org-tier-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--text-muted);font-family:var(--font-body);margin-bottom:12px;opacity:0.7;}
+    .org-tier-nodes{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-start;}
+    .org-connector{width:2px;height:36px;background:linear-gradient(to bottom,rgba(78,140,90,0.4),rgba(78,140,90,0.15));margin:0 auto;}
+    .org-connector-spread{height:20px;width:calc(100% - 120px);max-width:900px;margin:0 auto;position:relative;}
+    .org-connector-spread::before{content:'';position:absolute;top:0;left:50%;right:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
+    .org-connector-spread::after{content:'';position:absolute;bottom:0;left:60px;right:60px;height:2px;background:rgba(78,140,90,0.25);}
+    .org-connector-gather{height:20px;width:calc(100% - 120px);max-width:900px;margin:0 auto;position:relative;}
+    .org-connector-gather::before{content:'';position:absolute;bottom:0;left:50%;right:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
+    .org-connector-gather::after{content:'';position:absolute;top:0;left:60px;right:60px;height:2px;background:rgba(78,140,90,0.25);}
+    .org-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;transition:transform 0.22s cubic-bezier(.34,1.56,.64,1);}
+    .org-node:hover{transform:translateY(-4px);}
+    .org-node:hover .org-node-card{box-shadow:0 12px 36px rgba(26,46,30,0.18);}
+    .org-node-card{background:#fff;border:1.5px solid rgba(78,140,90,0.18);border-radius:16px;padding:18px 20px 16px;text-align:center;min-width:140px;max-width:180px;transition:box-shadow 0.22s,border-color 0.22s;position:relative;overflow:hidden;}
+    .org-node-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;}
+    .org-node:hover .org-node-card{border-color:rgba(78,140,90,0.45);}
+    .org-node-photo{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 10px;border:2px solid rgba(78,140,90,0.2);display:block;}
+    .org-node-initials{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:#fff;margin:0 auto 10px;letter-spacing:-0.02em;}
+    .org-node-role{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-body);font-weight:600;margin-bottom:5px;}
+    .org-node-name{font-size:0.78rem;font-weight:600;color:var(--nav-bg);line-height:1.3;font-family:var(--font-body);}
+    .org-node-dept{font-size:0.67rem;color:var(--text-muted);margin-top:4px;font-family:var(--font-body);line-height:1.3;}
+    .org-node-click-hint{position:absolute;bottom:7px;right:10px;font-size:0.55rem;color:rgba(78,140,90,0.5);font-family:var(--font-body);letter-spacing:0.05em;opacity:0;transition:opacity 0.2s;}
+    .org-node:hover .org-node-click-hint{opacity:1;}
+    .org-node.sz-xl .org-node-card{min-width:180px;padding:24px 24px 20px;}
+    .org-node.sz-xl .org-node-photo,.org-node.sz-xl .org-node-initials{width:76px;height:76px;font-size:1.6rem;}
+    .org-node.sz-xl .org-node-name{font-size:0.88rem;}
+    .org-node.sz-xl .org-node-role{font-size:0.63rem;}
+    .org-node.sz-lg .org-node-card{min-width:160px;}
+    .org-node.sz-lg .org-node-photo,.org-node.sz-lg .org-node-initials{width:68px;height:68px;font-size:1.4rem;}
+    .org-node.sz-sm .org-node-card{min-width:120px;max-width:148px;padding:12px 14px 10px;}
+    .org-node.sz-sm .org-node-photo,.org-node.sz-sm .org-node-initials{width:46px;height:46px;font-size:1rem;}
+    .org-node.sz-sm .org-node-name{font-size:0.72rem;}
+    .org-empty-tier{font-size:0.8rem;color:var(--text-muted);font-family:var(--font-body);border:1.5px dashed rgba(78,140,90,0.2);border-radius:12px;padding:16px 28px;text-align:center;font-style:italic;opacity:0.7;}
+    /* Tier color classes */
+    .tier-rektor{--tier-color:#1a2e1e;}
+    .tier-wakil{--tier-color:#2d6a40;}
+    .tier-dekan{--tier-color:#4e8c5a;}
+    .tier-dosen{--tier-color:#2563eb;}
+    .tier-staf{--tier-color:#9333ea;}
+    .tier-rektor .org-node-card::before,.tier-wakil .org-node-card::before,.tier-dekan .org-node-card::before,.tier-dosen .org-node-card::before,.tier-staf .org-node-card::before{background:var(--tier-color);}
+    .tier-rektor .org-node-initials,.tier-wakil .org-node-initials,.tier-dekan .org-node-initials,.tier-dosen .org-node-initials,.tier-staf .org-node-initials{background:var(--tier-color);}
+    .tier-rektor .org-node-role,.tier-wakil .org-node-role,.tier-dekan .org-node-role,.tier-dosen .org-node-role,.tier-staf .org-node-role{color:var(--tier-color);}
+    /* Loading skeleton */
+    .org-loading{display:flex;flex-direction:column;align-items:center;gap:32px;padding:40px 0;}
+    .skel{background:linear-gradient(90deg,#e8ede8 25%,#f2f5ef 50%,#e8ede8 75%);background-size:200%;animation:shimmer 1.4s infinite;border-radius:12px;}
+    @keyframes shimmer{from{background-position:200%}to{background-position:-200%}}
+    /* Bio Modal */
+    .bio-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(16,28,17,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
+    .bio-overlay.open{display:flex;}
+    .bio-modal{background:#fff;border-radius:24px;max-width:560px;width:100%;box-shadow:0 32px 80px rgba(16,28,17,0.22);overflow:hidden;position:relative;animation:bioIn 0.3s cubic-bezier(.34,1.4,.64,1) both;}
+    @keyframes bioIn{from{opacity:0;transform:scale(0.88) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+    .bio-header{padding:36px 36px 28px;display:flex;gap:24px;align-items:flex-start;position:relative;}
+    .bio-header-accent{position:absolute;top:0;left:0;right:0;height:4px;}
+    .bio-photo{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid rgba(78,140,90,0.2);}
+    .bio-initials{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;flex-shrink:0;}
+    .bio-header-info{flex:1;}
+    .bio-badge{display:inline-block;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;padding:3px 10px;border-radius:999px;margin-bottom:8px;font-family:var(--font-body);}
+    .bio-name{font-size:1.25rem;font-weight:700;color:#1a2e1e;line-height:1.25;margin-bottom:4px;font-family:var(--font-display,serif);}
+    .bio-position{font-size:0.82rem;color:var(--text-muted);font-family:var(--font-body);margin-bottom:2px;}
+    .bio-dept{font-size:0.78rem;color:rgba(78,140,90,0.8);font-weight:500;font-family:var(--font-body);}
+    .bio-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(26,46,30,0.07);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;color:#2d3a2e;font-size:1.1rem;line-height:1;}
+    .bio-close:hover{background:rgba(26,46,30,0.15);}
+    .bio-body{padding:0 36px 36px;}
+    .bio-divider{height:1px;background:rgba(26,46,30,0.07);margin-bottom:22px;}
+    .bio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+    .bio-stat{background:#f7faf6;border-radius:12px;padding:14px 16px;}
+    .bio-stat-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);font-family:var(--font-body);margin-bottom:5px;}
+    .bio-stat-value{font-size:0.9rem;font-weight:600;color:#1a2e1e;font-family:var(--font-body);}
+    .bio-desc-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);font-family:var(--font-body);margin-bottom:8px;font-weight:600;}
+    .bio-desc{font-size:0.85rem;color:#3d4d3e;line-height:1.65;font-family:var(--font-body);}
+    .bio-links{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+    .bio-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:0.78rem;font-weight:500;text-decoration:none;border:1px solid rgba(26,46,30,0.12);color:#2d3a2e;transition:background 0.2s;font-family:var(--font-body);}
+    .bio-link:hover{background:#f0f7f1;border-color:rgba(78,140,90,0.3);}
+    .admin-add-notice{text-align:center;margin-top:48px;font-size:0.82rem;color:var(--text-muted);font-family:var(--font-body);}
+    .admin-add-notice a{color:var(--accent);text-decoration:none;font-weight:500;}
+    .admin-add-notice a:hover{text-decoration:underline;}
+    @media(max-width:640px){
+      .org-tier-nodes{gap:10px;}
+      .org-node-card{min-width:110px;max-width:140px;padding:12px 12px 10px;}
+      .org-node.sz-xl .org-node-card{min-width:140px;}
+      .bio-header{flex-direction:column;align-items:center;text-align:center;padding:28px 24px 20px;}
+      .bio-body{padding:0 24px 28px;}
+      .bio-grid{grid-template-columns:1fr;}
+      .bio-name{font-size:1.1rem;}
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar" id="navbar"><div class="nav-inner"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">U</div><div class="nav-logo-text"><div class="nav-logo-name">Universitas</div><div class="nav-logo-sub">Lorem Ipsum</div></div></a><ul class="nav-links"><li><a href="index.html">Beranda</a></li><li class="has-dropdown"><a href="profile.html">Tentang Kami</a><div class="dropdown"><a href="profile.html">Profil</a><a href="sejarah.html">Sejarah</a><a href="visi-misi.html">Visi &amp; Misi</a><a href="struktur.html">Struktur Organisasi</a><a href="fasilitas.html">Fasilitas</a></div></li><li class="has-dropdown"><a href="penelitian.html">Akademik</a><div class="dropdown"><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a></div></li><li class="has-dropdown"><a href="staf.html">Komunitas</a><div class="dropdown"><a href="staf.html">Staf &amp; Dosen</a><a href="staf.html">Alumni</a><a href="mitra.html">Mitra</a></div></li><li><a href="berita.html">Berita</a></li><li><a href="kontak.html">Kontak</a></li></ul><div class="nav-right"><a href="#" class="nav-cta">Portal Mahasiswa</a><button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button></div></div></nav>
@@ -20,44 +114,67 @@
   </div>
 </div>
 
-<section class="section">
+<section class="org-section">
   <div class="container">
-    <div class="fade-up" style="margin-bottom:40px;">
-      <div class="section-tag">— Kepemimpinan</div>
-      <h2 class="section-title">Struktur Organisasi</h2>
+    <div class="fade-up" style="margin-bottom:40px;text-align:center;">
+      <div class="section-tag" style="justify-content:center;">— Kepemimpinan</div>
+      <h2 class="section-title" style="text-align:center;">Bagan Organisasi</h2>
+      <p style="font-family:var(--font-body);color:var(--text-muted);font-size:0.9rem;margin-top:8px;">Klik kartu untuk melihat profil lengkap</p>
     </div>
-    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
-      <div class="org-card fade-up">
-        <div class="org-avatar">L</div>
-        <div><div class="org-role">Rektor</div><div class="org-name">Prof. Dr. Lorem Ipsum, M.Si.</div></div>
+    <div class="org-legend fade-up">
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#1a2e1e"></div> Rektor</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#2d6a40"></div> Wakil Rektor</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#4e8c5a"></div> Dekan</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#2563eb"></div> Dosen / Profesor</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#9333ea"></div> Staf Administrasi</div>
+    </div>
+    <div id="orgTree" class="org-tree fade-up">
+      <div class="org-loading" id="orgLoading">
+        <div class="skel" style="width:160px;height:140px;border-radius:16px;"></div>
+        <div style="display:flex;gap:14px;">
+          <div class="skel" style="width:140px;height:120px;border-radius:16px;"></div>
+          <div class="skel" style="width:140px;height:120px;border-radius:16px;"></div>
+          <div class="skel" style="width:140px;height:120px;border-radius:16px;"></div>
+        </div>
+        <div style="display:flex;gap:14px;">
+          <div class="skel" style="width:120px;height:110px;border-radius:16px;"></div>
+          <div class="skel" style="width:120px;height:110px;border-radius:16px;"></div>
+          <div class="skel" style="width:120px;height:110px;border-radius:16px;"></div>
+          <div class="skel" style="width:120px;height:110px;border-radius:16px;"></div>
+        </div>
       </div>
-      <div class="org-card fade-up delay-1" style="margin-left:32px;">
-        <div class="org-avatar">A</div>
-        <div><div class="org-role">Wakil Rektor I – Akademik</div><div class="org-name">Dr. Adipiscing Elit, M.Pd.</div></div>
-      </div>
-      <div class="org-card fade-up delay-2" style="margin-left:32px;">
-        <div class="org-avatar">C</div>
-        <div><div class="org-role">Wakil Rektor II – Keuangan</div><div class="org-name">Dr. Consectetur Amet, M.M.</div></div>
-      </div>
-      <div class="org-card fade-up delay-3" style="margin-left:32px;">
-        <div class="org-avatar">D</div>
-        <div><div class="org-role">Wakil Rektor III – Kemahasiswaan</div><div class="org-name">Dr. Dolor Sit, M.Hum.</div></div>
-      </div>
-      <div class="org-card fade-up" style="margin-left:64px;">
-        <div class="org-avatar">I</div>
-        <div><div class="org-role">Dekan Fak. Sains &amp; Teknologi</div><div class="org-name">Prof. Incididunt Labore, Ph.D.</div></div>
-      </div>
-      <div class="org-card fade-up delay-1" style="margin-left:64px;">
-        <div class="org-avatar">T</div>
-        <div><div class="org-role">Dekan Fak. Sosial &amp; Humaniora</div><div class="org-name">Dr. Tempor Dolore, M.Soc.</div></div>
-      </div>
-      <div class="org-card fade-up delay-2" style="margin-left:64px;">
-        <div class="org-avatar">M</div>
-        <div><div class="org-role">Dekan Fak. Kesehatan</div><div class="org-name">Dr. Magna Aliqua, M.Kes.</div></div>
-      </div>
+    </div>
+    <div class="admin-add-notice fade-up">
+      Kelola anggota organisasi melalui <a href="admin/staff.html">Admin Panel → Staf &amp; Alumni</a>
     </div>
   </div>
 </section>
+
+<!-- Bio Modal -->
+<div class="bio-overlay" id="bioOverlay" onclick="handleOverlayClick(event)">
+  <div class="bio-modal" id="bioModal">
+    <div class="bio-header" id="bioHeader">
+      <div class="bio-header-accent" id="bioAccent"></div>
+      <div id="bioAvatar"></div>
+      <div class="bio-header-info">
+        <div class="bio-badge" id="bioBadge"></div>
+        <div class="bio-name" id="bioName"></div>
+        <div class="bio-position" id="bioPosition"></div>
+        <div class="bio-dept" id="bioDept"></div>
+      </div>
+      <button class="bio-close" onclick="closeBio()" aria-label="Tutup">&#x2715;</button>
+    </div>
+    <div class="bio-body">
+      <div class="bio-divider"></div>
+      <div class="bio-grid" id="bioGrid"></div>
+      <div id="bioDescWrap" style="display:none;">
+        <div class="bio-desc-label">Bidang Keahlian &amp; Riset</div>
+        <div class="bio-desc" id="bioDesc"></div>
+      </div>
+      <div class="bio-links" id="bioLinks"></div>
+    </div>
+  </div>
+</div>
 
 <footer>
   <div class="footer-inner">
@@ -68,5 +185,109 @@
   </div>
 </footer>
 <script src="main.js"></script>
+<script>
+const TIERS=[
+  {key:'rektor', label:'Rektor',            sz:'sz-xl',cssClass:'tier-rektor',color:'#1a2e1e'},
+  {key:'wakil',  label:'Wakil Rektor',      sz:'sz-lg',cssClass:'tier-wakil', color:'#2d6a40'},
+  {key:'dekan',  label:'Dekan',             sz:'',     cssClass:'tier-dekan', color:'#4e8c5a'},
+  {key:'dosen',  label:'Dosen / Profesor',  sz:'sz-sm',cssClass:'tier-dosen', color:'#2563eb'},
+  {key:'staf',   label:'Staf Administrasi', sz:'sz-sm',cssClass:'tier-staf',  color:'#9333ea'},
+];
+const TIER_LABELS={rektor:'Rektor',wakil:'Wakil Rektor',dekan:'Dekan',dosen:'Dosen / Profesor',staf:'Staf Administrasi'};
+
+(async()=>{
+  try{
+    const {data,error}=await sb.from('staff').select('*').not('org_level','is',null).order('org_level').order('name');
+    document.getElementById('orgLoading').remove();
+    if(error||!data||data.length===0){renderFallback();return;}
+    const groups={};
+    for(const p of data){const lv=(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
+    renderTree(groups);
+  }catch(e){document.getElementById('orgLoading').remove();renderFallback();}
+})();
+
+function renderTree(groups){
+  const tree=document.getElementById('orgTree');
+  const tiers=TIERS.filter(t=>groups[t.key]&&groups[t.key].length>0);
+  tiers.forEach((tier,idx)=>{
+    const people=groups[tier.key];
+    const multi=people.length>1;
+    if(idx>0){
+      if(multi){const sc=document.createElement('div');sc.className='org-connector-spread';tree.appendChild(sc);}
+      else{const c=document.createElement('div');c.className='org-connector';tree.appendChild(c);}
+    }
+    const tierEl=document.createElement('div');tierEl.className='org-tier';
+    const lbl=document.createElement('div');lbl.className='org-tier-label';lbl.textContent=tier.label.toUpperCase();tierEl.appendChild(lbl);
+    const nodes=document.createElement('div');nodes.className='org-tier-nodes';
+    people.forEach(p=>nodes.appendChild(makeNode(p,tier)));
+    tierEl.appendChild(nodes);tree.appendChild(tierEl);
+    if(idx<tiers.length-1&&multi){const gc=document.createElement('div');gc.className='org-connector-gather';tree.appendChild(gc);}
+  });
+}
+
+function makeNode(person,tier){
+  const node=document.createElement('div');
+  node.className='org-node '+tier.cssClass+' '+tier.sz;
+  node.setAttribute('tabindex','0');node.setAttribute('role','button');
+  const initial=(person.name||'?')[0].toUpperCase();
+  const av=person.photo_url
+    ?`<img class="org-node-photo" src="${e(person.photo_url)}" alt="${e(person.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="org-node-initials" style="display:none">${initial}</div>`
+    :`<div class="org-node-initials">${initial}</div>`;
+  node.innerHTML=`<div class="org-node-card">${av}<div class="org-node-role">${e(TIER_LABELS[tier.key]||tier.label)}</div><div class="org-node-name">${e(person.name)}</div>${person.bidang?`<div class="org-node-dept">${e(person.bidang)}</div>`:''}<div class="org-node-click-hint">lihat profil &#x2197;</div></div>`;
+  node.addEventListener('click',()=>openBio(person,tier));
+  node.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' ')openBio(person,tier);});
+  return node;
+}
+
+function renderFallback(){
+  const fd={
+    rektor:[{name:'Prof. Dr. Lorem Ipsum, M.Si.',position:'Rektor',bidang:'Kepemimpinan Pendidikan',expertise_desc:'Memimpin Universitas Lorem Ipsum dengan dedikasi tinggi untuk kemajuan pendidikan dan penelitian nasional.',email:'rektor@unilorem.ac.id',publications_count:42,org_level:'rektor'}],
+    wakil:[
+      {name:'Dr. Adipiscing Elit, M.Pd.',position:'Wakil Rektor I – Akademik',bidang:'Pengembangan Kurikulum',expertise_desc:'Bertanggung jawab atas seluruh program akademik dan pengembangan kurikulum universitas.',email:'warek1@unilorem.ac.id',publications_count:28,org_level:'wakil'},
+      {name:'Dr. Consectetur Amet, M.M.',position:'Wakil Rektor II – Keuangan',bidang:'Manajemen Keuangan',expertise_desc:'Mengelola anggaran dan sumber daya keuangan institusi secara transparan dan akuntabel.',email:'warek2@unilorem.ac.id',publications_count:15,org_level:'wakil'},
+      {name:'Dr. Dolor Sit, M.Hum.',position:'Wakil Rektor III – Kemahasiswaan',bidang:'Pengembangan Mahasiswa',expertise_desc:'Memfasilitasi pengembangan potensi mahasiswa melalui berbagai program kemahasiswaan.',email:'warek3@unilorem.ac.id',publications_count:19,org_level:'wakil'},
+    ],
+    dekan:[
+      {name:'Prof. Incididunt Labore, Ph.D.',position:'Dekan Fak. Sains & Teknologi',bidang:'Ilmu Komputer',expertise_desc:'Memimpin Fakultas Sains & Teknologi dengan fokus pada riset terapan dan inovasi digital.',email:'dekan.saintek@unilorem.ac.id',publications_count:67,org_level:'dekan'},
+      {name:'Dr. Tempor Dolore, M.Soc.',position:'Dekan Fak. Sosial & Humaniora',bidang:'Sosiologi',expertise_desc:'Mengembangkan Fakultas Sosial & Humaniora sebagai pusat kajian sosial-budaya.',email:'dekan.soshum@unilorem.ac.id',publications_count:34,org_level:'dekan'},
+      {name:'Dr. Magna Aliqua, M.Kes.',position:'Dekan Fak. Kesehatan',bidang:'Ilmu Kesehatan Masyarakat',expertise_desc:'Memimpin pengembangan program kesehatan yang berorientasi pada riset berbasis bukti.',email:'dekan.kesehatan@unilorem.ac.id',publications_count:51,org_level:'dekan'},
+    ]
+  };
+  renderTree(fd);
+}
+
+function openBio(person,tier){
+  const initial=(person.name||'?')[0].toUpperCase();
+  const av=document.getElementById('bioAvatar');
+  av.innerHTML=person.photo_url
+    ?`<img class="bio-photo" src="${e(person.photo_url)}" alt="${e(person.name)}" onerror="this.outerHTML='<div class=\\'bio-initials\\' style=\\'background:${tier.color}\\'>${initial}</div>'">`
+    :`<div class="bio-initials" style="background:${tier.color}">${initial}</div>`;
+  document.getElementById('bioBadge').textContent=TIER_LABELS[tier.key]||tier.label;
+  document.getElementById('bioName').textContent=person.name||'';
+  document.getElementById('bioPosition').textContent=person.position||'';
+  document.getElementById('bioDept').textContent=person.bidang||'';
+  const stats=[];
+  if(person.publications_count>0)stats.push({label:'Publikasi',value:person.publications_count});
+  if(person.email)stats.push({label:'Email',value:person.email});
+  if(person.graduation_year)stats.push({label:'Tahun Lulus',value:person.graduation_year});
+  if(person.type){const tm={dosen:'Dosen',alumni:'Alumni',staf:'Staf'};stats.push({label:'Tipe',value:tm[person.type]||person.type});}
+  document.getElementById('bioGrid').innerHTML=stats.map(s=>`<div class="bio-stat"><div class="bio-stat-label">${e(s.label)}</div><div class="bio-stat-value">${e(String(s.value))}</div></div>`).join('');
+  const dw=document.getElementById('bioDescWrap');
+  if(person.expertise_desc){document.getElementById('bioDesc').textContent=person.expertise_desc;dw.style.display='block';}else{dw.style.display='none';}
+  const links=[];
+  if(person.linkedin_url)links.push(`<a href="${e(person.linkedin_url)}" target="_blank" rel="noopener" class="bio-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>`);
+  if(person.email)links.push(`<a href="mailto:${e(person.email)}" class="bio-link"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email</a>`);
+  document.getElementById('bioLinks').innerHTML=links.join('');
+  document.getElementById('bioModal').className='bio-modal';
+  document.getElementById('bioAccent').style.background=tier.color;
+  document.getElementById('bioBadge').style.cssText=`background:${tier.color}18;color:${tier.color};`;
+  document.getElementById('bioOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBio(){document.getElementById('bioOverlay').classList.remove('open');document.body.style.overflow='';}
+function handleOverlayClick(e){if(e.target===document.getElementById('bioOverlay'))closeBio();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBio();});
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
 </body>
 </html>
