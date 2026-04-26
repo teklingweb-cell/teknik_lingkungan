@@ -184,17 +184,15 @@ let editId = null;
 function parseGDriveUrl(raw) {
   if (!raw) return null;
   raw = raw.trim();
-  // Already a direct uc?export or thumbnail URL
-  if (raw.includes('drive.google.com/uc') || raw.includes('drive.google.com/thumbnail') || raw.includes('lh3.googleusercontent.com')) return raw;
-  // file/d/FILE_ID
-  let m = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
-  // id=FILE_ID
-  m = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
-  // open?id=FILE_ID
-  m = raw.match(/open\?id=([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  // Already an lh3 CDN URL – use as-is
+  if (raw.includes('lh3.googleusercontent.com')) return raw;
+  // Extract file ID from any Drive share URL format
+  var m = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (!m) m = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  if (!m) m = raw.match(/open\?id=([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1200';
+  // Already a direct URL (non-Drive) – pass through
+  if (raw.startsWith('http')) return raw;
   return null;
 }
 

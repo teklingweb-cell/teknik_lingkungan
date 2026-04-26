@@ -280,6 +280,16 @@
 <script src="js/supabase-client.js"></script>
 <script src="main.js"></script>
 <script>
+
+function toGDriveImg(url) {
+  if (!url) return null;
+  if (url.includes('lh3.googleusercontent.com')) return url;
+  var m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (!m) m = url.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1200';
+  return url;
+}
+
 (async function () {
   var params = new URLSearchParams(window.location.search);
   var id = parseInt(params.get('id'));
@@ -312,7 +322,7 @@
   var coverWrap = document.getElementById('aCoverWrap');
   if (d.image_url) {
     var img = document.createElement('img');
-    img.src = d.image_url;
+    img.src = toGDriveImg(d.image_url);
     img.alt = d.title;
     img.className = 'article-cover';
     img.loading = 'lazy';
