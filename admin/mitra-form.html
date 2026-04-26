@@ -160,6 +160,7 @@ let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  initGDriveField('f_logo_url_raw', 'f_logo_url_preview', 'f_logo_url_status', 'f_logo_url');
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));

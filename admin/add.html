@@ -231,6 +231,9 @@ let editId = null;
   // Set today as default date
   document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
 
+  // Always init the GDrive field (needed for both new and edit)
+  initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
+
   // Check if editing
   const params = new URLSearchParams(window.location.search);
   if (params.has('edit')) {
