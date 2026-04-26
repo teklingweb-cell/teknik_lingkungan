@@ -96,8 +96,17 @@ function render() {
       <div class="achievement-desc">${esc(item.description||'')}</div>
       <div style="margin-top:12px;"><span style="font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;padding:3px 10px;border-radius:999px;background:rgba(26,46,30,0.08);color:rgba(45,58,46,0.6);">${esc(item.category)}</span></div>
     </div>`).join('');
+  observeNewCards('achievementGrid');
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function observeNewCards(gridId) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('#' + gridId + ' .fade-up').forEach(el => obs.observe(el));
+}
+
 </script>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="index.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Beranda</a></div></div></footer>
