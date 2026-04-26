@@ -232,10 +232,13 @@
 
   <div class="article-body">
     <p class="article-excerpt" id="aExcerpt"></p>
-    <hr class="article-divider">
-    <p style="font-family:var(--font-body);font-size:0.95rem;color:var(--muted);line-height:1.8;text-align:center;padding:40px 0;opacity:0.6;">
-      — Konten lengkap artikel tersedia di sistem manajemen konten —
-    </p>
+    <div id="aLinkWrap" style="display:none;padding:32px 0 8px;">
+      <a id="aLinkBtn" href="#" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:var(--navy);color:var(--cream);border-radius:12px;text-decoration:none;font-family:var(--font-body);font-size:0.9rem;font-weight:600;transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+        Buka Artikel Lengkap &#8599;
+      </a>
+    </div>
     <div class="article-footer-meta">
       <div class="article-author-pill">
         <div class="author-avatar" id="aAuthorInitial"></div>
@@ -311,6 +314,12 @@ function toGDriveImg(url) {
   document.getElementById('aTitle').textContent      = d.title;
   document.getElementById('aAuthor').textContent     = d.author;
   document.getElementById('aExcerpt').textContent    = d.excerpt;
+
+  // Direct link
+  if (d.link_url) {
+    document.getElementById('aLinkWrap').style.display = '';
+    document.getElementById('aLinkBtn').href = d.link_url;
+  }
   document.getElementById('aAuthorName').textContent = d.author;
   document.getElementById('navCategory').innerHTML   = '<span class="tag">'+d.category+'</span>';
 

@@ -73,7 +73,9 @@
     var featImg = _featSrc
       ? '<img src="'+_featSrc+'" alt="'+item.title+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">'
       : '<span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">'+item.id+'</span>';
-    wrap.innerHTML = '<a href="berita-detail.html?id='+item.id+'" class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'
+    var _featUrl = item.link_url ? item.link_url : 'berita-detail.html?id='+item.id;
+    var _featTarget = item.link_url ? ' target="_blank" rel="noopener"' : '';
+    wrap.innerHTML = '<a href="'+_featUrl+'"'+_featTarget+' class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'  
       + '<div class="featured-thumb" style="position:relative;overflow:hidden;">'
       + featImg
       + '<span class="featured-badge">Featured</span>'
@@ -96,8 +98,10 @@
     var thumb = _thumbSrc
       ? '<img src="'+_thumbSrc+'" alt="'+item.title+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;">'
       : '<span class="news-thumb-num">'+item.id+'</span>';
+    var _cardUrl = item.link_url ? item.link_url : 'berita-detail.html?id='+item.id;
+    var _cardTarget = item.link_url ? ' target="_blank" rel="noopener"' : '';
     return '<div class="research-card-wrap" data-cat="'+item.category+'" style="display:flex;">'
-      + '<a href="berita-detail.html?id='+item.id+'" class="news-card" style="width:100%;"><article>'
+      + '<a href="'+_cardUrl+'"'+_cardTarget+' class="news-card" style="width:100%;"><article>'
       + '<div class="news-thumb">'+thumb+'</div>'
       + '<div class="news-body">'
       + '<div class="news-meta"><span class="tag">'+item.category+'</span><span class="news-date">'+fmtDate(item.date)+'</span></div>'

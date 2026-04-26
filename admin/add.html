@@ -203,6 +203,10 @@
           Di Google Drive: klik kanan file → <strong>Bagikan</strong> → <strong>Siapa saja dengan link</strong> → salin link.
         </span>
       </div>
+        <div class="field">
+          <label>Link Artikel Lengkap <span style="font-size:0.72rem;color:var(--muted);font-weight:400;">(opsional — jika ada sumber eksternal)</span></label>
+          <input type="url" id="f_link_url" placeholder="https://... (kosongkan jika tidak ada)" autocomplete="off">
+        </div>
         <label class="checkbox-row">
           <input type="checkbox" id="f_featured">
           <div>
@@ -257,6 +261,7 @@ async function loadEditItem() {
   document.getElementById('f_date').value     = data.date;
   document.getElementById('f_author').value   = data.author;
   document.getElementById('f_featured').checked = data.featured;
+  document.getElementById('f_link_url').value = data.link_url || '';
     if (data.image_url) {
       document.getElementById('f_image_url_raw').value = data.image_url;
       initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
@@ -342,6 +347,7 @@ async function doSubmit() {
   const author   = document.getElementById('f_author').value.trim();
   const featured = document.getElementById('f_featured').checked;
   const image_url = document.getElementById('f_image_url').value || null;
+  const link_url  = document.getElementById('f_link_url').value.trim() || null;
 
   // Validate
   const errors = [];
@@ -370,9 +376,9 @@ async function doSubmit() {
 
   let error;
   if (editId) {
-    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured }).eq('id', editId));
+    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured, image_url, link_url }).eq('id', editId));
   } else {
-    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured }]));
+    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured, image_url, link_url }]));
   }
 
   if (error) {
