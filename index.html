@@ -318,8 +318,14 @@
 <script>
 (async () => {
   const grid = document.getElementById('homeNewsGrid');
-  const { data, error } = await sb.from('news').select('*').eq('show_on_home', true).order('date', { ascending: false }).limit(3);
-  if (error || !data || !data.length) return; // keep skeleton on failure
+
+  // Try show_on_home first; fall back to latest 3 if column missing or nothing marked
+  let { data, error } = await sb.from('news').select('*').eq('show_on_home', true).order('date', { ascending: false }).limit(3);
+  if (error || !data || !data.length) {
+    const fallback = await sb.from('news').select('*').order('date', { ascending: false }).limit(3);
+    if (fallback.error || !fallback.data || !fallback.data.length) return;
+    data = fallback.data;
+  }
 
   const delays = ['', ' delay-1', ' delay-2'];
   const formatDate = d => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
