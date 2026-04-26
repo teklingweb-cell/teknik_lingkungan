@@ -65,10 +65,23 @@
     .empty-title{font-size:1rem;font-weight:500;color:var(--navy);margin-bottom:6px;} .empty-sub{font-size:0.83rem;color:var(--muted);}
     .avatar-circle{width:36px;height:36px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:#fff;flex-shrink:0;}
     @media(max-width:900px){th.hide-mobile,td.hide-mobile{display:none;}}
-    @media(max-width:640px){.sidebar{display:none;}.main{margin-left:0;}.topbar,.content{padding-left:16px;padding-right:16px;}}
+    @media(max-width:640px){.main{margin-left:0;}.topbar,.content{padding-left:16px;padding-right:16px;}}
+  
+    /* Mobile sidebar drawer */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9; }
+    .sidebar-overlay.open { display: block; }
+    .mob-menu-btn { display: none; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; color: var(--navy); }
+    .mob-menu-btn:hover { background: var(--cream); }
+    @media(max-width:640px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.28s cubic-bezier(.4,0,.2,1); }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
+      .mob-menu-btn { display: flex; }
+    }
   </style>
 </head>
 <body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -110,6 +123,9 @@
 
 <div class="main">
   <header class="topbar">
+    <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="topbar-title">Manajemen Staf & Alumni</div>
     <a href="/admin/staff-form" class="btn btn-green">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -245,6 +261,10 @@ function showAlert(type, msg) {
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+</script>
+<script>
+function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
 </script>
 </body>
 </html>
