@@ -27,21 +27,21 @@
       <div style="display:flex;align-items:center;gap:16px;">
         <div style="width:40px;height:40px;background:rgba(78,140,90,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">📖</div>
         <div>
-          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">124</div>
+          <div id="stat-publikasi" style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">–</div>
           <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Publikasi Aktif</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:16px;">
         <div style="width:40px;height:40px;background:rgba(78,140,90,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👥</div>
         <div>
-          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">38</div>
+          <div id="stat-tim" style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">–</div>
           <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Tim Peneliti</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:16px;">
         <div style="width:40px;height:40px;background:rgba(78,140,90,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🌐</div>
         <div>
-          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">Rp 8.2M</div>
+          <div id="stat-dana" style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--navy);">–</div>
           <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);">Total Dana Riset</div>
         </div>
       </div>
@@ -74,6 +74,21 @@ const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Keseha
   const { data, error } = await sb.from('penelitian').select('*').order('year', { ascending: false });
   if (error) { document.getElementById('researchGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
   allData = data;
+
+  // Update stats from live data
+  document.getElementById('stat-publikasi').textContent = data.length;
+  const uniqueAuthors = new Set(data.map(d => d.author)).size;
+  document.getElementById('stat-tim').textContent = uniqueAuthors;
+  const totalJuta = data.reduce((sum, d) => {
+    if (!d.funding) return sum;
+    const m = d.funding.match(/([\d.,]+)\s*(Juta|Miliar|M)/i);
+    if (!m) return sum;
+    let v = parseFloat(m[1].replace(/\./g,'').replace(',','.'));
+    if (/Miliar|M/i.test(m[2])) v *= 1000;
+    return sum + v;
+  }, 0);
+  const dana = totalJuta >= 1000 ? 'Rp ' + (totalJuta/1000).toFixed(1) + 'M' : 'Rp ' + Math.round(totalJuta) + 'Jt';
+  document.getElementById('stat-dana').textContent = dana;
   render();
 })();
 

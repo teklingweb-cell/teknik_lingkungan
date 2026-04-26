@@ -25,19 +25,19 @@
   <div class="container" style="padding:40px 24px;">
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;" class="stats-mini">
       <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">340+</div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);" id="stat-total">–</div>
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Total Penghargaan</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">48</div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);" id="stat-intl">–</div>
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Penghargaan Internasional</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">12</div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);" id="stat-akreditasi">–</div>
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Akreditasi A/Unggul</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">2.400+</div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);" id="stat-prestasi">–</div>
         <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Alumni Berprestasi</div>
       </div>
     </div>
@@ -69,6 +69,11 @@ let allData = [], activeFilter = 'all';
   const { data, error } = await sb.from('pencapaian').select('*').order('year', { ascending: false });
   if (error) { document.getElementById('achievementGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
   allData = data;
+
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-intl').textContent = data.filter(d => d.category === 'Ranking').length;
+  document.getElementById('stat-akreditasi').textContent = data.filter(d => d.category === 'Akreditasi').length;
+  document.getElementById('stat-prestasi').textContent = data.filter(d => d.category === 'Prestasi').length;
   render();
 })();
 

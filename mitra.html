@@ -24,10 +24,10 @@
 <div style="background:#fff;border-bottom:1px solid rgba(26,46,30,0.08);">
   <div class="container" style="padding:40px 24px;">
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;" class="mitra-stats">
-      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">38+</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Total Mitra</div></div>
-      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">12</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Mitra Internasional</div></div>
-      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">15</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">MoU Aktif</div></div>
-      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">8</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Tahun Kemitraan Rata-rata</div></div>
+      <div style="text-align:center;"><div id="stat-total" style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">–</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Total Mitra</div></div>
+      <div style="text-align:center;"><div id="stat-intl" style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">–</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Mitra Internasional</div></div>
+      <div style="text-align:center;"><div id="stat-mou" style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">–</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">MoU Aktif</div></div>
+      <div style="text-align:center;"><div id="stat-tahun" style="font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--gold-light);">–</div><div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-top:4px;">Tahun Kemitraan Rata-rata</div></div>
     </div>
   </div>
 </div>
@@ -56,6 +56,16 @@ let allData = [], activeFilter = 'all';
   const { data, error } = await sb.from('mitra').select('*').order('since_year', { ascending: true });
   if (error) { document.getElementById('mitraGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
   allData = data;
+
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-intl').textContent = data.filter(d => d.category === 'Internasional').length;
+  document.getElementById('stat-mou').textContent = data.length; // all entries are active partnerships
+  const withYear = data.filter(d => d.since_year);
+  if (withYear.length) {
+    const currentYear = new Date().getFullYear();
+    const avgYears = Math.round(withYear.reduce((s,d) => s + (currentYear - d.since_year), 0) / withYear.length);
+    document.getElementById('stat-tahun').textContent = avgYears;
+  }
   render();
 })();
 
