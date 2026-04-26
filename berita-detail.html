@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Berita – Universitas Lorem Ipsum</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Article hero ── */
+    .article-hero {
+      background: var(--navy);
+      padding: 80px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .article-hero-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 70% 40%, rgba(78,140,90,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .article-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: rgba(242,245,239,0.45);
+      text-decoration: none;
+      font-family: var(--font-body);
+      margin-bottom: 28px;
+      transition: color 0.2s;
+    }
+    .article-back:hover { color: rgba(242,245,239,0.85); }
+    .article-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .article-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .article-byline {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.8rem;
+      color: rgba(242,245,239,0.45);
+      font-family: var(--font-body);
+      flex-wrap: wrap;
+    }
+    .article-byline span { display: flex; align-items: center; gap: 5px; }
+
+    /* ── Cover image ── */
+    .article-cover-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .article-cover {
+      width: 100%;
+      max-height: 460px;
+      object-fit: cover;
+      border-radius: 16px;
+      display: block;
+      margin-top: -2px;
+      box-shadow: 0 24px 64px rgba(14,22,40,0.18);
+    }
+    .article-cover-placeholder {
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(135deg, rgba(26,46,30,0.1), rgba(26,46,30,0.2));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 300;
+      color: rgba(26,46,30,0.15);
+    }
+
+    /* ── Article body ── */
+    .article-body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .article-excerpt {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.75;
+      border-left: 3px solid var(--green);
+      padding-left: 20px;
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+    .article-divider {
+      border: none;
+      border-top: 1px solid rgba(26,46,30,0.1);
+      margin: 36px 0;
+    }
+    .article-footer-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(26,46,30,0.1);
+      margin-top: 32px;
+    }
+    .article-author-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cream);
+      border: 1px solid rgba(26,46,30,0.1);
+      border-radius: 99px;
+      padding: 8px 16px 8px 8px;
+    }
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cream);
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .author-name { font-size: 0.82rem; font-weight: 600; color: var(--navy); font-family: var(--font-body); }
+    .author-role { font-size: 0.72rem; color: var(--muted); font-family: var(--font-body); }
+
+    /* ── Related/back section ── */
+    .article-nav-bar {
+      background: var(--cream);
+      border-top: 1px solid rgba(26,46,30,0.08);
+      padding: 24px;
+    }
+    .article-nav-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Loading / error states ── */
+    .state-wrap {
+      max-width: 780px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .state-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.3; }
+    .state-title { font-family: var(--font-display); font-size: 1.4rem; color: var(--navy); margin-bottom: 8px; }
+    .state-sub { font-size: 0.875rem; color: var(--muted); font-family: var(--font-body); }
+
+    /* ── Skeleton ── */
+    .skeleton { background: linear-gradient(90deg, #e8ede8 25%, #f2f5f2 50%, #e8ede8 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+    @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+    .sk-block { display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar"><div class="nav-inner"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">U</div><div class="nav-logo-text"><div class="nav-logo-name">Universitas</div><div class="nav-logo-sub">Lorem Ipsum</div></div></a><ul class="nav-links"><li><a href="index.html">Beranda</a></li><li><a href="penelitian.html">Penelitian</a></li><li><a href="pencapaian.html">Pencapaian</a></li><li><a href="fasilitas.html">Fasilitas</a></li><li><a href="profile.html">Profil</a></li><li><a href="staf.html">Staf &amp; Alumni</a></li><li><a href="mitra.html">Mitra</a></li><li><a href="berita.html" class="active">Berita</a></li><li><a href="kontak.html">Kontak</a></li></ul><div class="nav-right"><a href="#" class="nav-cta">Portal Mahasiswa</a><button class="hamburger"><span></span><span></span><span></span></button></div></div></nav>
+<div class="mobile-overlay"><div class="mobile-drawer"><a href="index.html">Beranda</a><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a><a href="fasilitas.html">Fasilitas</a><a href="profile.html">Profil</a><a href="staf.html">Staf &amp; Alumni</a><a href="mitra.html">Mitra</a><a href="berita.html">Berita</a><a href="kontak.html">Kontak</a></div></div>
+
+<!-- ── Loading skeleton ── -->
+<div id="loadingState">
+  <section class="article-hero" style="min-height:280px;">
+    <div class="article-hero-glow"></div>
+    <div class="article-hero-inner">
+      <div class="skeleton sk-block" style="width:100px;height:14px;margin-bottom:28px;"></div>
+      <div class="skeleton sk-block" style="width:80px;height:22px;border-radius:99px;margin-bottom:20px;"></div>
+      <div class="skeleton sk-block" style="width:90%;height:42px;"></div>
+      <div class="skeleton sk-block" style="width:60%;height:28px;"></div>
+      <div class="skeleton sk-block" style="width:200px;height:14px;margin-top:12px;"></div>
+    </div>
+  </section>
+  <div class="article-cover-wrap" style="margin-top:0;">
+    <div class="skeleton" style="width:100%;height:300px;border-radius:16px;"></div>
+  </div>
+  <div class="article-body">
+    <div class="skeleton sk-block" style="width:100%;height:18px;"></div>
+    <div class="skeleton sk-block" style="width:95%;height:18px;"></div>
+    <div class="skeleton sk-block" style="width:80%;height:18px;"></div>
+  </div>
+</div>
+
+<!-- ── Article content (populated by JS) ── -->
+<div id="articleState" style="display:none;">
+  <section class="article-hero">
+    <div class="article-hero-glow"></div>
+    <div class="article-hero-inner">
+      <a href="berita.html" class="article-back">
+        ← Kembali ke Berita
+      </a>
+      <div class="article-meta-row">
+        <span class="tag" id="aCategory"></span>
+        <span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);" id="aDate"></span>
+      </div>
+      <div class="article-title" id="aTitle"></div>
+      <div class="article-byline">
+        <span>👤 <span id="aAuthor"></span></span>
+      </div>
+    </div>
+  </section>
+
+  <div id="aCoverWrap" class="article-cover-wrap"></div>
+
+  <div class="article-body">
+    <p class="article-excerpt" id="aExcerpt"></p>
+    <hr class="article-divider">
+    <p style="font-family:var(--font-body);font-size:0.95rem;color:var(--muted);line-height:1.8;text-align:center;padding:40px 0;opacity:0.6;">
+      — Konten lengkap artikel tersedia di sistem manajemen konten —
+    </p>
+    <div class="article-footer-meta">
+      <div class="article-author-pill">
+        <div class="author-avatar" id="aAuthorInitial"></div>
+        <div>
+          <div class="author-name" id="aAuthorName"></div>
+          <div class="author-role">Penulis / Unit</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="tag" id="aCategory2"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Not found state ── -->
+<div id="errorState" style="display:none;">
+  <section class="article-hero" style="min-height:200px;">
+    <div class="article-hero-glow"></div>
+  </section>
+  <div class="state-wrap">
+    <div class="state-icon">📭</div>
+    <div class="state-title">Berita tidak ditemukan</div>
+    <div class="state-sub" style="margin-bottom:24px;">Artikel yang Anda cari tidak ada atau telah dihapus.</div>
+    <a href="berita.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--navy);color:var(--cream);border-radius:8px;text-decoration:none;font-family:var(--font-body);font-size:0.875rem;font-weight:500;">← Kembali ke Berita</a>
+  </div>
+</div>
+
+<!-- ── Bottom nav bar ── -->
+<div class="article-nav-bar" id="navBar" style="display:none;">
+  <div class="article-nav-inner">
+    <a href="berita.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.83rem;color:var(--muted);text-decoration:none;font-family:var(--font-body);transition:color 0.2s;" onmouseover="this.style.color='var(--navy)'" onmouseout="this.style.color='var(--muted)'">
+      ← Semua Berita
+    </a>
+    <span id="navCategory"></span>
+  </div>
+</div>
+
+<footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Universitas Lorem Ipsum.</span><a href="berita.html" style="font-size:0.75rem;color:rgba(242,245,239,0.3);text-decoration:none;font-family:var(--font-body);">← Berita</a></div></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="main.js"></script>
+<script>
+(async function () {
+  var params = new URLSearchParams(window.location.search);
+  var id = parseInt(params.get('id'));
+
+  if (!id) { showError(); return; }
+
+  var res = await sb.from('news').select('*').eq('id', id).single();
+  if (res.error || !res.data) { showError(); return; }
+
+  var d = res.data;
+
+  // Update page title
+  document.title = d.title + ' – Universitas Lorem Ipsum';
+
+  // Populate hero
+  document.getElementById('aCategory').textContent  = d.category;
+  document.getElementById('aCategory2').textContent = d.category;
+  document.getElementById('aDate').textContent       = fmtDate(d.date);
+  document.getElementById('aTitle').textContent      = d.title;
+  document.getElementById('aAuthor').textContent     = d.author;
+  document.getElementById('aExcerpt').textContent    = d.excerpt;
+  document.getElementById('aAuthorName').textContent = d.author;
+  document.getElementById('navCategory').innerHTML   = '<span class="tag">'+d.category+'</span>';
+
+  // Author initial avatar
+  var initial = (d.author || '?').split(' ').map(function(w){ return w[0]; }).slice(0,2).join('').toUpperCase();
+  document.getElementById('aAuthorInitial').textContent = initial;
+
+  // Cover image
+  var coverWrap = document.getElementById('aCoverWrap');
+  if (d.image_url) {
+    var img = document.createElement('img');
+    img.src = d.image_url;
+    img.alt = d.title;
+    img.className = 'article-cover';
+    img.loading = 'lazy';
+    coverWrap.appendChild(img);
+  } else {
+    coverWrap.innerHTML = '<div class="article-cover-placeholder">'+d.id+'</div>';
+  }
+
+  // Show article
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('articleState').style.display = '';
+  document.getElementById('navBar').style.display = '';
+
+  // Animate in
+  document.getElementById('aTitle').classList.add('fade-up');
+  setTimeout(function(){ document.getElementById('aTitle').classList.add('visible'); }, 100);
+})();
+
+function fmtDate(str) {
+  if (!str) return '';
+  var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+  var p = str.split('-');
+  return parseInt(p[2]) + ' ' + months[parseInt(p[1])-1] + ' ' + p[0];
+}
+
+function showError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = '';
+}
+</script>
+</body>
+</html>

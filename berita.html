@@ -60,9 +60,12 @@
     if (!item) { wrap.innerHTML = ''; return; }
     wrap.style.display = visible ? '' : 'none';
     if (!visible) return;
-    wrap.innerHTML = '<a href="#" class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'
-      + '<div class="featured-thumb">'
-      + '<span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">'+item.id+'</span>'
+    var featImg = item.image_url
+      ? '<img src="'+item.image_url+'" alt="'+item.title+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">'
+      : '<span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">'+item.id+'</span>';
+    wrap.innerHTML = '<a href="berita-detail.html?id='+item.id+'" class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'
+      + '<div class="featured-thumb" style="position:relative;overflow:hidden;">'
+      + featImg
       + '<span class="featured-badge">Featured</span>'
       + '</div>'
       + '<div class="featured-body">'
@@ -79,9 +82,12 @@
   }
 
   function newsCardHTML(item) {
+    var thumb = item.image_url
+      ? '<img src="'+item.image_url+'" alt="'+item.title+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;">'
+      : '<span class="news-thumb-num">'+item.id+'</span>';
     return '<div class="research-card-wrap" data-cat="'+item.category+'" style="display:flex;">'
-      + '<a href="#" class="news-card" style="width:100%;"><article>'
-      + '<div class="news-thumb"><span class="news-thumb-num">'+item.id+'</span></div>'
+      + '<a href="berita-detail.html?id='+item.id+'" class="news-card" style="width:100%;"><article>'
+      + '<div class="news-thumb">'+thumb+'</div>'
       + '<div class="news-body">'
       + '<div class="news-meta"><span class="tag">'+item.category+'</span><span class="news-date">'+fmtDate(item.date)+'</span></div>'
       + '<div class="news-title">'+item.title+'</div>'
