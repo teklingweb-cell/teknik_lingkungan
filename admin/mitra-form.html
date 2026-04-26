@@ -52,6 +52,23 @@
       .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
       .mob-menu-btn { display: flex; }
     }
+  
+    /* GDrive image field */
+    .gdrive-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .gdrive-input-row { display: flex; gap: 8px; }
+    .gdrive-input-row .form-input, .gdrive-input-row input { flex: 1; }
+    .gdrive-clear-btn { padding: 0 12px; border: 1px solid var(--border); background: var(--cream); border-radius: 8px; cursor: pointer; font-size: 0.8rem; color: var(--muted); white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+    .gdrive-clear-btn:hover { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
+    .gdrive-preview { display: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fafaf8; position: relative; }
+    .gdrive-preview.show { display: block; }
+    .gdrive-preview img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
+    .gdrive-preview-label { position: absolute; top: 8px; right: 8px; background: rgba(26,46,30,0.7); color: #fff; font-size: 0.65rem; padding: 3px 8px; border-radius: 20px; }
+    .gdrive-hint { font-size: 0.72rem; color: var(--muted); }
+    .gdrive-hint a { color: var(--green); text-decoration: none; }
+    .gdrive-hint a:hover { text-decoration: underline; }
+    .gdrive-status { font-size: 0.72rem; font-weight: 500; }
+    .gdrive-status.ok  { color: #15803d; }
+    .gdrive-status.err { color: var(--danger); }
   </style>
 </head>
 <body>
@@ -114,6 +131,22 @@
           <span class="form-hint">Opsional</span>
         </div>
       </div>
+      <div class="form-group gdrive-wrap">
+        <label>Logo Mitra (Google Drive)</label>
+        <div class="gdrive-input-row">
+          <input class="form-input" id="f_logo_url_raw" placeholder="Paste link Google Drive di sini…" autocomplete="off">
+          <button type="button" class="gdrive-clear-btn" onclick="clearGDriveField('f_logo_url_raw','f_logo_url_preview','f_logo_url_status','f_logo_url')">✕ Hapus</button>
+        </div>
+        <input type="hidden" id="f_logo_url">
+        <div class="gdrive-preview" id="f_logo_url_preview">
+          <img src="" alt="Preview" loading="lazy">
+          <span class="gdrive-preview-label">Preview</span>
+        </div>
+        <span class="gdrive-status" id="f_logo_url_status"></span>
+        <span class="gdrive-hint">
+          Di Google Drive: klik kanan file → <strong>Bagikan</strong> → <strong>Siapa saja dengan link</strong> → salin link.
+        </span>
+      </div>
       <div style="display:flex;gap:12px;margin-top:8px;">
         <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
         <a href="/admin/mitra" class="btn btn-ghost">Batal</a>
@@ -138,8 +171,79 @@ let editId = null;
     document.getElementById('f_description').value = data.description || '';
     document.getElementById('f_since_year').value  = data.since_year || '';
     document.getElementById('f_website_url').value = data.website_url || '';
+    if (data.logo_url) {
+      document.getElementById('f_logo_url_raw').value = data.logo_url;
+      initGDriveField('f_logo_url_raw', 'f_logo_url_preview', 'f_logo_url_status', 'f_logo_url');
+      document.getElementById('f_logo_url').value = data.logo_url;
+    }
   }
 })();
+
+// ── Google Drive URL helper ───────────────────────────────
+function parseGDriveUrl(raw) {
+  if (!raw) return null;
+  raw = raw.trim();
+  // Already a direct uc?export or thumbnail URL
+  if (raw.includes('drive.google.com/uc') || raw.includes('drive.google.com/thumbnail') || raw.includes('lh3.googleusercontent.com')) return raw;
+  // file/d/FILE_ID
+  let m = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  // id=FILE_ID
+  m = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  // open?id=FILE_ID
+  m = raw.match(/open\?id=([a-zA-Z0-9_-]{10,})/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800';
+  return null;
+}
+
+function initGDriveField(inputId, previewId, statusId, storedId) {
+  const inp    = document.getElementById(inputId);
+  const pre    = document.getElementById(previewId);
+  const status = document.getElementById(statusId);
+  const stored = document.getElementById(storedId);
+  const img    = pre ? pre.querySelector('img') : null;
+
+  function update() {
+    const direct = parseGDriveUrl(inp.value);
+    if (stored) stored.value = direct || '';
+    if (!direct) {
+      if (pre)    { pre.classList.remove('show'); }
+      if (status) { status.textContent = ''; }
+      return;
+    }
+    if (img) {
+      img.src = direct;
+      img.onerror = () => {
+        pre.classList.remove('show');
+        if (status) { status.className = 'gdrive-status err'; status.textContent = '✗ Gambar tidak bisa dimuat. Pastikan link bisa diakses publik.'; }
+      };
+      img.onload = () => {
+        pre.classList.add('show');
+        if (status) { status.className = 'gdrive-status ok'; status.textContent = '✓ Gambar berhasil dimuat'; }
+      };
+    }
+  }
+
+  inp.addEventListener('input', update);
+  inp.addEventListener('paste', () => setTimeout(update, 50));
+
+  // Init if value already set
+  if (inp.value) update();
+
+  return { update };
+}
+
+function clearGDriveField(inputId, previewId, statusId, storedId) {
+  document.getElementById(inputId).value = '';
+  const pre = document.getElementById(previewId);
+  if (pre) pre.classList.remove('show');
+  const status = document.getElementById(statusId);
+  if (status) status.textContent = '';
+  const stored = document.getElementById(storedId);
+  if (stored) stored.value = '';
+}
+
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
 
 async function doSave() {
@@ -156,7 +260,8 @@ async function doSave() {
 
   const btn = document.getElementById('saveBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan…';
-  const payload = { name, category, description, since_year, website_url };
+  const logo_url = document.getElementById('f_logo_url').value || null;
+  const payload = { name, category, description, since_year, website_url, logo_url };
   let error;
   if (editId) {
     ({ error } = await sb.from('mitra').update(payload).eq('id', editId));
