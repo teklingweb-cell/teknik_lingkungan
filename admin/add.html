@@ -83,11 +83,11 @@
     <div><div class="logo-text">Universitas</div><div class="logo-sub">Admin Panel</div></div>
   </div>
   <div class="nav-section">Menu</div>
-  <a class="nav-item" href="index.html">
+  <a class="nav-item" href="/admin">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
     Dashboard
   </a>
-  <a class="nav-item active" href="add.html">
+  <a class="nav-item active" href="/admin/add">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     Tambah Berita
   </a>
@@ -106,7 +106,7 @@
 <div class="main">
   <header class="topbar">
     <div class="topbar-title" id="pageTitle">Tambah Berita Baru</div>
-    <a href="index.html" class="btn btn-ghost">← Kembali</a>
+    <a href="/admin" class="btn btn-ghost">← Kembali</a>
   </header>
 
   <div class="content">
@@ -164,7 +164,7 @@
       </div>
 
       <div class="form-footer">
-        <a href="index.html" class="btn btn-ghost">Batal</a>
+        <a href="/admin" class="btn btn-ghost">Batal</a>
         <button class="btn btn-green" id="submitBtn" onclick="doSubmit()">✚ Tambahkan Berita</button>
       </div>
     </div>
@@ -177,7 +177,7 @@ let editId = null;
 // ── Auth guard + init ─────────────────────────────────────
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
+  if (!session) { window.location.href = '/admin/login'; return; }
 
   // Set today as default date
   document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
@@ -192,7 +192,7 @@ let editId = null;
 
 async function loadEditItem() {
   const { data, error } = await sb.from('news').select('*').eq('id', editId).single();
-  if (error || !data) { window.location.href = 'index.html'; return; }
+  if (error || !data) { window.location.href = '/admin'; return; }
 
   document.getElementById('pageTitle').textContent = 'Edit Berita';
   document.getElementById('formTitle').textContent = 'Edit Berita';
@@ -209,7 +209,7 @@ async function loadEditItem() {
 
 async function doLogout() {
   await sb.auth.signOut();
-  window.location.href = 'login.html';
+  window.location.href = '/admin/login';
 }
 
 // ── Submit ────────────────────────────────────────────────

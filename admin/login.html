@@ -86,7 +86,7 @@
   // Redirect if already logged in
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) window.location.href = 'index.html';
+    if (session) window.location.href = '/admin';
   })();
 
   async function doLogin() {
@@ -109,7 +109,7 @@
       errBox.classList.add('alert-error');
       btn.disabled = false; btn.textContent = 'Masuk';
     } else {
-      window.location.href = 'index.html';
+      window.location.href = '/admin';
     }
   }
 

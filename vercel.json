@@ -2,14 +2,16 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/admin",            "destination": "/admin/index.html" },
-    { "source": "/admin/staff",      "destination": "/admin/staff.html" },
-    { "source": "/admin/staff-form", "destination": "/admin/staff-form.html" },
-    { "source": "/admin/penelitian", "destination": "/admin/penelitian.html" },
-    { "source": "/admin/penelitian-form", "destination": "/admin/penelitian-form.html" },
-    { "source": "/admin/pencapaian", "destination": "/admin/pencapaian.html" },
-    { "source": "/admin/pencapaian-form", "destination": "/admin/pencapaian-form.html" },
-    { "source": "/admin/mitra",      "destination": "/admin/mitra.html" },
-    { "source": "/admin/mitra-form", "destination": "/admin/mitra-form.html" }
+    { "source": "/admin",                  "destination": "/admin/index.html" },
+    { "source": "/admin/add",              "destination": "/admin/add.html" },
+    { "source": "/admin/login",            "destination": "/admin/login.html" },
+    { "source": "/admin/staff",            "destination": "/admin/staff.html" },
+    { "source": "/admin/staff-form",       "destination": "/admin/staff-form.html" },
+    { "source": "/admin/penelitian",       "destination": "/admin/penelitian.html" },
+    { "source": "/admin/penelitian-form",  "destination": "/admin/penelitian-form.html" },
+    { "source": "/admin/pencapaian",       "destination": "/admin/pencapaian.html" },
+    { "source": "/admin/pencapaian-form",  "destination": "/admin/pencapaian-form.html" },
+    { "source": "/admin/mitra",            "destination": "/admin/mitra.html" },
+    { "source": "/admin/mitra-form",       "destination": "/admin/mitra-form.html" }
   ]
 }

@@ -48,11 +48,11 @@
 <aside class="sidebar">
   <div class="sidebar-logo"><div class="logo-icon">U</div><div><div class="logo-text">Universitas</div><div class="logo-sub">Admin Panel</div></div></div>
   <div class="nav-section">Konten</div>
-  <a class="nav-item" href="index.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Berita</a>
-  <a class="nav-item" href="staff.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>Staf & Alumni</a>
-  <a class="nav-item" href="penelitian.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>Penelitian</a>
-  <a class="nav-item active" href="pencapaian.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Pencapaian</a>
-  <a class="nav-item" href="mitra.html"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mitra</a>
+  <a class="nav-item" href="/admin"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Berita</a>
+  <a class="nav-item" href="/admin/staff"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>Staf & Alumni</a>
+  <a class="nav-item" href="/admin/penelitian"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>Penelitian</a>
+  <a class="nav-item active" href="/admin/pencapaian"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>Pencapaian</a>
+  <a class="nav-item" href="/admin/mitra"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mitra</a>
   <div class="sidebar-footer">
     <a class="back-link" href="../pencapaian.html"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Lihat Situs</a>
     <button class="logout-btn" onclick="doLogout()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Keluar</button>
@@ -62,7 +62,7 @@
 <div class="main">
   <header class="topbar">
     <div class="topbar-title" id="pageTitle">Tambah Pencapaian</div>
-    <a href="pencapaian.html" class="btn btn-ghost">← Kembali</a>
+    <a href="/admin/pencapaian" class="btn btn-ghost">← Kembali</a>
   </header>
   <div class="content">
     <div id="alertBox" style="display:none;"></div>
@@ -103,7 +103,7 @@
       </div>
       <div style="display:flex;gap:12px;margin-top:8px;">
         <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
-        <a href="pencapaian.html" class="btn btn-ghost">Batal</a>
+        <a href="/admin/pencapaian" class="btn btn-ghost">Batal</a>
       </div>
     </div>
   </div>
@@ -113,7 +113,7 @@
 let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
+  if (!session) { window.location.href = '/admin/login'; return; }
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));
@@ -128,7 +128,7 @@ let editId = null;
     document.getElementById('iconPreview').textContent = data.icon || '🏆';
   }
 })();
-async function doLogout() { await sb.auth.signOut(); window.location.href = 'login.html'; }
+async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
 
 async function doSave() {
   const title       = document.getElementById('f_title').value.trim();
@@ -154,7 +154,7 @@ async function doSave() {
   }
   btn.disabled = false; btn.textContent = 'Simpan';
   if (error) { showAlert('Gagal menyimpan: ' + error.message); return; }
-  window.location.href = 'pencapaian.html?msg=' + (editId ? 'updated' : 'added');
+  window.location.href = '/admin/pencapaian?msg=' + (editId ? 'updated' : 'added');
 }
 function showAlert(msg) {
   const box = document.getElementById('alertBox');
