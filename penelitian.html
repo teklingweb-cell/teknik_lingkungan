@@ -52,13 +52,13 @@
 <!-- PENELITIAN LIST -->
 <section class="section" style="background:var(--cream);">
   <div class="container">
-    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;" class="fade-up" id="filterBar">
-      <button class="filter-chip active" data-cat="all">Semua</button>
-      <button class="filter-chip" data-cat="Sains &amp; Teknologi">Sains &amp; Teknologi</button>
-      <button class="filter-chip" data-cat="Lingkungan">Lingkungan</button>
-      <button class="filter-chip" data-cat="Kesehatan">Kesehatan</button>
-      <button class="filter-chip" data-cat="Sosial &amp; Humaniora">Sosial &amp; Humaniora</button>
-      <button class="filter-chip" data-cat="Ekonomi">Ekonomi</button>
+    <div class="tab-bar fade-up" id="filterBar" style="margin-bottom:36px;">
+      <button class="tab-btn active" data-cat="all">Semua</button>
+      <button class="tab-btn" data-cat="Sains &amp; Teknologi">Sains &amp; Teknologi</button>
+      <button class="tab-btn" data-cat="Lingkungan">Lingkungan</button>
+      <button class="tab-btn" data-cat="Kesehatan">Kesehatan</button>
+      <button class="tab-btn" data-cat="Sosial &amp; Humaniora">Sosial &amp; Humaniora</button>
+      <button class="tab-btn" data-cat="Ekonomi">Ekonomi</button>
     </div>
     <div id="researchGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;min-height:200px;"></div>
   </div>
@@ -77,9 +77,9 @@ const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Keseha
   render();
 })();
 
-document.querySelectorAll('.filter-chip').forEach(btn => {
+document.querySelectorAll('.tab-btn[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn[data-cat]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.cat;
     render();

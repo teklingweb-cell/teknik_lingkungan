@@ -48,13 +48,13 @@
 <!-- ACHIEVEMENTS -->
 <section class="section">
   <div class="container">
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;" class="fade-up">
-      <button class="filter-chip active" data-cat="all">Semua</button>
-      <button class="filter-chip" data-cat="Riset">Riset</button>
-      <button class="filter-chip" data-cat="Akreditasi">Akreditasi</button>
-      <button class="filter-chip" data-cat="Prestasi">Prestasi</button>
-      <button class="filter-chip" data-cat="Hibah">Hibah</button>
-      <button class="filter-chip" data-cat="Ranking">Ranking</button>
+    <div class="tab-bar fade-up" style="margin-bottom:36px;">
+      <button class="tab-btn active" data-cat="all">Semua</button>
+      <button class="tab-btn" data-cat="Riset">Riset</button>
+      <button class="tab-btn" data-cat="Akreditasi">Akreditasi</button>
+      <button class="tab-btn" data-cat="Prestasi">Prestasi</button>
+      <button class="tab-btn" data-cat="Hibah">Hibah</button>
+      <button class="tab-btn" data-cat="Ranking">Ranking</button>
     </div>
     <div id="achievementGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;min-height:200px;"></div>
   </div>
@@ -72,9 +72,9 @@ let allData = [], activeFilter = 'all';
   render();
 })();
 
-document.querySelectorAll('.filter-chip').forEach(btn => {
+document.querySelectorAll('.tab-btn[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn[data-cat]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.cat;
     render();
