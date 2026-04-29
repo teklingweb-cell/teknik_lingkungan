@@ -111,19 +111,7 @@
           <input class="form-input" id="f_year" type="number" min="2000" max="2100" placeholder="2024">
         </div>
       </div>
-      <div class="form-group">
-        <label>Ikon (Emoji)</label>
-        <div style="display:flex;gap:12px;align-items:center;">
-          <div class="icon-preview" id="iconPreview"></div>
-          <input class="form-input" id="f_icon" placeholder="" maxlength="8" oninput="document.getElementById('iconPreview').textContent=this.value||''">
-        </div>
-        <span class="form-hint">Kode ikon atau singkatan kategori (opsional)</span>
-      </div>
-      <div style="display:flex;gap:12px;margin-top:8px;">
-        <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
-        <a href="/admin/pencapaian" class="btn btn-ghost">Batal</a>
-      </div>
-    </div>
+      
   </div>
 </div>
 
@@ -142,8 +130,6 @@ let editId = null;
     document.getElementById('f_description').value = data.description || '';
     document.getElementById('f_category').value    = data.category || 'Riset';
     document.getElementById('f_year').value        = data.year || '';
-    document.getElementById('f_icon').value        = data.icon || '';
-    document.getElementById('iconPreview').textContent = data.icon || '';
   }
 })();
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
@@ -153,7 +139,7 @@ async function doSave() {
   const description = document.getElementById('f_description').value.trim();
   const category    = document.getElementById('f_category').value;
   const year        = parseInt(document.getElementById('f_year').value);
-  const icon        = document.getElementById('f_icon').value.trim() || '';
+  const icon        =
 
   const errors = [];
   if (!title)       errors.push('Judul wajib diisi.');
