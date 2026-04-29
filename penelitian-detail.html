@@ -426,6 +426,7 @@ function renderHero(d) {
   const statusClass = statusRaw === 'selesai' ? 'selesai' : statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
   const statusLabel = d.status || 'Aktif';
   const shortTitle = d.title.length > 50 ? d.title.substring(0, 50) + '…' : d.title;
+  const fundingMeta = d.funding
     ? '<div class="detail-meta-item"><span class="icon">💰</span><span>' + esc(d.funding) + '</span></div>'
     : '';
 
