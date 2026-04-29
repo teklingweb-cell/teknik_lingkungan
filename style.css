@@ -299,7 +299,7 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   position: relative;
   overflow: hidden;
   text-align: center;
-  padding: 80px 24px 60px;
+  padding: 80px 24px 140px;
 }
 .hero-bg-glow-1 {
   position: absolute;
@@ -383,7 +383,7 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
 }
 .hero-scroll {
   position: absolute;
-  bottom: 40px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -391,6 +391,8 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   align-items: center;
   gap: 8px;
   animation: fadeIn 1s 1s ease both;
+  pointer-events: none;
+  z-index: 2;
 }
 .hero-scroll span {
   font-size: 0.6rem;
@@ -1583,4 +1585,39 @@ textarea.form-input { resize: none; }
   .hero-buttons .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
   .featured-body { padding: 20px; }
   .cta-banner-title { font-size: 1.6rem; }
+}
+
+/* ─── HERO RESPONSIVE ─── */
+
+/* Hide scroll indicator when viewport is too short (zoomed in / small screen) */
+@media (max-height: 680px) {
+  .hero-scroll { display: none; }
+  .hero { padding-bottom: 60px; }
+}
+
+/* Medium height — shrink indicator */
+@media (max-height: 820px) and (min-height: 681px) {
+  .hero-scroll { bottom: 16px; }
+  .hero-scroll-line { height: 20px; }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+  .hero { padding: 100px 20px 120px; }
+  .hero-title { font-size: clamp(2rem, 10vw, 3rem); }
+  .hero-subtitle { font-size: 0.9rem; }
+  .hero-logo-badge { padding: 8px 14px 8px 8px; gap: 10px; }
+  .hero-untan-logo { width: 36px; height: 36px; }
+  .hero-badge { font-size: 0.6rem; letter-spacing: 0.12em; padding: 5px 12px; margin-bottom: 20px; }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .hero { padding: 100px 32px 130px; }
+  .hero-title { font-size: clamp(2.2rem, 8vw, 3.8rem); }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) {
+  .hero-content { max-width: 900px; }
 }
