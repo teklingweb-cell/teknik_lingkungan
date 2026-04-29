@@ -63,6 +63,11 @@
       color: rgba(242,245,239,0.6);
       border: 1px solid rgba(148,163,184,0.2);
     }
+    .detail-status.wip {
+      background: rgba(217,119,6,0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(217,119,6,0.3);
+    }
     .detail-status::before {
       content: '';
       width: 6px;
@@ -417,10 +422,10 @@ function showError() {
 }
 
 function renderHero(d) {
-  const statusClass = (d.status || '').toLowerCase() === 'selesai' ? 'selesai' : 'aktif';
+  const statusRaw   = (d.status || '').toLowerCase();
+  const statusClass = statusRaw === 'selesai' ? 'selesai' : statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
   const statusLabel = d.status || 'Aktif';
   const shortTitle = d.title.length > 50 ? d.title.substring(0, 50) + '…' : d.title;
-  const fundingMeta = d.funding
     ? '<div class="detail-meta-item"><span class="icon">💰</span><span>' + esc(d.funding) + '</span></div>'
     : '';
 
@@ -455,7 +460,8 @@ function renderHero(d) {
 
 function renderBody(d) {
   const keywords = deriveKeywords(d);
-  const statusClass = (d.status || '').toLowerCase() === 'selesai' ? 'selesai' : 'aktif';
+  const statusRaw2  = (d.status || '').toLowerCase();
+  const statusClass = statusRaw2 === 'selesai' ? 'selesai' : statusRaw2 === 'sedang berjalan' ? 'wip' : 'aktif';
 
   // Pre-compute all parts to avoid nested template literals
   var pubCard;
