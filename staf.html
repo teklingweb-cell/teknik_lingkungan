@@ -30,7 +30,7 @@
           <button class="tab-btn" data-tab="staf">Staf <span class="tab-count" id="count-staf">–</span></button>
         </div>
         <div class="search-wrap" style="position:relative;">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon"></span>
           <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari..." style="width:220px;padding-left:36px;" oninput="filterCards()">
         </div>
       </div>
@@ -100,7 +100,7 @@ function render() {
         <div class="staff-footer">
           <span class="staff-pubs">${s.publications_count||0} Publikasi</span>
           <div class="staff-actions">
-            ${s.email ? `<a href="mailto:${esc(s.email)}" class="staff-btn">✉</a>` : ''}
+            ${s.email ? `<a href="mailto:${esc(s.email)}" class="staff-btn"></a>` : ''}
             ${s.linkedin_url ? `<a href="${esc(s.linkedin_url)}" target="_blank" class="staff-btn">in</a>` : '<button class="staff-btn" disabled style="opacity:0.3;">in</button>'}
           </div>
         </div>
@@ -118,7 +118,7 @@ function render() {
         <div style="margin-top:10px;font-size:0.85rem;color:var(--charcoal);font-family:var(--font-body);">${esc(s.position)}</div>
         <div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">${esc(s.bidang)}</div>
         <div class="staff-footer" style="margin-top:12px;"><span></span><div class="staff-actions">
-          ${s.email ? `<a href="mailto:${esc(s.email)}" class="staff-btn">✉</a>` : ''}
+          ${s.email ? `<a href="mailto:${esc(s.email)}" class="staff-btn"></a>` : ''}
           ${s.linkedin_url ? `<a href="${esc(s.linkedin_url)}" target="_blank" class="staff-btn">in</a>` : ''}
         </div></div>
       </div>`).join('');

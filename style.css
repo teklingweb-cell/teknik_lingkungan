@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --cream: #f2f5ef;
@@ -11,8 +11,8 @@
   --forest: #2d5a35;
   --moss: #7aab6e;
   --sage: #b8ceaf;
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Merriweather', Georgia, serif;
+  --font-body: 'Inter', Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

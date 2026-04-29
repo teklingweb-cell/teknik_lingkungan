@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
     :root {
       --navy:#1a2e1e;--green:#4e8c5a;--light:#68b077;
       --cream:#f2f5ef;--white:#ffffff;--border:rgba(26,46,30,0.1);
@@ -161,7 +161,7 @@
 
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
-    <div class="modal-icon">🗑️</div>
+    <div class="modal-icon"></div>
     <div class="modal-title">Hapus Data?</div>
     <div class="modal-body" id="deleteModalBody">Tindakan ini tidak dapat dibatalkan.</div>
     <div class="modal-actions">
@@ -209,7 +209,7 @@ function renderTable() {
   document.getElementById('cardCount').textContent = filtered.length + ' item';
 
   if (!filtered.length) {
-    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon">👤</div><div class="empty-title">Belum ada data</div><div class="empty-sub">Klik "Tambah" untuk menambahkan data pertama.</div></div>`;
+    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon"></div><div class="empty-title">Belum ada data</div><div class="empty-sub">Klik "Tambah" untuk menambahkan data pertama.</div></div>`;
     return;
   }
 

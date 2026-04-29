@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
     :root{--navy:#1a2e1e;--green:#4e8c5a;--light:#68b077;--cream:#f2f5ef;--white:#ffffff;--border:rgba(26,46,30,0.1);--text:#2d3a2e;--muted:rgba(45,58,46,0.55);--danger:#dc2626;--dangerBg:#fef2f2;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
@@ -114,10 +114,10 @@
       <div class="form-group">
         <label>Ikon (Emoji)</label>
         <div style="display:flex;gap:12px;align-items:center;">
-          <div class="icon-preview" id="iconPreview">🏆</div>
-          <input class="form-input" id="f_icon" placeholder="🏆" maxlength="8" oninput="document.getElementById('iconPreview').textContent=this.value||'🏆'">
+          <div class="icon-preview" id="iconPreview"></div>
+          <input class="form-input" id="f_icon" placeholder="" maxlength="8" oninput="document.getElementById('iconPreview').textContent=this.value||''">
         </div>
-        <span class="form-hint">Paste emoji dari keyboard atau copy dari emojipedia.org</span>
+        <span class="form-hint">Kode ikon atau singkatan kategori (opsional)</span>
       </div>
       <div style="display:flex;gap:12px;margin-top:8px;">
         <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
@@ -142,8 +142,8 @@ let editId = null;
     document.getElementById('f_description').value = data.description || '';
     document.getElementById('f_category').value    = data.category || 'Riset';
     document.getElementById('f_year').value        = data.year || '';
-    document.getElementById('f_icon').value        = data.icon || '🏆';
-    document.getElementById('iconPreview').textContent = data.icon || '🏆';
+    document.getElementById('f_icon').value        = data.icon || '';
+    document.getElementById('iconPreview').textContent = data.icon || '';
   }
 })();
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
@@ -153,7 +153,7 @@ async function doSave() {
   const description = document.getElementById('f_description').value.trim();
   const category    = document.getElementById('f_category').value;
   const year        = parseInt(document.getElementById('f_year').value);
-  const icon        = document.getElementById('f_icon').value.trim() || '🏆';
+  const icon        = document.getElementById('f_icon').value.trim() || '';
 
   const errors = [];
   if (!title)       errors.push('Judul wajib diisi.');

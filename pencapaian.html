@@ -96,7 +96,6 @@ function render() {
   grid.innerHTML = items.map((item, i) => `
     <div class="achievement-card fade-up${i%4===1?' delay-1':i%4===2?' delay-2':i%4===3?' delay-3':''}">
       <div class="achievement-year">${item.year}</div>
-      <div style="font-size:2.2rem;margin:12px 0 8px;">${esc(item.icon||'🏆')}</div>
       <div class="achievement-title">${esc(item.title)}</div>
       <div class="achievement-desc">${esc(item.description||'')}</div>
       <div style="margin-top:12px;"><span style="font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;padding:3px 10px;border-radius:999px;background:rgba(26,46,30,0.08);color:rgba(45,58,46,0.6);">${esc(item.category)}</span></div>

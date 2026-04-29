@@ -7,14 +7,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
     :root {
       --navy: #1a2e1e; --green: #4e8c5a; --light: #68b077;
       --cream: #f2f5ef; --white: #ffffff; --border: rgba(26,46,30,0.1);
       --text: #2d3a2e; --muted: rgba(45,58,46,0.55); --danger: #dc2626;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+    body { font-family: 'Inter', Arial, sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
     .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 220px; background: var(--navy); display: flex; flex-direction: column; padding: 0 0 24px; z-index: 10; }
     .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -34,7 +34,7 @@
     .main { margin-left: 220px; min-height: 100vh; }
     .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 5; }
     .topbar-title { font-size: 1rem; font-weight: 600; color: var(--navy); }
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-family: 'Inter', Arial, sans-serif; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
     .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text); }
     .btn-ghost:hover { background: var(--cream); }
     .btn-green { background: var(--green); color: #fff; }
@@ -60,7 +60,7 @@
     label .req { color: var(--danger); margin-left: 2px; }
     input[type=text], input[type=date], select, textarea {
       width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
-      font-size: 0.875rem; color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem; color: var(--text); font-family: 'Inter', Arial, sans-serif;
       background: #fff; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(78,140,90,0.15); }
@@ -150,7 +150,7 @@
 
     <div class="form-card">
       <div class="form-header">
-        <div class="form-header-icon" id="formIcon">📝</div>
+        <div class="form-header-icon" id="formIcon"></div>
         <div>
           <div class="form-header-title" id="formTitle">Berita Baru</div>
           <div class="form-header-sub">Isi semua kolom yang bertanda bintang (*)</div>
@@ -217,7 +217,7 @@
         <label class="checkbox-row">
           <input type="checkbox" id="f_show_on_home">
           <div>
-            <div class="checkbox-label">🏠 Tampilkan di Beranda</div>
+            <div class="checkbox-label"> Tampilkan di Beranda</div>
             <div class="checkbox-sub">Berita ini akan muncul di seksi berita halaman utama (maks. 3 berita terbaru yang dipilih).</div>
           </div>
         </label>
@@ -225,7 +225,7 @@
 
       <div class="form-footer">
         <a href="/admin" class="btn btn-ghost">Batal</a>
-        <button class="btn btn-green" id="submitBtn" onclick="doSubmit()">✚ Tambahkan Berita</button>
+        <button class="btn btn-green" id="submitBtn" onclick="doSubmit()">+ Tambahkan Berita</button>
       </div>
     </div>
   </div>
@@ -259,8 +259,8 @@ async function loadEditItem() {
 
   document.getElementById('pageTitle').textContent = 'Edit Berita';
   document.getElementById('formTitle').textContent = 'Edit Berita';
-  document.getElementById('formIcon').textContent  = '✏️';
-  document.getElementById('submitBtn').textContent = '💾 Simpan Perubahan';
+  document.getElementById('formIcon').textContent  = '';
+  document.getElementById('submitBtn').textContent = ' Simpan Perubahan';
 
   document.getElementById('f_title').value    = data.title;
   document.getElementById('f_excerpt').value  = data.excerpt;
@@ -392,7 +392,7 @@ async function doSubmit() {
 
   if (error) {
     btn.disabled = false;
-    btn.textContent = editId ? '💾 Simpan Perubahan' : '✚ Tambahkan Berita';
+    btn.textContent = editId ? ' Simpan Perubahan' : '+ Tambahkan Berita';
     document.getElementById('errList').innerHTML = `<li>Gagal menyimpan: ${error.message}</li>`;
     document.getElementById('errBox').style.display = 'block';
     return;

@@ -113,7 +113,7 @@ if (contactForm) {
     btn.textContent = 'Mengirim...';
     setTimeout(() => {
       btn.disabled = false;
-      btn.innerHTML = '✉ Kirim Pesan';
+      btn.innerHTML = ' Kirim Pesan';
       contactForm.reset();
       if (formSuccess) {
         formSuccess.style.display = 'flex';

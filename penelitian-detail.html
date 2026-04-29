@@ -427,7 +427,7 @@ function renderHero(d) {
   const statusLabel = d.status || 'Aktif';
   const shortTitle = d.title.length > 50 ? d.title.substring(0, 50) + '…' : d.title;
   const fundingMeta = d.funding
-    ? '<div class="detail-meta-item"><span class="icon">💰</span><span>' + esc(d.funding) + '</span></div>'
+    ? '<div class="detail-meta-item"><span class="icon"></span><span>' + esc(d.funding) + '</span></div>'
     : '';
 
   document.getElementById('heroSection').innerHTML =
@@ -441,8 +441,8 @@ function renderHero(d) {
     + '</div>'
     + '<h1 class="detail-title">' + esc(d.title) + '</h1>'
     + '<div class="detail-meta-row">'
-    + '<div class="detail-meta-item"><span class="icon">👤</span><span>' + esc(d.author) + '</span></div>'
-    + '<div class="detail-meta-item"><span class="icon">📅</span><span>' + esc(String(d.year)) + '</span></div>'
+    + '<div class="detail-meta-item"><span class="icon"></span><span>' + esc(d.author) + '</span></div>'
+    + '<div class="detail-meta-item"><span class="icon"></span><span>' + esc(String(d.year)) + '</span></div>'
     + fundingMeta
     + '</div>'
     + '</div>'
@@ -468,7 +468,7 @@ function renderBody(d) {
   var pubCard;
   if (d.publication_url) {
     pubCard = '<div class="detail-pub-card">'
-      + '<div class="detail-pub-card-label">📄 Publikasi &amp; Karya</div>'
+      + '<div class="detail-pub-card-label"> Publikasi &amp; Karya</div>'
       + '<div class="detail-pub-card-title">Akses full text atau data pendukung penelitian ini</div>'
       + '<a href="' + esc(d.publication_url) + '" target="_blank" rel="noopener" class="detail-pub-btn">'
       + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
@@ -478,7 +478,7 @@ function renderBody(d) {
       + '</svg>Buka Publikasi / DOI</a></div>';
   } else {
     pubCard = '<div class="detail-pub-card">'
-      + '<div class="detail-pub-card-label">📄 Publikasi &amp; Karya</div>'
+      + '<div class="detail-pub-card-label"> Publikasi &amp; Karya</div>'
       + '<div class="detail-pub-card-title">Link publikasi</div>'
       + '<p class="detail-pub-unavailable">Link publikasi belum tersedia untuk penelitian ini.</p>'
       + '</div>';
@@ -499,7 +499,7 @@ function renderBody(d) {
 
   var sidebarPubCard = d.publication_url
     ? '<div class="sidebar-card fade-up" style="text-align:center;background:var(--navy);">'
-      + '<div style="font-size:1.8rem;margin-bottom:8px;">🔗</div>'
+      + '<div style="font-size:1.8rem;margin-bottom:8px;"></div>'
       + '<div style="font-family:var(--font-display);font-size:0.95rem;color:rgba(242,245,239,0.8);margin-bottom:14px;">Publikasi tersedia</div>'
       + '<a href="' + esc(d.publication_url) + '" target="_blank" rel="noopener" class="detail-pub-btn" style="width:100%;justify-content:center;">Buka Link →</a>'
       + '</div>'
@@ -521,7 +521,7 @@ function renderBody(d) {
     + '</div>'
     + sidebarPubCard
     + '<div class="sidebar-card fade-up" style="background:rgba(78,140,90,0.06);border-color:rgba(78,140,90,0.15);">'
-    + '<div style="font-size:0.78rem;font-family:var(--font-body);color:var(--forest);line-height:1.6;">💡 <strong>Tertarik berkolaborasi?</strong><br>Hubungi prodi melalui halaman <a href="kontak.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Kontak</a> untuk informasi lebih lanjut tentang peluang riset bersama.</div>'
+    + '<div style="font-size:0.78rem;font-family:var(--font-body);color:var(--forest);line-height:1.6;"> <strong>Tertarik berkolaborasi?</strong><br>Hubungi prodi melalui halaman <a href="kontak.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Kontak</a> untuk informasi lebih lanjut tentang peluang riset bersama.</div>'
     + '</div>'
     + '</div>'
     + '</div>';
