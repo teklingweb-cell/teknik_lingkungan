@@ -293,7 +293,6 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
 .hero {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #0d1f10 0%, #1a2e1e 50%, #122418 100%);
