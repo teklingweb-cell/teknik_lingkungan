@@ -110,21 +110,20 @@ function render() {
   }
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    const detailUrl = `penelitian-detail.html?id=${item.id}`;
     return `<div class="research-card-wrap" style="display:flex;">
-      <a href="${detailUrl}" class="research-card fade-up" style="text-decoration:none;cursor:pointer;">
+      <div class="research-card fade-up">
         <div class="research-card-header">
           <span class="tag">${esc(item.category)}</span>
           <span class="research-year">${item.year}</span>
         </div>
         <div class="research-title">${esc(item.title)}</div>
         <div class="research-author">${esc(item.author)}</div>
-        ${item.abstract ? `<div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);margin-top:8px;line-height:1.6;">${esc(item.abstract.substring(0,100))}${item.abstract.length>100?'…':''}</div>` : ''}
+        ${item.abstract ? `<div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);margin-top:8px;line-height:1.6;">${esc(item.abstract.substring(0,120))}${item.abstract.length>120?'…':''}</div>` : ''}
         <div class="research-footer">
-          <span class="research-funded">${esc(item.funding||'–')}</span>
-          <span style="color:var(--gold);font-size:0.82rem;font-weight:600;">Lihat Detail →</span>
+          <span class="research-funded" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(item.funding||'–')}</span>
+          ${item.publication_url ? `<a href="${esc(item.publication_url)}" target="_blank" style="color:inherit;text-decoration:none;">→</a>` : '<span>→</span>'}
         </div>
-      </a>
+      </div>
     </div>`;
   }).join('');
   observeNewCards('researchGrid');

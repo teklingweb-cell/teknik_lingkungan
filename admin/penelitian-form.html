@@ -148,6 +148,11 @@
         <label>Abstrak / Deskripsi</label>
         <textarea class="form-textarea" id="f_abstract" placeholder="Deskripsi singkat penelitian..."></textarea>
       </div>
+      <div class="form-group">
+        <label>Kata Kunci</label>
+        <input class="form-input" id="f_keywords" placeholder="cth: lingkungan, kualitas udara, biomassa (pisahkan dengan koma)">
+        <span style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Pisahkan setiap kata kunci dengan tanda koma.</span>
+      </div>
       <div class="form-group gdrive-wrap">
         <label>Gambar Penelitian (Google Drive)</label>
         <div class="gdrive-input-row">
@@ -192,6 +197,7 @@ let editId = null;
     document.getElementById('f_status').value         = data.status || 'Aktif';
     document.getElementById('f_publication_url').value = data.publication_url || '';
     document.getElementById('f_abstract').value       = data.abstract || '';
+    document.getElementById('f_keywords').value      = data.keywords || '';
     if (data.image_url) {
       document.getElementById('f_image_url_raw').value = data.image_url;
       initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
@@ -274,6 +280,7 @@ async function doSave() {
   const status          = document.getElementById('f_status').value;
   const publication_url = document.getElementById('f_publication_url').value.trim() || null;
   const abstract        = document.getElementById('f_abstract').value.trim() || null;
+  const keywords        = document.getElementById('f_keywords').value.trim() || null;
 
   const errors = [];
   if (!title)          errors.push('Judul wajib diisi.');
@@ -284,7 +291,7 @@ async function doSave() {
   const btn = document.getElementById('saveBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan…';
   const image_url = document.getElementById('f_image_url').value || null;
-  const payload = { title, author, category, year, funding, status, publication_url, abstract, image_url };
+  const payload = { title, author, category, year, funding, status, publication_url, abstract, keywords, image_url };
   let error;
   if (editId) {
     ({ error } = await sb.from('penelitian').update(payload).eq('id', editId));

@@ -364,14 +364,17 @@ const CAT_COLORS = {
   'Ekonomi':'#d97706'
 };
 
-// Derive keyword chips from category + title words (fallback since DB has no keywords col)
+// Get keywords: use DB field if available, fall back to category only
 function deriveKeywords(item) {
-  const base = [item.category];
-  const stops = new Set(['dan','di','pada','dalam','untuk','dari','dengan','yang','ini','itu','ke','oleh','atau','serta','suatu','sebuah','terhadap','tentang','sebagai']);
-  const words = item.title.split(/\s+/).filter(w => w.length > 5 && !stops.has(w.toLowerCase()));
-  // pick up to 4 unique meaningful words
-  const picked = [...new Set(words.map(w => w.replace(/[^a-zA-Z0-9]/g,'')).filter(Boolean))].slice(0, 4);
-  return [...base, ...picked];
+  if (item.keywords && item.keywords.trim()) {
+    const chips = item.keywords.split(',').map(k => k.trim()).filter(Boolean);
+    // always prepend category if not already included
+    if (!chips.some(c => c.toLowerCase() === item.category.toLowerCase())) {
+      chips.unshift(item.category);
+    }
+    return chips;
+  }
+  return [item.category];
 }
 
 function esc(s) {
@@ -488,13 +491,14 @@ function renderBody(d) {
         <!-- Publication link -->
         <div class="fade-up">${pubCard}</div>
 
-        <!-- Keywords derived from data -->
+        <!-- Keywords -->
+        ${keywords.length > 1 || (keywords.length === 1 && keywords[0] !== d.category) || (d.keywords && d.keywords.trim()) ? `
         <div class="detail-keywords fade-up">
           <div class="detail-section-label">Kata Kunci</div>
           <div class="keyword-chips">
-            ${keywords.map(k => `<span class="keyword-chip">${esc(k)}</span>`).join('')}
+            ${keywords.map(k => \`<span class="keyword-chip">\${esc(k)}</span>\`).join('')}
           </div>
-        </div>
+        </div>` : ''}
       </div>
 
       <!-- Sidebar -->
