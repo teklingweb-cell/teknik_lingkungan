@@ -1377,18 +1377,12 @@ textarea.form-input { resize: none; }
   border-top: 1px solid rgba(26,46,30,0.05);
 }
 .research-funded { font-size: 0.78rem; color: var(--gold-light); font-weight: 500; font-family: var(--font-body); }
-.research-status-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 2px 9px; border-radius: 999px;
-  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-  font-family: var(--font-body);
+.research-status-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block;
 }
-.research-status-pill::before {
-  content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0;
-}
-.research-status-pill.aktif    { background: rgba(22,163,74,0.12);  color: #16a34a; border: 1px solid rgba(22,163,74,0.25); }
-.research-status-pill.wip      { background: rgba(217,119,6,0.12);  color: #d97706; border: 1px solid rgba(217,119,6,0.25); }
-.research-status-pill.selesai  { background: rgba(107,122,108,0.1); color: #6b7a6c; border: 1px solid rgba(107,122,108,0.2); }
+.research-status-dot.aktif   { background: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.2); }
+.research-status-dot.wip     { background: #d97706; box-shadow: 0 0 0 2px rgba(217,119,6,0.2); }
+.research-status-dot.selesai { background: #9ca3af; box-shadow: 0 0 0 2px rgba(156,163,175,0.2); }
 
 
 .contact-info-card {

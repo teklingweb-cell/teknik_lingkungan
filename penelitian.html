@@ -119,7 +119,7 @@ function render() {
         <div class="research-card-header">
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="tag">${esc(item.category)}</span>
-            <span class="research-status-pill ${statusClass}">${esc(statusLabel)}</span>
+            <span class="research-status-dot ${statusClass}" title="${esc(statusLabel)}"></span>
           </div>
           <span class="research-year">${item.year}</span>
         </div>
