@@ -419,145 +419,105 @@ function showError() {
 function renderHero(d) {
   const statusClass = (d.status || '').toLowerCase() === 'selesai' ? 'selesai' : 'aktif';
   const statusLabel = d.status || 'Aktif';
+  const shortTitle = d.title.length > 50 ? d.title.substring(0, 50) + '…' : d.title;
+  const fundingMeta = d.funding
+    ? '<div class="detail-meta-item"><span class="icon">💰</span><span>' + esc(d.funding) + '</span></div>'
+    : '';
 
-  document.getElementById('heroSection').innerHTML = `
-    <div class="detail-hero">
-      <div class="container" style="position:relative;">
-        <a href="penelitian.html" class="detail-back">
-          ← Kembali ke Daftar Penelitian
-        </a>
-        <div class="detail-hero-inner">
-          <div class="detail-tag-row">
-            <span class="detail-tag">${esc(d.category)}</span>
-            <span class="detail-status ${statusClass}">${esc(statusLabel)}</span>
-          </div>
-          <h1 class="detail-title">${esc(d.title)}</h1>
-          <div class="detail-meta-row">
-            <div class="detail-meta-item">
-              <span class="icon">👤</span>
-              <span>${esc(d.author)}</span>
-            </div>
-            <div class="detail-meta-item">
-              <span class="icon">📅</span>
-              <span>${esc(String(d.year))}</span>
-            </div>
-            ${d.funding ? `
-            <div class="detail-meta-item">
-              <span class="icon">💰</span>
-              <span>${esc(d.funding)}</span>
-            </div>` : ''}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="background:#fff;border-bottom:1px solid rgba(26,46,30,0.06);">
-      <div class="container" style="padding:12px 24px;">
-        <div class="breadcrumb">
-          <a href="index.html">Beranda</a>
-          <span>›</span>
-          <a href="penelitian.html">Penelitian</a>
-          <span>›</span>
-          <span>${esc(d.title.length > 50 ? d.title.substring(0,50)+'…' : d.title)}</span>
-        </div>
-      </div>
-    </div>
-  `;
+  document.getElementById('heroSection').innerHTML =
+    '<div class="detail-hero">'
+    + '<div class="container" style="position:relative;">'
+    + '<a href="penelitian.html" class="detail-back">← Kembali ke Daftar Penelitian</a>'
+    + '<div class="detail-hero-inner">'
+    + '<div class="detail-tag-row">'
+    + '<span class="detail-tag">' + esc(d.category) + '</span>'
+    + '<span class="detail-status ' + statusClass + '">' + esc(statusLabel) + '</span>'
+    + '</div>'
+    + '<h1 class="detail-title">' + esc(d.title) + '</h1>'
+    + '<div class="detail-meta-row">'
+    + '<div class="detail-meta-item"><span class="icon">👤</span><span>' + esc(d.author) + '</span></div>'
+    + '<div class="detail-meta-item"><span class="icon">📅</span><span>' + esc(String(d.year)) + '</span></div>'
+    + fundingMeta
+    + '</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>'
+    + '<div style="background:#fff;border-bottom:1px solid rgba(26,46,30,0.06);">'
+    + '<div class="container" style="padding:12px 24px;">'
+    + '<div class="breadcrumb">'
+    + '<a href="index.html">Beranda</a><span>›</span>'
+    + '<a href="penelitian.html">Penelitian</a><span>›</span>'
+    + '<span>' + esc(shortTitle) + '</span>'
+    + '</div>'
+    + '</div>'
+    + '</div>';
 }
 
 function renderBody(d) {
   const keywords = deriveKeywords(d);
   const statusClass = (d.status || '').toLowerCase() === 'selesai' ? 'selesai' : 'aktif';
 
-  const pubCard = d.publication_url
-    ? `<div class="detail-pub-card">
-        <div class="detail-pub-card-label">📄 Publikasi & Karya</div>
-        <div class="detail-pub-card-title">Akses full text atau data pendukung penelitian ini</div>
-        <a href="${esc(d.publication_url)}" target="_blank" rel="noopener" class="detail-pub-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            <polyline points="15 3 21 3 21 9"/>
-            <line x1="10" y1="14" x2="21" y2="3"/>
-          </svg>
-          Buka Publikasi / DOI
-        </a>
-      </div>`
-    : `<div class="detail-pub-card">
-        <div class="detail-pub-card-label">📄 Publikasi & Karya</div>
-        <div class="detail-pub-card-title">Link publikasi</div>
-        <p class="detail-pub-unavailable">Link publikasi belum tersedia untuk penelitian ini.</p>
-      </div>`;
+  // Pre-compute all parts to avoid nested template literals
+  var pubCard;
+  if (d.publication_url) {
+    pubCard = '<div class="detail-pub-card">'
+      + '<div class="detail-pub-card-label">📄 Publikasi &amp; Karya</div>'
+      + '<div class="detail-pub-card-title">Akses full text atau data pendukung penelitian ini</div>'
+      + '<a href="' + esc(d.publication_url) + '" target="_blank" rel="noopener" class="detail-pub-btn">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+      + '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'
+      + '<polyline points="15 3 21 3 21 9"/>'
+      + '<line x1="10" y1="14" x2="21" y2="3"/>'
+      + '</svg>Buka Publikasi / DOI</a></div>';
+  } else {
+    pubCard = '<div class="detail-pub-card">'
+      + '<div class="detail-pub-card-label">📄 Publikasi &amp; Karya</div>'
+      + '<div class="detail-pub-card-title">Link publikasi</div>'
+      + '<p class="detail-pub-unavailable">Link publikasi belum tersedia untuk penelitian ini.</p>'
+      + '</div>';
+  }
 
-  document.getElementById('bodySection').innerHTML = `
-    <div class="detail-layout">
-      <!-- Main column -->
-      <div>
-        <!-- Abstract -->
-        <div class="detail-abstract fade-up">
-          <div class="detail-section-label">Abstrak</div>
-          ${d.abstract
-            ? `<p class="detail-abstract-text">${esc(d.abstract)}</p>`
-            : `<p class="detail-abstract-text empty">Abstrak belum ditambahkan untuk penelitian ini. Administrator dapat menambahkannya melalui panel admin.</p>`
-          }
-        </div>
+  var abstractHtml = d.abstract
+    ? '<p class="detail-abstract-text">' + esc(d.abstract) + '</p>'
+    : '<p class="detail-abstract-text empty">Abstrak belum ditambahkan untuk penelitian ini. Administrator dapat menambahkannya melalui panel admin.</p>';
 
-        <!-- Publication link -->
-        <div class="fade-up">${pubCard}</div>
+  var keywordChips = keywords.map(function(k) {
+    return '<span class="keyword-chip">' + esc(k) + '</span>';
+  }).join('');
 
-        <!-- Keywords -->
-        ${keywords.length > 1 || (keywords.length === 1 && keywords[0] !== d.category) || (d.keywords && d.keywords.trim()) ? `
-        <div class="detail-keywords fade-up">
-          <div class="detail-section-label">Kata Kunci</div>
-          <div class="keyword-chips">
-            ${keywords.map(k => \`<span class="keyword-chip">\${esc(k)}</span>\`).join('')}
-          </div>
-        </div>` : ''}
-      </div>
+  var showKeywords = keywords.length > 1 || (d.keywords && d.keywords.trim());
+  var keywordsBlock = showKeywords
+    ? '<div class="detail-keywords fade-up"><div class="detail-section-label">Kata Kunci</div><div class="keyword-chips">' + keywordChips + '</div></div>'
+    : '';
 
-      <!-- Sidebar -->
-      <div class="detail-sidebar">
-        <div class="sidebar-card fade-up">
-          <div class="sidebar-card-title">Informasi Penelitian</div>
+  var sidebarPubCard = d.publication_url
+    ? '<div class="sidebar-card fade-up" style="text-align:center;background:var(--navy);">'
+      + '<div style="font-size:1.8rem;margin-bottom:8px;">🔗</div>'
+      + '<div style="font-family:var(--font-display);font-size:0.95rem;color:rgba(242,245,239,0.8);margin-bottom:14px;">Publikasi tersedia</div>'
+      + '<a href="' + esc(d.publication_url) + '" target="_blank" rel="noopener" class="detail-pub-btn" style="width:100%;justify-content:center;">Buka Link →</a>'
+      + '</div>'
+    : '';
 
-          <div class="sidebar-row">
-            <span class="sidebar-row-label">Peneliti Utama</span>
-            <span class="sidebar-row-value">${esc(d.author)}</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-row-label">Tahun</span>
-            <span class="sidebar-row-value">${esc(String(d.year))}</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-row-label">Kategori</span>
-            <span class="sidebar-row-value">${esc(d.category)}</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-row-label">Dana Penelitian</span>
-            <span class="sidebar-row-value funded">${esc(formatFunding(d.funding))}</span>
-          </div>
-          <div class="sidebar-row">
-            <span class="sidebar-row-label">Status</span>
-            <span class="sidebar-row-value ${statusClass}">${esc(d.status || 'Aktif')}</span>
-          </div>
-        </div>
-
-        ${d.publication_url ? `
-        <div class="sidebar-card fade-up" style="text-align:center;background:var(--navy);">
-          <div style="font-size:1.8rem;margin-bottom:8px;">🔗</div>
-          <div style="font-family:var(--font-display);font-size:0.95rem;color:rgba(242,245,239,0.8);margin-bottom:14px;">Publikasi tersedia</div>
-          <a href="${esc(d.publication_url)}" target="_blank" rel="noopener" class="detail-pub-btn" style="width:100%;justify-content:center;">
-            Buka Link →
-          </a>
-        </div>` : ''}
-
-        <div class="sidebar-card fade-up" style="background:rgba(78,140,90,0.06);border-color:rgba(78,140,90,0.15);">
-          <div style="font-size:0.78rem;font-family:var(--font-body);color:var(--forest);line-height:1.6;">
-            💡 <strong>Tertarik berkolaborasi?</strong><br>
-            Hubungi prodi melalui halaman <a href="kontak.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Kontak</a> untuk informasi lebih lanjut tentang peluang riset bersama.
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  document.getElementById('bodySection').innerHTML = '<div class="detail-layout">'
+    + '<div>'
+    + '<div class="detail-abstract fade-up"><div class="detail-section-label">Abstrak</div>' + abstractHtml + '</div>'
+    + '<div class="fade-up">' + pubCard + '</div>'
+    + keywordsBlock
+    + '</div>'
+    + '<div class="detail-sidebar">'
+    + '<div class="sidebar-card fade-up"><div class="sidebar-card-title">Informasi Penelitian</div>'
+    + '<div class="sidebar-row"><span class="sidebar-row-label">Peneliti Utama</span><span class="sidebar-row-value">' + esc(d.author) + '</span></div>'
+    + '<div class="sidebar-row"><span class="sidebar-row-label">Tahun</span><span class="sidebar-row-value">' + esc(String(d.year)) + '</span></div>'
+    + '<div class="sidebar-row"><span class="sidebar-row-label">Kategori</span><span class="sidebar-row-value">' + esc(d.category) + '</span></div>'
+    + '<div class="sidebar-row"><span class="sidebar-row-label">Dana Penelitian</span><span class="sidebar-row-value funded">' + esc(formatFunding(d.funding)) + '</span></div>'
+    + '<div class="sidebar-row"><span class="sidebar-row-label">Status</span><span class="sidebar-row-value ' + statusClass + '">' + esc(d.status || 'Aktif') + '</span></div>'
+    + '</div>'
+    + sidebarPubCard
+    + '<div class="sidebar-card fade-up" style="background:rgba(78,140,90,0.06);border-color:rgba(78,140,90,0.15);">'
+    + '<div style="font-size:0.78rem;font-family:var(--font-body);color:var(--forest);line-height:1.6;">💡 <strong>Tertarik berkolaborasi?</strong><br>Hubungi prodi melalui halaman <a href="kontak.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Kontak</a> untuk informasi lebih lanjut tentang peluang riset bersama.</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>';
 
   // Trigger fade-up animations
   const obs = new IntersectionObserver((entries) => {
