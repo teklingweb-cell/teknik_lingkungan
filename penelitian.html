@@ -114,21 +114,23 @@ function render() {
     const statusRaw   = (item.status || '').toLowerCase();
     const statusClass = statusRaw === 'selesai' ? 'selesai' : statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
     const statusLabel = item.status || 'Aktif';
-    return `<div class="research-card-wrap" style="display:flex;height:100%;width:100%;position:relative;">
-      <span class="research-ribbon ${statusClass}">${esc(statusLabel)}</span>
-      <a href="${detailUrl}" class="research-card fade-up" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;width:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,30,0.13)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div class="research-card-header">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span class="tag">${esc(item.category)}</span>
+    const abstract    = item.abstract ? esc(item.abstract.substring(0,110)) + (item.abstract.length > 110 ? '…' : '') : '';
+    return `<div class="research-card-wrap">
+      <a href="${detailUrl}" class="research-card fade-up">
+        <div class="research-card-accent" style="background:${color};"></div>
+        <div class="research-card-body">
+          <div class="research-card-meta">
+            <span class="research-card-category">${esc(item.category)}</span>
+            <span class="research-card-year">${item.year}</span>
           </div>
-          <span class="research-year">${item.year}</span>
+          <div class="research-card-title">${esc(item.title)}</div>
+          <div class="research-card-author">${esc(item.author)}</div>
+          ${abstract ? `<div class="research-card-abstract">${abstract}</div>` : '<div style="flex:1;"></div>'}
         </div>
-        <div class="research-title">${esc(item.title)}</div>
-        <div class="research-author">${esc(item.author)}</div>
-        ${item.abstract ? `<div style="font-size:0.8rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);margin-top:8px;line-height:1.6;flex:1;">${esc(item.abstract.substring(0,120))}${item.abstract.length>120?'…':''}</div>` : '<div style="flex:1;"></div>'}
-        <div class="research-footer" style="margin-top:auto;">
-          <span class="research-funded" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(item.funding||'–')}</span>
-          <span style="font-size:0.78rem;font-family:var(--font-body);color:var(--gold);font-weight:600;white-space:nowrap;">Lihat Detail →</span>
+        <div class="research-card-footer">
+          <span class="research-card-status ${statusClass}">${esc(statusLabel)}</span>
+          ${item.funding ? `<span class="research-card-funding">${esc(item.funding)}</span>` : ''}
+          <span class="research-card-cta">Lihat Detail →</span>
         </div>
       </a>
     </div>`;
