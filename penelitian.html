@@ -110,7 +110,7 @@ function render() {
   }
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    return `<div class="research-card-wrap" style="display:flex;align-items:stretch;">
+    return `<div class="research-card-wrap" style="display:flex;">
       <div class="research-card fade-up">
         <div class="research-card-header">
           <span class="tag">${esc(item.category)}</span>
