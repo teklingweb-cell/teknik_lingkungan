@@ -343,7 +343,7 @@
 <div id="bodySection"></div>
 
 <!-- ERROR state (hidden by default) -->
-<div id="errorSection" style="display:none;" class="container" style="padding:80px 0;">
+<div id="errorSection" style="display:none;padding:80px 0;" class="container">
   <div class="detail-error">
     <h2>Penelitian tidak ditemukan</h2>
     <p>Data yang kamu cari tidak tersedia atau telah dihapus.</p>
@@ -386,17 +386,29 @@ function formatFunding(f) {
 }
 
 (async () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
 
-  if (!id) { showError(); return; }
+    if (!id) { showError(); return; }
 
-  const { data, error } = await sb.from('penelitian').select('*').eq('id', id).single();
-  if (error || !data) { showError(); return; }
+    // Race against a 10-second timeout so the page never hangs forever
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 10000)
+    );
 
-  document.title = `${data.title} – Prodi Teknik Lingkungan`;
-  renderHero(data);
-  renderBody(data);
+    const query = sb.from('penelitian').select('*').eq('id', id).single();
+    const { data, error } = await Promise.race([query, timeout]);
+
+    if (error || !data) { showError(); return; }
+
+    document.title = `${data.title} – Prodi Teknik Lingkungan`;
+    renderHero(data);
+    renderBody(data);
+  } catch (err) {
+    console.error('penelitian-detail error:', err);
+    showError();
+  }
 })();
 
 function showError() {
