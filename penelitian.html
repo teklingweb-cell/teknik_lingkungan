@@ -111,8 +111,8 @@ function render() {
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
     const detailUrl = `penelitian-detail.html?id=${encodeURIComponent(item.id)}`;
-    return `<div class="research-card-wrap" style="display:flex;">
-      <a href="${detailUrl}" class="research-card fade-up" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,30,0.13)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    return `<div class="research-card-wrap" style="display:flex;height:100%;width:100%;">
+      <a href="${detailUrl}" class="research-card fade-up" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;width:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,30,0.13)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
         <div class="research-card-header">
           <span class="tag">${esc(item.category)}</span>
           <span class="research-year">${item.year}</span>

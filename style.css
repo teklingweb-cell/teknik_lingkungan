@@ -1363,8 +1363,8 @@ textarea.form-input { resize: none; }
   font-weight: 500;
   color: var(--navy);
   line-height: 1.4;
-  flex: 1;
   transition: color 0.2s;
+  margin-bottom: 4px;
 }
 .research-card:hover .research-title { color: var(--gold); }
 .research-author { font-size: 0.78rem; color: rgba(45,58,46,0.5); font-family: var(--font-body); margin-top: 10px; }
