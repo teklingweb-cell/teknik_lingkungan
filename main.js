@@ -17,13 +17,6 @@ if (hamburger && mobileOverlay) {
     hamburger.classList.toggle('open');
     mobileOverlay.classList.toggle('open');
   });
-  const mobileClose = document.getElementById('mobileClose');
-  if (mobileClose) {
-    mobileClose.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileOverlay.classList.remove('open');
-    });
-  }
   mobileOverlay.addEventListener('click', (e) => {
     if (e.target === mobileOverlay || e.target.closest('.mobile-drawer') === null) {
       hamburger.classList.remove('open');

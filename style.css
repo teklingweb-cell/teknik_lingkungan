@@ -1192,7 +1192,7 @@ textarea.form-input { resize: none; }
 }
 .partner-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(14,22,40,0.12); }
 .partner-avatar {
-  width: 56px; height: 56px;
+  width: 48px; height: 48px;
   background: var(--navy);
   border-radius: 12px;
   display: flex;
