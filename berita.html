@@ -38,7 +38,7 @@
     <div id="featuredWrap"></div>
     <div class="grid-3" id="newsGrid"></div>
     <div id="emptyState" style="display:none;text-align:center;padding:60px 0;">
-      <div style="font-size:3rem;opacity:0.3;margin-bottom:12px;"></div>
+      <div style="display:flex;justify-content:center;margin-bottom:12px;"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(45,58,46,0.25)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
       <div style="font-size:1rem;font-weight:500;color:var(--navy);">Belum ada berita</div>
       <div style="font-size:0.83rem;color:var(--muted);margin-top:6px;">Tidak ada berita untuk kategori ini.</div>
     </div>
@@ -93,7 +93,7 @@
       + '</div>'
       + '<div class="featured-title">'+item.title+'</div>'
       + '<div class="featured-excerpt">'+item.excerpt+'</div>'
-      + '<div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;"><span> '+item.author+'</span></div>'
+      + '<div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'13\' height=\'13\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'/><circle cx=\'12\' cy=\'7\' r=\'4\'/></svg><span>'+item.author+'</span></div>'
       + '<div style="display:flex;align-items:center;gap:6px;color:var(--gold-light);font-size:0.875rem;font-weight:500;font-family:var(--font-body);">Baca Selengkapnya ›</div>'
       + '</div></a>';
     setTimeout(function(){ var el = wrap.querySelector('.featured-card'); if(el) el.classList.add('visible'); }, 50);
