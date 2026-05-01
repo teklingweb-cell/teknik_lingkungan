@@ -8,6 +8,7 @@
     <meta name="description" content="Baca berita lengkap dari Prodi Teknik Lingkungan Universitas Tanjungpura.">
   <meta property="og:title" content="Berita – Prodi Teknik Lingkungan Untan">
   <meta property="og:description" content="Baca berita lengkap dari Prodi Teknik Lingkungan Universitas Tanjungpura.">
+  <meta property="og:url" content="https://tl.ft.untan.ac.id/berita-detail">
   <meta property="og:type" content="website">
   <title>Berita – Prodi Teknik Lingkungan</title>
   <link rel="stylesheet" href="style.css">
@@ -327,7 +328,12 @@ function toGDriveImg(url) {
     document.getElementById('aLinkBtn').href = d.link_url;
   }
   document.getElementById('aAuthorName').textContent = d.author;
-  document.getElementById('navCategory').innerHTML   = '<span class="tag">'+d.category+'</span>';
+  var _catEl = document.getElementById('navCategory');
+  var _catSpan = document.createElement('span');
+  _catSpan.className = 'tag';
+  _catSpan.textContent = d.category;
+  _catEl.innerHTML = '';
+  _catEl.appendChild(_catSpan);
 
   // Author initial avatar
   var initial = (d.author || '?').split(' ').map(function(w){ return w[0]; }).slice(0,2).join('').toUpperCase();
@@ -343,7 +349,11 @@ function toGDriveImg(url) {
     img.loading = 'lazy';
     coverWrap.appendChild(img);
   } else {
-    coverWrap.innerHTML = '<div class="article-cover-placeholder">'+d.id+'</div>';
+    var _ph = document.createElement('div');
+    _ph.className = 'article-cover-placeholder';
+    _ph.textContent = d.id;
+    coverWrap.innerHTML = '';
+    coverWrap.appendChild(_ph);
   }
 
   // Show article

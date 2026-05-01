@@ -56,6 +56,7 @@
       .mob-menu-btn { display: flex; }
     }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -122,6 +123,7 @@ let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  document.getElementById('auth-hide')?.remove();
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));

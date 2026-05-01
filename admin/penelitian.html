@@ -67,6 +67,7 @@
       .mob-menu-btn { display: flex; }
     }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 
@@ -115,7 +116,7 @@
 
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
-    <div class="modal-icon"></div>
+    <div class="modal-icon" style="font-size:0;"><div style="width:48px;height:48px;background:#fef2f2;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div></div>
     <div class="modal-title">Hapus Penelitian?</div>
     <div class="modal-body" id="deleteModalBody"></div>
     <div class="modal-actions">
@@ -132,6 +133,7 @@ let allData = [], deleteTargetId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  document.getElementById('auth-hide')?.remove();
   loadData();
 })();
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
@@ -150,7 +152,7 @@ async function loadData() {
 function renderTable() {
   document.getElementById('cardCount').textContent = allData.length + ' item';
   if (!allData.length) {
-    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon"></div><div class="empty-title">Belum ada data penelitian</div></div>`;
+    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon" style="font-size:0;"><div style="width:56px;height:56px;background:var(--cream);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(45,58,46,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div></div><div class="empty-title">Belum ada data penelitian</div></div>`;
     return;
   }
   const rows = allData.map(item => {
@@ -196,7 +198,7 @@ function showAlert(type, msg) {
   setTimeout(() => { box.style.display = 'none'; }, 4000);
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

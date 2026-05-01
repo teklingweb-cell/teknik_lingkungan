@@ -67,6 +67,7 @@
       .mob-menu-btn { display: flex; }
     }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -112,7 +113,7 @@
 
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
-    <div class="modal-icon"></div>
+    <div class="modal-icon" style="font-size:0;"><div style="width:48px;height:48px;background:#fef2f2;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div></div>
     <div class="modal-title">Hapus Pencapaian?</div>
     <div class="modal-body" id="deleteModalBody"></div>
     <div class="modal-actions">
@@ -129,6 +130,7 @@ let allData = [], deleteTargetId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  document.getElementById('auth-hide')?.remove();
   loadData();
 })();
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
@@ -147,13 +149,13 @@ async function loadData() {
 function renderTable() {
   document.getElementById('cardCount').textContent = allData.length + ' item';
   if (!allData.length) {
-    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon"></div><div class="empty-title">Belum ada pencapaian</div></div>`;
+    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon" style="font-size:0;"><div style="width:56px;height:56px;background:var(--cream);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(45,58,46,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div></div><div class="empty-title">Belum ada pencapaian</div></div>`;
     return;
   }
   const rows = allData.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
     return `<tr>
-      <td style="font-size:1.5rem;width:48px;">${escHtml(item.category||'-')}</td>
+      <td style="width:44px;"><div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:${color}18;"><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='6'/><path d='M15.477 12.89L17 22l-5-3-5 3 1.523-9.11'/></svg></div></td>
       <td><div style="font-weight:500;color:var(--navy);max-width:300px;">${escHtml(item.title)}</div><div style="font-size:0.75rem;color:var(--muted);margin-top:2px;max-width:300px;">${escHtml((item.description||'').substring(0,80))}${(item.description||'').length>80?'…':''}</div></td>
       <td class="hide-mobile"><span class="badge" style="background:${color}18;color:${color};">${escHtml(item.category)}</span></td>
       <td class="hide-mobile" style="color:var(--muted);font-weight:500;">${item.year}</td>
@@ -164,7 +166,7 @@ function renderTable() {
     </tr>`;
   }).join('');
   document.getElementById('tableWrap').innerHTML = `<div style="overflow-x:auto;"><table>
-    <thead><tr><th>·</th><th>Judul</th><th class="hide-mobile">Kategori</th><th class="hide-mobile">Tahun</th><th style="text-align:right;">Aksi</th></tr></thead>
+    <thead><tr><th style="width:44px;"></th><th>Judul</th><th class="hide-mobile">Kategori</th><th class="hide-mobile">Tahun</th><th style="text-align:right;">Aksi</th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
 }
 
@@ -190,7 +192,7 @@ function showAlert(type, msg) {
   setTimeout(() => { box.style.display = 'none'; }, 4000);
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

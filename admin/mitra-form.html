@@ -72,6 +72,7 @@
     .gdrive-status.ok  { color: #15803d; }
     .gdrive-status.err { color: var(--danger); }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -164,6 +165,7 @@ let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  document.getElementById('auth-hide')?.remove();
   initGDriveField('f_logo_url_raw', 'f_logo_url_preview', 'f_logo_url_status', 'f_logo_url');
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {

@@ -104,6 +104,7 @@
     .gdrive-status.ok  { color: #15803d; }
     .gdrive-status.err { color: var(--danger); }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 
@@ -256,6 +257,7 @@ let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
+  document.getElementById('auth-hide')?.remove();
 
   // Set today as default date
   document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
@@ -411,7 +413,11 @@ async function doSubmit() {
   if (error) {
     btn.disabled = false;
     btn.textContent = editId ? ' Simpan Perubahan' : '+ Tambahkan Berita';
-    document.getElementById('errList').innerHTML = `<li>Gagal menyimpan: ${error.message}</li>`;
+    var _errEl = document.getElementById('errList');
+    _errEl.innerHTML = '';
+    var _li = document.createElement('li');
+    _li.textContent = 'Gagal menyimpan: ' + error.message;
+    _errEl.appendChild(_li);
     document.getElementById('errBox').style.display = 'block';
     return;
   }

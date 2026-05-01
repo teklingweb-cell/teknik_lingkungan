@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /data/
+
+Sitemap: https://tl.ft.untan.ac.id/sitemap.xml

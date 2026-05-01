@@ -58,6 +58,7 @@
     }
     .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); display: block; }
   </style>
+  <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
 <body>
 <div class="card">
@@ -88,7 +89,7 @@
   // Redirect if already logged in
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) window.location.href = '/admin';
+    if (session) { window.location.href = '/admin'; } else { document.getElementById('auth-hide')?.remove(); }
   })();
 
   async function doLogin() {
