@@ -383,6 +383,7 @@ function showNimConflict(nim_nip, owner) {
   document.getElementById('conflictOwnerName').textContent = owner.name;
   document.getElementById('conflictOwnerMeta').textContent =
     (TYPE_LABELS[owner.type] || owner.type) + (owner.position ? ' · ' + owner.position : '');
+  document.getElementById('conflictOwnerInitial').textContent = (owner.name||'?')[0].toUpperCase();
   document.getElementById('nimConflictModal').style.display = 'flex';
 }
 
@@ -422,14 +423,8 @@ function showAlert(msg) {
   </div>
 </div>
 
+<!-- Close on backdrop click -->
 <script>
-// Keep owner initial in sync when modal opens
-const _origShowNimConflict = showNimConflict;
-function showNimConflict(nim_nip, owner) {
-  _origShowNimConflict(nim_nip, owner);
-  document.getElementById('conflictOwnerInitial').textContent = (owner.name||'?')[0].toUpperCase();
-}
-// Close on backdrop click
 document.getElementById('nimConflictModal').addEventListener('click', function(e){
   if (e.target === this) closeNimConflict();
 });
