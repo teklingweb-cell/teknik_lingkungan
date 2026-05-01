@@ -1403,7 +1403,6 @@ textarea.form-input { resize: none; }
 }
 .research-card-status.aktif   { color: #16a34a; }
 .research-card-status.wip     { color: #d97706; }
-.research-card-status.selesai { color: #9ca3af; }
 .research-card-funding {
   font-size: 0.73rem; font-weight: 600; font-family: var(--font-body);
   color: var(--gold); white-space: nowrap; margin-left: auto; margin-right: 10px;

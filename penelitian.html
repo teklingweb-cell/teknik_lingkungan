@@ -118,7 +118,7 @@ function render() {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
     const detailUrl = `penelitian-detail.html?id=${encodeURIComponent(item.id)}`;
     const statusRaw   = (item.status || '').toLowerCase();
-    const statusClass = statusRaw === 'selesai' ? 'selesai' : statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
+    const statusClass = statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
     const statusLabel = item.status || 'Aktif';
     const abstract    = item.abstract ? esc(item.abstract.substring(0,110)) + (item.abstract.length > 110 ? '…' : '') : '';
     return `<div class="research-card-wrap">

@@ -155,8 +155,8 @@ function renderTable() {
   }
   const rows = allData.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    const statusColor = item.status === 'Aktif' ? '#16a34a' : item.status === 'Sedang Berjalan' ? '#d97706' : '#6b7a6c';
-    const statusBg    = item.status === 'Aktif' ? '#f0fdf4' : item.status === 'Sedang Berjalan' ? '#fffbeb' : '#f4f4f4';
+    const statusColor = item.status === 'Aktif' ? '#16a34a' : '#d97706';
+    const statusBg    = item.status === 'Aktif' ? '#f0fdf4' : '#fffbeb';
     return `<tr>
       <td><div style="font-weight:500;color:var(--navy);max-width:280px;">${escHtml(item.title)}</div><div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">${escHtml(item.author)}</div></td>
       <td class="hide-mobile"><span class="badge" style="background:${color}18;color:${color};">${escHtml(item.category)}</span></td>
