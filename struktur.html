@@ -11,9 +11,12 @@
   <meta property="og:url" content="https://tl.ft.untan.ac.id/struktur">
   <meta property="og:type" content="website">
   <title>Struktur Organisasi – Prodi Teknik Lingkungan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/supabase-client.js"></script>
   <style>
     .org-section{padding:60px 0 80px;}
     .org-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;justify-content:center;}
@@ -188,7 +191,7 @@
     </div>
   </div>
 </footer>
-<script src="main.js"></script>
+<script defer src="main.js"></script>
 <script>
 const TIERS=[
   {key:'rektor', label:'Rektor',            sz:'sz-xl',cssClass:'tier-rektor',color:'#1a2e1e'},
@@ -201,7 +204,7 @@ const TIER_LABELS={rektor:'Rektor',wakil:'Wakil Rektor',dekan:'Dekan',dosen:'Dos
 
 (async()=>{
   try{
-    const {data,error}=await sb.from('staff').select('*').not('org_level','is',null).order('org_level').order('name');
+    const {data,error}=await sb.from('staff').select('*').not('org_level','is',null).order('org_level').order('name').limit(100);
     document.getElementById('orgLoading').remove();
     if(error||!data||data.length===0){renderFallback();return;}
     const groups={};

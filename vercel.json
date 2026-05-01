@@ -65,6 +65,24 @@
   ],
   "headers": [
     {
+      "source": "/(.*\\.css|.*\\.js|.*\\.png|.*\\.webp|.*\\.jpg|.*\\.ico|.*\\.svg|.*\\.woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(sitemap\\.xml|robots\\.txt)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
