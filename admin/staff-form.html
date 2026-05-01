@@ -346,6 +346,20 @@ async function doSave() {
   if (!bidang)   errors.push('Bidang keahlian wajib diisi.');
   if (errors.length) { showAlert(errors.join(' ')); return; }
 
+  // ── NIM/NIP uniqueness check ─────────────────────────────
+  if (nim_nip) {
+    const { data: existing, error: chkErr } = await sb
+      .from('staff').select('id, name, type, position').eq('nim_nip', nim_nip);
+    if (!chkErr && existing && existing.length) {
+      // Exclude current record when editing
+      const conflict = existing.filter(r => r.id !== editId);
+      if (conflict.length) {
+        showNimConflict(nim_nip, conflict[0]);
+        return;
+      }
+    }
+  }
+
   const btn = document.getElementById('saveBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan…';
 
@@ -363,11 +377,64 @@ async function doSave() {
   window.location.href = '/admin/staff?msg=' + (editId ? 'updated' : 'added');
 }
 
+function showNimConflict(nim_nip, owner) {
+  const TYPE_LABELS = { dosen: 'Dosen', alumni: 'Alumni', staf: 'Staf' };
+  document.getElementById('conflictNim').textContent = nim_nip;
+  document.getElementById('conflictOwnerName').textContent = owner.name;
+  document.getElementById('conflictOwnerMeta').textContent =
+    (TYPE_LABELS[owner.type] || owner.type) + (owner.position ? ' · ' + owner.position : '');
+  document.getElementById('nimConflictModal').style.display = 'flex';
+}
+
+function closeNimConflict() {
+  document.getElementById('nimConflictModal').style.display = 'none';
+}
+
 function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
 </script>
+<!-- NIM/NIP Conflict Modal -->
+<div id="nimConflictModal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(26,46,30,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.18);position:relative;">
+    <!-- Icon -->
+    <div style="width:52px;height:52px;border-radius:14px;background:#fef3c7;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+      <svg width="26" height="26" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div style="font-size:1.05rem;font-weight:600;color:#1a2e1e;margin-bottom:6px;">NIP / NIM sudah digunakan</div>
+    <div style="font-size:0.85rem;color:rgba(45,58,46,0.6);margin-bottom:20px;">
+      Nomor <code id="conflictNim" style="background:#f4f4f0;padding:2px 7px;border-radius:5px;font-size:0.82rem;color:#1a2e1e;"></code> sudah terdaftar atas nama:
+    </div>
+    <!-- Owner card -->
+    <div style="display:flex;align-items:center;gap:14px;background:#f7faf6;border:1px solid rgba(78,140,90,0.2);border-radius:12px;padding:14px 16px;margin-bottom:24px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:#4e8c5a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#fff;flex-shrink:0;" id="conflictOwnerInitial">?</div>
+      <div>
+        <div style="font-weight:600;font-size:0.92rem;color:#1a2e1e;" id="conflictOwnerName"></div>
+        <div style="font-size:0.75rem;color:rgba(45,58,46,0.55);margin-top:2px;" id="conflictOwnerMeta"></div>
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:rgba(45,58,46,0.5);margin-bottom:24px;">Gunakan nomor yang berbeda, atau hapus data lama terlebih dahulu sebelum menyimpan.</div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+      <button onclick="closeNimConflict()" style="padding:9px 20px;border-radius:8px;border:1px solid rgba(26,46,30,0.15);background:none;font-size:0.85rem;font-weight:500;color:#1a2e1e;cursor:pointer;">Tutup</button>
+      <button onclick="document.getElementById('f_nim_nip').value='';closeNimConflict();document.getElementById('f_nim_nip').focus();" style="padding:9px 20px;border-radius:8px;border:none;background:#4e8c5a;color:#fff;font-size:0.85rem;font-weight:500;cursor:pointer;">Ganti Nomor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Keep owner initial in sync when modal opens
+const _origShowNimConflict = showNimConflict;
+function showNimConflict(nim_nip, owner) {
+  _origShowNimConflict(nim_nip, owner);
+  document.getElementById('conflictOwnerInitial').textContent = (owner.name||'?')[0].toUpperCase();
+}
+// Close on backdrop click
+document.getElementById('nimConflictModal').addEventListener('click', function(e){
+  if (e.target === this) closeNimConflict();
+});
+</script>
+
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
 function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
