@@ -576,16 +576,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script>
-// Navbar
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
-
-// Mobile menu
-document.getElementById('hamburgerBtn').addEventListener('click', () => { document.getElementById('mobileOverlay').classList.add('open'); });
-document.getElementById('mobileClose').addEventListener('click',  () => { document.getElementById('mobileOverlay').classList.remove('open'); });
-document.getElementById('mobileOverlay').addEventListener('click', e => { if (e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
-
-// Fade-up
+// Fade-up (page-specific .fu elements)
 const fuObs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fuObs.unobserve(e.target); } });
 }, { threshold: 0.06 });
