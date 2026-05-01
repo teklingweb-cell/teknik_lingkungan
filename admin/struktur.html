@@ -250,6 +250,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const TIERS = [
   { key: 'rektor', label: 'Rektor',                 color: '#1a2e1e' },
   { key: 'wakil',  label: 'Wakil Rektor',            color: '#2d6a40' },
@@ -413,6 +414,7 @@ function showAlert(type, msg) {
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

@@ -127,6 +127,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Kesehatan':'#dc2626','Sosial & Humaniora':'#9333ea','Ekonomi':'#d97706'};
 let allData = [], deleteTargetId = null;
 
@@ -199,6 +200,7 @@ function showAlert(type, msg) {
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

@@ -428,7 +428,7 @@
 <script defer src="js/supabase-client.js"></script>
 <script defer src="main.js"></script>
 <script>
-(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const grid = document.getElementById('homeNewsGrid');
   let { data, error } = await sb.from('news').select('*').eq('show_on_home', true).limit(100).order('date', { ascending: false }).limit(3);
   if (error || !data || !data.length) {
@@ -458,7 +458,7 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.05 });
   grid.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
-})();
+});
 </script>
 </body>
 </html>

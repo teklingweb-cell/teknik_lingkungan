@@ -231,6 +231,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 let editId = null;
 
 (async () => {
@@ -397,6 +398,7 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
+});
 </script>
 <!-- NIM/NIP Conflict Modal -->
 <div id="nimConflictModal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(26,46,30,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;">

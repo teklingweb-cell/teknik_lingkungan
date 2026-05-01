@@ -251,6 +251,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 let editId = null;
 
 // ── Auth guard + init ─────────────────────────────────────
@@ -424,6 +425,7 @@ async function doSubmit() {
 
   window.location.href = `index.html?msg=${editId ? 'updated' : 'added'}`;
 }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

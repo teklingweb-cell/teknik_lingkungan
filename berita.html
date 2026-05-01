@@ -55,6 +55,7 @@
 <script defer src="js/supabase-client.js"></script>
 <script defer src="main.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 (function () {
   var allNews = [];
   var activeFilter = 'all';
@@ -172,6 +173,7 @@
         .catch(function(){ document.getElementById('emptyState').style.display = ''; });
     });
 })();
+});
 </script>
 </body>
 </html>

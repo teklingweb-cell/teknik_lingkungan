@@ -193,6 +193,7 @@
 </footer>
 <script defer src="main.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const TIERS=[
   {key:'rektor', label:'Rektor',            sz:'sz-xl',cssClass:'tier-rektor',color:'#1a2e1e'},
   {key:'wakil',  label:'Wakil Rektor',      sz:'sz-lg',cssClass:'tier-wakil', color:'#2d6a40'},
@@ -286,6 +287,7 @@ function closeBio(){document.getElementById('bioOverlay').classList.remove('open
 function handleOverlayClick(e){if(e.target===document.getElementById('bioOverlay'))closeBio();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBio();});
 function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+});
 </script>
 </body>
 </html>

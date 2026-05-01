@@ -217,6 +217,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const CAT_COLORS = {
   'Penelitian': '#2563eb', 'Pencapaian': '#16a34a',
   'Acara': '#9333ea', 'Pengumuman': '#d97706', 'Beasiswa': '#0891b2'
@@ -393,6 +394,7 @@ function escHtml(str) {
 function escAttr(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

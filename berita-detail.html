@@ -293,6 +293,7 @@
 <script defer src="js/supabase-client.js"></script>
 <script defer src="main.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 
 function toGDriveImg(url) {
   if (!url) return null;
@@ -380,6 +381,7 @@ function showError() {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorState').style.display = '';
 }
+});
 </script>
 </body>
 </html>

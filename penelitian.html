@@ -77,6 +77,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="js/supabase-client.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 let allData = [], activeFilter = 'all';
 const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Kesehatan':'#dc2626','Sosial & Humaniora':'#9333ea','Ekonomi':'#d97706'};
 
@@ -156,6 +157,7 @@ function observeNewCards(gridId) {
   document.querySelectorAll('#' + gridId + ' .fade-up').forEach(el => obs.observe(el));
 }
 
+});
 </script>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Prodi Teknik Lingkungan.</span><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">Powered by Sayba Arc</span></div></div></footer>

@@ -161,6 +161,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 let editId = null;
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -281,6 +282,7 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

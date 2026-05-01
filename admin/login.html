@@ -86,6 +86,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
   // Redirect if already logged in
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
@@ -118,6 +119,7 @@
 
   // Allow Enter key
   document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+});
 </script>
 </body>
 </html>

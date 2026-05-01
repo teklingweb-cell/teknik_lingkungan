@@ -371,6 +371,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="js/supabase-client.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const CAT_COLORS = {
   'Sains & Teknologi':'#2563eb',
   'Lingkungan':'#16a34a',
@@ -542,6 +543,7 @@ function renderBody(d) {
   }, { threshold: 0.05 });
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 }
+});
 </script>
 
 <script defer src="main.js"></script>

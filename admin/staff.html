@@ -175,6 +175,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const TYPE_LABELS = { dosen:'Dosen', alumni:'Alumni', staf:'Staf' };
 const TYPE_COLORS = { dosen:'#2563eb', alumni:'#16a34a', staf:'#9333ea' };
 let allData = [], currentFilter = 'all', deleteTargetId = null;
@@ -283,6 +284,7 @@ function renderOrgBadge(level) {
   const m = map[level];
   return `<span class="badge" style="background:${m.color}15;color:${m.color};">${m.label}</span>`;
 }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }

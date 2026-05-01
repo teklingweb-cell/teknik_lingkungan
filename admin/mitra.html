@@ -125,6 +125,7 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
 const CAT_COLORS = {'Industri':'#2563eb','Akademik':'#16a34a','Pemerintah':'#d97706','Internasional':'#9333ea'};
 let allData = [], deleteTargetId = null;
 
@@ -201,6 +202,7 @@ function showAlert(type, msg) {
 }
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+});
 </script>
 <script>
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
