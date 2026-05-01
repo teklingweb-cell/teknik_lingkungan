@@ -3,15 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Program Studi Teknik Lingkungan Universitas Tanjungpura – Menjaga Bumi, Membangun Masa Depan. Informasi akademik, penelitian, fasilitas, dan komunitas.">
+  <meta name="description" content="Program Studi Teknik Lingkungan Universitas Tanjungpura – Menjaga Bumi, Membangun Masa Depan.">
   <meta property="og:title" content="Program Studi Teknik Lingkungan – Universitas Tanjungpura">
-  <meta property="og:description" content="Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan – unggul dalam riset dan pengabdian lingkungan hidup.">
+  <meta property="og:description" content="Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="banner.png">
   <title>Program Studi Teknik Lingkungan – Menjaga Bumi, Membangun Masa Depan</title>
   <link rel="icon" type="image/png" href="logo-untan.png">
   <link rel="apple-touch-icon" href="logo-untan.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --ink:        #0c1a0f;
+      --forest:     #183d22;
+      --leaf:       #2f7d46;
+      --mint:       #5fad72;
+      --sage:       #a8c9a4;
+      --cream:      #f5f0e8;
+      --parchment:  #ede8de;
+      --clay:       #c4a882;
+      --amber:      #e8a84c;
+      --white:      #fdfaf5;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'DM Mono', monospace;
+      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring:cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--white); color: var(--ink); overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.5;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 2px; }
+
+    /* ── NAVBAR ── */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 200; transition: background .4s, box-shadow .4s; background: transparent; }
+    .navbar.scrolled { background: rgba(253,250,245,0.96); backdrop-filter: blur(16px); box-shadow: 0 1px 0 rgba(12,26,15,0.08); }
+    .nav-inner { max-width: 1320px; margin: 0 auto; padding: 0 2.5rem; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 40px; height: 40px; object-fit: contain; border-radius: 50%; background: white; padding: 3px; filter: drop-shadow(0 1px 3px rgba(0,0,0,.2)); }
+    .nav-logo-text { display: none; }
+    @media(min-width:640px){ .nav-logo-text { display: block; } }
+    .nav-logo-name { font-family: var(--font-display); font-weight: 600; font-size: .9rem; color: white; line-height: 1.2; transition: color .3s; }
+    .nav-logo-sub  { font-size: .58rem; text-transform: uppercase; letter-spacing: .15em; color: var(--sage); font-family: var(--font-body); transition: color .3s; }
+    .navbar.scrolled .nav-logo-name { color: var(--ink); }
+    .navbar.scrolled .nav-logo-sub  { color: var(--leaf); }
+    .nav-links { display: none; list-style: none; align-items: center; gap: 0; }
+    @media(min-width:1024px){ .nav-links { display: flex; } }
+    .nav-links a { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: .8rem; font-family: var(--font-body); font-weight: 500; text-decoration: none; border-radius: 8px; color: rgba(255,255,255,.82); transition: color .2s, background .2s; }
+    .navbar.scrolled .nav-links a { color: rgba(12,26,15,.65); }
+    .navbar.scrolled .nav-links a:hover { color: var(--ink); background: rgba(12,26,15,.04); }
+    .nav-links li { position: relative; }
+    .has-dropdown > a::after { content: ' ▾'; font-size: .6rem; }
+    .dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; padding: 6px; min-width: 200px; background: var(--white); border: 1px solid rgba(12,26,15,.08); border-radius: 14px; box-shadow: 0 12px 40px rgba(12,26,15,.12); }
+    .dropdown::before { content: ''; position: absolute; top: -10px; left: 0; width: 100%; height: 10px; }
+    .has-dropdown:hover .dropdown { display: block; }
+    .dropdown a { display: flex !important; align-items: center; gap: 10px; padding: 9px 12px !important; font-size: .78rem; color: rgba(12,26,15,.65) !important; border-radius: 8px; }
+    .dropdown a::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--leaf); flex-shrink: 0; }
+    .dropdown a:hover { background: rgba(12,26,15,.04); color: var(--ink) !important; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .hamburger { display: flex; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+    @media(min-width:1024px){ .hamburger { display: none; } }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: white; border-radius: 2px; transition: all .3s; }
+    .navbar.scrolled .hamburger span { background: var(--ink); }
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(12,26,15,.5); z-index: 300; backdrop-filter: blur(4px); }
+    .mobile-overlay.open { display: block; }
+    .mobile-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(360px,92vw); background: var(--white); padding: 80px 28px 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+    .mobile-drawer a { font-family: var(--font-body); font-size: .9rem; font-weight: 500; color: var(--ink); text-decoration: none; padding: 10px 0; border-bottom: 1px solid rgba(12,26,15,.06); }
+    .mobile-group-title { font-family: var(--font-mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .15em; color: var(--leaf); padding: 16px 0 4px; }
+    .mobile-sub { display: flex; flex-direction: column; }
+    .mobile-sub a { padding: 8px 0 8px 16px; font-size: .83rem; color: rgba(12,26,15,.6); }
+    .mobile-close-btn { position: absolute; top: 24px; right: 24px; background: none; border: 1px solid rgba(12,26,15,.12); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero2 { position: relative; min-height: 100svh; display: grid; grid-template-columns: 1fr; overflow: hidden; background: var(--ink); }
+    @media(min-width:900px){ .hero2 { grid-template-columns: 52% 48%; } }
+    .hero2-left { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 120px 4vw 80px; background: linear-gradient(135deg,#0c1a0f 0%,#183d22 100%); }
+    .hero2-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mint); margin-bottom: 28px; }
+    .hero2-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--mint); }
+    .hero2-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.8rem,5.5vw,5.5rem); line-height: 1.0; color: var(--cream); margin-bottom: 28px; letter-spacing: -.02em; }
+    .hero2-title em { font-style: italic; color: var(--mint); display: block; }
+    .hero2-desc { font-family: var(--font-body); font-weight: 300; font-size: clamp(.9rem,1.2vw,1.05rem); color: rgba(245,240,232,.55); line-height: 1.75; max-width: 480px; margin-bottom: 44px; }
+    .hero2-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-hero-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--leaf); color: white; font-family: var(--font-body); font-weight: 600; font-size: .82rem; text-decoration: none; border-radius: 999px; transition: background .2s, transform .2s; }
+    .btn-hero-primary:hover { background: var(--mint); transform: translateY(-2px); }
+    .btn-hero-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: transparent; border: 1px solid rgba(245,240,232,.2); color: rgba(245,240,232,.7); font-family: var(--font-body); font-weight: 500; font-size: .82rem; text-decoration: none; border-radius: 999px; transition: border-color .2s, color .2s; }
+    .btn-hero-ghost:hover { border-color: rgba(245,240,232,.6); color: white; }
+    .hero2-left::after { content: ''; position: absolute; bottom: 0; right: 0; width: 1px; height: 60%; background: linear-gradient(to bottom,transparent,rgba(95,173,114,.3) 40%,transparent); }
+    .hero2-badge { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 48px; padding: 8px 16px 8px 8px; border: 1px solid rgba(245,240,232,.1); border-radius: 999px; width: fit-content; }
+    .hero2-badge img { width: 36px; height: 36px; border-radius: 50%; background: white; padding: 2px; object-fit: contain; }
+    .hero2-badge-text { display: flex; flex-direction: column; }
+    .hero2-badge-name { font-family: var(--font-display); font-size: .78rem; font-weight: 600; color: var(--cream); }
+    .hero2-badge-sub  { font-family: var(--font-mono); font-size: .58rem; color: var(--mint); letter-spacing: .1em; text-transform: uppercase; }
+    .hero2-acred { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; padding: 5px 14px 5px 8px; background: rgba(47,125,70,.2); border: 1px solid rgba(47,125,70,.4); border-radius: 999px; width: fit-content; }
+    .hero2-acred-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px var(--mint); animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.7)} }
+    .hero2-acred span { font-family: var(--font-mono); font-size: .65rem; color: var(--mint); letter-spacing: .1em; }
+    .hero2-right { position: relative; overflow: hidden; min-height: 50vh; }
+    @media(min-width:900px){ .hero2-right { min-height: unset; } }
+    .hero2-img { position: absolute; inset: 0; background: url('banner.png') center center/cover no-repeat; }
+    .hero2-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(24,61,34,.7) 0%,rgba(12,26,15,.4) 60%,rgba(12,26,15,.2) 100%); }
+    .hero2-chips { position: absolute; bottom: 48px; left: 32px; right: 32px; z-index: 3; display: flex; gap: 10px; flex-wrap: wrap; }
+    @media(max-width:899px){ .hero2-chips { display: none; } }
+    .hero2-chip { background: rgba(253,250,245,.1); backdrop-filter: blur(16px); border: 1px solid rgba(253,250,245,.15); border-radius: 14px; padding: 16px 20px; flex: 1; min-width: 100px; }
+    .hero2-chip-val { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: white; line-height: 1; }
+    .hero2-chip-lbl { font-family: var(--font-body); font-size: .68rem; color: rgba(255,255,255,.55); margin-top: 4px; font-weight: 400; }
+    .hero2-scroll { position: absolute; bottom: 32px; left: 4vw; display: flex; align-items: center; gap: 10px; z-index: 3; }
+    @media(min-width:900px){ .hero2-scroll { display: none; } }
+    .hero2-scroll span { font-family: var(--font-mono); font-size: .62rem; color: rgba(245,240,232,.4); letter-spacing: .2em; text-transform: uppercase; }
+    .hero2-scroll-line { width: 40px; height: 1px; background: linear-gradient(to right,rgba(245,240,232,.4),transparent); animation: expandLine 2s ease-in-out infinite; }
+    @keyframes expandLine { 0%{width:20px;opacity:.3} 50%{width:50px;opacity:.7} 100%{width:20px;opacity:.3} }
+
+    /* ── STATS ── */
+    .stats2 { background: var(--forest); }
+    .stats2-inner { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
+    @media(max-width:700px){ .stats2-inner { grid-template-columns: repeat(2,1fr); } }
+    .stats2-item { padding: 40px 36px; border-right: 1px solid rgba(245,240,232,.06); position: relative; overflow: hidden; transition: background .3s; }
+    .stats2-item:last-child { border-right: none; }
+    .stats2-item:hover { background: rgba(245,240,232,.03); }
+    .stats2-val { font-family: var(--font-display); font-weight: 900; font-size: clamp(2rem,3.5vw,2.8rem); color: var(--cream); line-height: 1; margin-bottom: 8px; }
+    .stats2-val span { color: var(--mint); }
+    .stats2-lbl { font-family: var(--font-body); font-size: .75rem; color: rgba(245,240,232,.45); font-weight: 400; text-transform: uppercase; letter-spacing: .1em; }
+    .stats2-item::before { content: ''; position: absolute; bottom: 0; right: 0; width: 40px; height: 40px; border-left: 1px solid rgba(95,173,114,.15); border-top: 1px solid rgba(95,173,114,.15); border-radius: 0 0 0 4px; }
+
+    /* ── SECTION COMMONS ── */
+    .sec { max-width: 1320px; margin: 0 auto; padding: 100px 2.5rem; }
+    .sec-sm { padding-top: 60px; padding-bottom: 60px; }
+    .sec-label { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--leaf); margin-bottom: 16px; }
+    .sec-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--leaf); }
+    .sec-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem,3vw,2.8rem); color: var(--ink); line-height: 1.15; letter-spacing: -.02em; }
+    .sec-title.light { color: var(--cream); }
+    .sec-divider { width: 32px; height: 2px; background: var(--leaf); margin-top: 16px; border-radius: 2px; }
+
+    /* ── FOCUS CARDS ── */
+    .focus-section { background: var(--white); }
+    .focus-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; flex-wrap: wrap; gap: 16px; }
+    .focus-see-all { font-family: var(--font-body); font-size: .8rem; color: var(--leaf); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: gap .2s; }
+    .focus-see-all:hover { gap: 10px; }
+    .focus-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    @media(max-width:900px){ .focus-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:540px){ .focus-grid { grid-template-columns: 1fr; } }
+    .focus-card { position: relative; overflow: hidden; border-radius: 20px; background: var(--parchment); border: 1px solid rgba(12,26,15,.06); padding: 32px 28px; text-decoration: none; display: block; transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); cursor: pointer; }
+    .focus-card:hover { transform: translateY(-6px); box-shadow: 0 24px 64px rgba(12,26,15,.1); }
+    .focus-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,var(--forest),var(--leaf)); opacity: 0; transition: opacity .4s; }
+    .focus-card:hover::before { opacity: 1; }
+    .focus-card-num { font-family: var(--font-mono); font-size: .62rem; color: rgba(12,26,15,.3); letter-spacing: .15em; margin-bottom: 20px; position: relative; z-index: 1; transition: color .3s; }
+    .focus-card:hover .focus-card-num { color: rgba(245,240,232,.4); }
+    .focus-card-icon { width: 48px; height: 48px; background: rgba(47,125,70,.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; z-index: 1; transition: background .3s; }
+    .focus-card-icon svg { transition: stroke .3s; }
+    .focus-card:hover .focus-card-icon { background: rgba(255,255,255,.15); }
+    .focus-card:hover .focus-card-icon svg { stroke: white !important; }
+    .focus-card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--ink); margin-bottom: 12px; line-height: 1.3; position: relative; z-index: 1; transition: color .3s; }
+    .focus-card:hover .focus-card-title { color: white; }
+    .focus-card-desc { font-family: var(--font-body); font-size: .78rem; color: rgba(12,26,15,.5); line-height: 1.65; position: relative; z-index: 1; transition: color .3s; }
+    .focus-card:hover .focus-card-desc { color: rgba(245,240,232,.65); }
+    .focus-card-arrow { position: absolute; bottom: 24px; right: 24px; width: 32px; height: 32px; border-radius: 50%; background: rgba(12,26,15,.05); display: flex; align-items: center; justify-content: center; font-size: .8rem; color: var(--leaf); transition: background .3s, color .3s, transform .3s var(--ease-spring); z-index: 1; }
+    .focus-card:hover .focus-card-arrow { background: rgba(255,255,255,.2); color: white; transform: translate(3px,-3px); }
+
+    /* ── NEWS ── */
+    .news-section { background: var(--parchment); }
+    .news-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; flex-wrap: wrap; gap: 16px; }
+    .news-grid2 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media(max-width:900px){ .news-grid2 { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:580px){ .news-grid2 { grid-template-columns: 1fr; } }
+    .news-card2 { background: var(--white); border-radius: 18px; overflow: hidden; text-decoration: none; display: block; border: 1px solid rgba(12,26,15,.06); transition: transform .3s var(--ease-out), box-shadow .3s; }
+    .news-card2:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(12,26,15,.1); }
+    .news-thumb2 { aspect-ratio: 16/9; overflow: hidden; background: var(--forest); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; color: rgba(245,240,232,.15); }
+    .news-thumb2 img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .news-card2:hover .news-thumb2 img { transform: scale(1.05); }
+    .news-body2 { padding: 24px; }
+    .news-meta2 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .news-cat { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--leaf); font-weight: 500; }
+    .news-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(12,26,15,.2); }
+    .news-date2 { font-family: var(--font-body); font-size: .7rem; color: rgba(12,26,15,.35); font-weight: 400; }
+    .news-title2 { font-family: var(--font-display); font-weight: 600; font-size: .98rem; color: var(--ink); line-height: 1.4; margin-bottom: 10px; }
+    .news-excerpt2 { font-family: var(--font-body); font-size: .77rem; color: rgba(12,26,15,.5); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .news-footer2 { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid rgba(12,26,15,.05); }
+    .news-read2 { font-family: var(--font-body); font-size: .73rem; font-weight: 600; color: var(--leaf); display: inline-flex; align-items: center; gap: 6px; }
+
+    /* ── ABOUT ── */
+    .about-section { background: var(--ink); }
+    .about-bento { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; gap: 16px; }
+    @media(max-width:800px){ .about-bento { grid-template-columns: 1fr; } }
+    .about-main { grid-column: 1; grid-row: 1/3; background: rgba(245,240,232,.04); border: 1px solid rgba(245,240,232,.07); border-radius: 20px; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; }
+    @media(max-width:800px){ .about-main { grid-row: auto; } }
+    .about-main-body p { font-family: var(--font-body); font-weight: 300; font-size: .9rem; color: rgba(245,240,232,.5); line-height: 1.8; margin-bottom: 16px; }
+    .about-cta { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: .8rem; font-weight: 600; color: var(--mint); text-decoration: none; padding-bottom: 3px; border-bottom: 1px solid rgba(95,173,114,.3); transition: border-color .2s, gap .2s; }
+    .about-cta:hover { border-color: var(--mint); gap: 12px; }
+    .about-stat-card { background: rgba(245,240,232,.04); border: 1px solid rgba(245,240,232,.07); border-radius: 20px; padding: 32px 36px; display: flex; flex-direction: column; justify-content: center; }
+    .about-stat-card.accent { background: var(--leaf); border-color: transparent; }
+    .about-stat-val { font-family: var(--font-display); font-weight: 900; font-size: 2.8rem; color: var(--cream); line-height: 1; margin-bottom: 8px; }
+    .about-stat-card.accent .about-stat-val { color: white; }
+    .about-stat-lbl { font-family: var(--font-body); font-size: .72rem; color: rgba(245,240,232,.45); text-transform: uppercase; letter-spacing: .12em; }
+    .about-stat-card.accent .about-stat-lbl { color: rgba(255,255,255,.7); }
+    .about-row2 { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 16px; margin-top: 16px; }
+    @media(max-width:800px){ .about-row2 { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:540px){ .about-row2 { grid-template-columns: 1fr; } }
+
+    /* ── CTA ── */
+    .cta2-wrap { background: var(--parchment); }
+    .cta2 { background: var(--forest); border-radius: 24px; padding: 64px 60px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; position: relative; overflow: hidden; }
+    .cta2::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; background: radial-gradient(circle,rgba(95,173,114,.25) 0%,transparent 70%); border-radius: 50%; }
+    .cta2::after { content: ''; position: absolute; bottom: -80px; left: 20%; width: 200px; height: 200px; background: radial-gradient(circle,rgba(47,125,70,.2) 0%,transparent 70%); border-radius: 50%; }
+    .cta2-text { position: relative; z-index: 1; }
+    .cta2-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem,2.5vw,2rem); color: var(--cream); line-height: 1.2; margin-bottom: 12px; }
+    .cta2-sub { font-family: var(--font-body); font-size: .85rem; color: rgba(245,240,232,.5); font-weight: 300; }
+    .cta2-btns { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+    .btn-cta-primary { padding: 13px 28px; background: var(--mint); color: var(--ink); font-family: var(--font-body); font-weight: 700; font-size: .82rem; text-decoration: none; border-radius: 999px; transition: background .2s, transform .2s; }
+    .btn-cta-primary:hover { background: var(--sage); transform: translateY(-2px); }
+    .btn-cta-outline { padding: 13px 28px; background: transparent; border: 1px solid rgba(245,240,232,.25); color: rgba(245,240,232,.7); font-family: var(--font-body); font-weight: 500; font-size: .82rem; text-decoration: none; border-radius: 999px; transition: border-color .2s, color .2s; }
+    .btn-cta-outline:hover { border-color: rgba(245,240,232,.6); color: white; }
+
+    /* ── FOOTER ── */
+    footer { display: block; background: var(--ink); }
+    .footer2-inner { max-width: 1320px; margin: 0 auto; padding: 80px 2.5rem 40px; }
+    .footer2-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 48px; margin-bottom: 60px; }
+    @media(max-width:900px){ .footer2-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:540px){ .footer2-grid { grid-template-columns: 1fr; } }
+    .footer2-brand-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .footer2-brand-logo-icon { width: 38px; height: 38px; background: var(--leaf); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: white; font-size: .7rem; }
+    .footer2-brand-name { font-family: var(--font-display); font-weight: 600; font-size: .9rem; color: var(--cream); }
+    .footer2-brand-sub  { font-family: var(--font-mono); font-size: .55rem; text-transform: uppercase; letter-spacing: .15em; color: var(--mint); }
+    .footer2-desc { font-family: var(--font-body); font-size: .78rem; color: rgba(245,240,232,.35); line-height: 1.7; margin-bottom: 24px; font-weight: 300; }
+    .footer2-socials { display: flex; gap: 8px; }
+    .footer2-social { width: 34px; height: 34px; background: rgba(245,240,232,.05); border: 1px solid rgba(245,240,232,.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); font-size: .7rem; font-weight: 600; color: rgba(245,240,232,.4); text-decoration: none; transition: background .2s, color .2s, border-color .2s; }
+    .footer2-social:hover { background: var(--leaf); color: white; border-color: var(--leaf); }
+    .footer2-col-title { font-family: var(--font-mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .2em; color: rgba(245,240,232,.3); margin-bottom: 20px; }
+    .footer2-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer2-links a { font-family: var(--font-body); font-size: .8rem; color: rgba(245,240,232,.4); text-decoration: none; transition: color .2s; }
+    .footer2-links a:hover { color: var(--mint); }
+    .footer2-contact-item { font-family: var(--font-body); font-size: .78rem; color: rgba(245,240,232,.35); line-height: 1.5; margin-bottom: 10px; font-weight: 300; }
+    .footer2-bottom { border-top: 1px solid rgba(245,240,232,.06); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer2-bottom span { font-family: var(--font-body); font-size: .72rem; color: rgba(245,240,232,.25); }
+    .footer2-powered { font-family: var(--font-mono); font-size: .62rem; color: rgba(245,240,232,.2) !important; letter-spacing: .1em; }
+
+    /* ── FADE-UP ── */
+    .fu { opacity: 0; transform: translateY(28px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+    .fu.visible { opacity: 1; transform: none; }
+    .fu.d1 { transition-delay: .1s; }
+    .fu.d2 { transition-delay: .2s; }
+    .fu.d3 { transition-delay: .3s; }
+    .fu.d4 { transition-delay: .4s; }
+
+    /* Hero load animations */
+    .hero2-left > * { animation: heroIn .8s var(--ease-out) forwards; opacity: 0; }
+    .hero2-left > *:nth-child(1){ animation-delay:.1s; }
+    .hero2-left > *:nth-child(2){ animation-delay:.2s; }
+    .hero2-left > *:nth-child(3){ animation-delay:.3s; }
+    .hero2-left > *:nth-child(4){ animation-delay:.35s; }
+    .hero2-left > *:nth-child(5){ animation-delay:.4s; }
+    .hero2-left > *:nth-child(6){ animation-delay:.5s; }
+    @keyframes heroIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+    .hero2-chip { animation: chipIn .6s var(--ease-spring) forwards; opacity: 0; }
+    .hero2-chip:nth-child(1){ animation-delay:.6s; }
+    .hero2-chip:nth-child(2){ animation-delay:.72s; }
+    .hero2-chip:nth-child(3){ animation-delay:.84s; }
+    .hero2-chip:nth-child(4){ animation-delay:.96s; }
+    @keyframes chipIn { from{opacity:0;transform:translateY(16px) scale(.95)} to{opacity:1;transform:none} }
+  </style>
 </head>
 <body>
 
@@ -19,7 +277,7 @@
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="logo-untan.png" alt="Logo Universitas Tanjungpura" style="height:44px;width:44px;object-fit:contain;border-radius:50%;background:white;padding:3px;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.18));">
+      <img src="logo-untan.png" alt="Logo Universitas Tanjungpura">
       <div class="nav-logo-text">
         <div class="nav-logo-name">Teknik Lingkungan</div>
         <div class="nav-logo-sub">Program Studi</div>
@@ -55,13 +313,16 @@
       <li><a href="kontak.html">Kontak</a></li>
     </ul>
     <div class="nav-right">
-      
-      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" aria-label="Menu" id="hamburgerBtn">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </nav>
-<div class="mobile-overlay">
+
+<div class="mobile-overlay" id="mobileOverlay">
   <div class="mobile-drawer">
+    <button class="mobile-close-btn" id="mobileClose">✕</button>
     <a href="index.html">Beranda</a>
     <div class="mobile-group-title">Tentang Prodi</div>
     <div class="mobile-sub">
@@ -87,296 +348,199 @@
 </div>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-banner-overlay"></div>
-  <div class="hero-bg-glow-1"></div>
-  <div class="hero-bg-glow-2"></div>
-  <svg class="hero-grid" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="grid-hero" width="80" height="80" patternUnits="userSpaceOnUse">
-        <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#7aab6e" stroke-width="0.5"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#grid-hero)"/>
-  </svg>
-  <div class="hero-line"></div>
-
-  <div class="hero-content">
-    <div class="hero-logo-badge">
-      <img src="logo-untan.png" alt="Logo Universitas Tanjungpura" class="hero-untan-logo">
-      <div class="hero-untan-text">
-        <span class="hero-untan-name">Universitas Tanjungpura</span>
-        <span class="hero-untan-sub">Pontianak — Kalimantan Barat</span>
+<section class="hero2">
+  <div class="hero2-left">
+    <div class="hero2-badge">
+      <img src="logo-untan.png" alt="Logo Universitas Tanjungpura">
+      <div class="hero2-badge-text">
+        <span class="hero2-badge-name">Universitas Tanjungpura</span>
+        <span class="hero2-badge-sub">Pontianak · Kalimantan Barat</span>
       </div>
     </div>
-    <div class="hero-badge">
-      <span class="dot"></span>
-      Prodi Teknik Lingkungan — Terakreditasi Unggul
+    <div class="hero2-acred">
+      <div class="hero2-acred-dot"></div>
+      <span>Terakreditasi Unggul</span>
     </div>
-    <h1 class="hero-title">
-      Menjaga<br>
-      <em>Bumi</em> untuk<br>
-      Generasi Mendatang
-    </h1>
-    <p class="hero-subtitle">
-      Program Studi Teknik Lingkungan hadir untuk mencetak insinyur lingkungan yang mampu merancang solusi nyata atas krisis air, udara, dan pengelolaan limbah demi keberlanjutan ekosistem Indonesia.
-    </p>
-    <div class="hero-buttons">
-      <a href="profile.html" class="btn-primary">Tentang Prodi →</a>
-      <a href="penelitian.html" class="btn-ghost">Lihat Penelitian ›</a>
+    <h1 class="hero2-title">Menjaga<br><em>Bumi</em> untuk<br>Generasi Mendatang</h1>
+    <p class="hero2-desc">Program Studi Teknik Lingkungan mencetak insinyur yang mampu merancang solusi nyata atas krisis air, udara, dan pengelolaan limbah demi keberlanjutan ekosistem Indonesia.</p>
+    <div class="hero2-btns">
+      <a href="profile.html" class="btn-hero-primary">Tentang Prodi →</a>
+      <a href="penelitian.html" class="btn-hero-ghost">Lihat Penelitian</a>
+    </div>
+    <div class="hero2-scroll">
+      <span>Scroll</span>
+      <div class="hero2-scroll-line"></div>
     </div>
   </div>
-
-  <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="hero-scroll-line"></div>
+  <div class="hero2-right">
+    <div class="hero2-img"></div>
+    <div class="hero2-chips">
+      <div class="hero2-chip">
+        <div class="hero2-chip-val">20<span style="font-size:1rem;font-weight:400">+</span></div>
+        <div class="hero2-chip-lbl">Tahun Berdiri</div>
+      </div>
+      <div class="hero2-chip">
+        <div class="hero2-chip-val">480<span style="font-size:1rem;font-weight:400">+</span></div>
+        <div class="hero2-chip-lbl">Mahasiswa Aktif</div>
+      </div>
+      <div class="hero2-chip">
+        <div class="hero2-chip-val">28</div>
+        <div class="hero2-chip-lbl">Dosen Pengampu</div>
+      </div>
+      <div class="hero2-chip">
+        <div class="hero2-chip-val">94<span style="font-size:1rem;font-weight:400">%</span></div>
+        <div class="hero2-chip-lbl">Tingkat Kelulusan</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<style>
-.hero {
-  background: linear-gradient(135deg, #0d1f10 0%, #1a2e1e 50%, #122418 100%);
-  background-image: url('banner.png');
-  background-size: cover;
-  background-position: center 30%;
-  background-blend-mode: normal;
-}
-.hero-banner-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(10,24,13,0.82) 0%,
-    rgba(13,31,16,0.75) 40%,
-    rgba(10,24,13,0.90) 100%
-  );
-  z-index: 0;
-}
-.hero-bg-glow-1, .hero-bg-glow-2, .hero-grid, .hero-line {
-  position: absolute;
-  z-index: 0;
-}
-.hero-content {
-  position: relative;
-  z-index: 1;
-}
-.hero-scroll {
-  position: absolute;
-  z-index: 1;
-}
-/* Logo badge above the hero text */
-.hero-logo-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
-  padding: 10px 20px 10px 10px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  animation: fadeUp 0.4s ease forwards;
-}
-.hero-untan-logo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-  background: white;
-  border-radius: 50%;
-  padding: 3px;
-}
-.hero-untan-text {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-.hero-untan-name {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--cream);
-  letter-spacing: 0.01em;
-}
-.hero-untan-sub {
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  color: rgba(122,171,110,0.9);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 1px;
-}
-@media(max-width:480px){
-  .hero-logo-badge { padding: 8px 14px 8px 8px; }
-  .hero-untan-logo { width: 38px; height: 38px; }
-  .hero-untan-name { font-size: 0.75rem; }
-}
-</style>
-
 <!-- STATS -->
-<div class="stats-strip">
-  <div class="container section" style="padding-top:0;padding-bottom:0;">
-    <div class="stats-grid">
-      <div class="stat-item fade-up">
-        <span class="stat-value">20+</span>
-        <span class="stat-label">Tahun Berdiri</span>
+<div class="stats2">
+  <div class="stats2-inner">
+    <div class="stats2-item fu"><div class="stats2-val">20<span>+</span></div><div class="stats2-lbl">Tahun Berdiri</div></div>
+    <div class="stats2-item fu d1"><div class="stats2-val">480<span>+</span></div><div class="stats2-lbl">Mahasiswa Aktif</div></div>
+    <div class="stats2-item fu d2"><div class="stats2-val">28</div><div class="stats2-lbl">Dosen Pengampu</div></div>
+    <div class="stats2-item fu d3"><div class="stats2-val">94<span>%</span></div><div class="stats2-lbl">Tingkat Kelulusan</div></div>
+  </div>
+</div>
+
+<!-- FOCUS AREAS -->
+<div class="focus-section">
+  <div class="sec">
+    <div class="focus-header">
+      <div class="fu">
+        <div class="sec-label">Bidang Unggulan</div>
+        <h2 class="sec-title">Fokus Kajian Kami</h2>
+        <div class="sec-divider"></div>
       </div>
-      <div class="stat-item fade-up delay-1">
-        <span class="stat-value">480+</span>
-        <span class="stat-label">Mahasiswa Aktif</span>
+      <a href="penelitian.html" class="focus-see-all fu d2">Semua Penelitian →</a>
+    </div>
+    <div class="focus-grid">
+      <a href="penelitian.html" class="focus-card fu">
+        <div class="focus-card-num">01</div>
+        <div class="focus-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f7d46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 8.5 4 12.5 4 15.5a8 8 0 0 0 16 0C20 12.5 17.5 8.5 12 2z"/><path d="M12 12v6M9 15l3 3 3-3" stroke-width="1.5"/></svg>
+        </div>
+        <div class="focus-card-title">Rekayasa Air &amp; Air Limbah</div>
+        <div class="focus-card-desc">Perancangan sistem pengolahan air bersih, IPAL, dan teknologi daur ulang air limbah domestik maupun industri.</div>
+        <div class="focus-card-arrow">→</div>
+      </a>
+      <a href="fasilitas.html" class="focus-card fu d1">
+        <div class="focus-card-num">02</div>
+        <div class="focus-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f7d46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+        </div>
+        <div class="focus-card-title">Kualitas Udara</div>
+        <div class="focus-card-desc">Monitoring, pemodelan dispersi polutan, serta pengendalian emisi gas berbahaya dari sumber industri dan transportasi.</div>
+        <div class="focus-card-arrow">→</div>
+      </a>
+      <a href="penelitian.html" class="focus-card fu d2">
+        <div class="focus-card-num">03</div>
+        <div class="focus-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f7d46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        </div>
+        <div class="focus-card-title">Pengelolaan Limbah Padat</div>
+        <div class="focus-card-desc">Desain TPS, sistem pengangkutan, landfill engineering, serta teknologi pengolahan sampah berbasis circular economy.</div>
+        <div class="focus-card-arrow">→</div>
+      </a>
+      <a href="pencapaian.html" class="focus-card fu d3">
+        <div class="focus-card-num">04</div>
+        <div class="focus-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f7d46" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        </div>
+        <div class="focus-card-title">Analisis Dampak Lingkungan</div>
+        <div class="focus-card-desc">Penyusunan AMDAL, UKL-UPL, dan kajian risiko lingkungan untuk proyek infrastruktur dan industri skala nasional.</div>
+        <div class="focus-card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="news-section">
+  <div class="sec">
+    <div class="news-header">
+      <div class="fu">
+        <div class="sec-label">Terkini</div>
+        <h2 class="sec-title">Berita &amp; Kegiatan</h2>
+        <div class="sec-divider"></div>
       </div>
-      <div class="stat-item fade-up delay-2">
-        <span class="stat-value">28</span>
-        <span class="stat-label">Dosen Pengampu</span>
+      <a href="berita.html" class="focus-see-all fu d2">Semua Berita →</a>
+    </div>
+    <div class="news-grid2" id="homeNewsGrid">
+      <div class="news-card2" style="opacity:.35;pointer-events:none;"><div class="news-thumb2">⋯</div><div class="news-body2"><div style="height:10px;background:rgba(12,26,15,.08);border-radius:4px;width:60%;margin-bottom:12px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;margin-bottom:8px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;width:80%;"></div></div></div>
+      <div class="news-card2" style="opacity:.25;pointer-events:none;"><div class="news-thumb2">⋯</div><div class="news-body2"><div style="height:10px;background:rgba(12,26,15,.08);border-radius:4px;width:60%;margin-bottom:12px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;margin-bottom:8px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;width:80%;"></div></div></div>
+      <div class="news-card2" style="opacity:.15;pointer-events:none;"><div class="news-thumb2">⋯</div><div class="news-body2"><div style="height:10px;background:rgba(12,26,15,.08);border-radius:4px;width:60%;margin-bottom:12px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;margin-bottom:8px;"></div><div style="height:14px;background:rgba(12,26,15,.08);border-radius:4px;width:80%;"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT BENTO -->
+<div class="about-section">
+  <div class="sec">
+    <div class="about-bento">
+      <div class="about-main fu">
+        <div>
+          <div class="sec-label" style="color:var(--mint);">Tentang Prodi</div>
+          <h2 class="sec-title light" style="margin-bottom:28px;">Lebih dari Sekadar<br>Program Studi</h2>
+          <div class="about-main-body">
+            <p>Prodi Teknik Lingkungan hadir sebagai jawaban atas tantangan lingkungan yang kian kompleks — dari pencemaran air dan udara hingga krisis sampah perkotaan. Kami menyiapkan lulusan yang tidak hanya paham teori, tapi siap turun ke lapangan dengan solusi terukur.</p>
+            <p>Didukung tiga laboratorium aktif dan jaringan mitra industri lingkungan, mahasiswa kami mendapat pengalaman riset dan praktik yang relevan dengan kebutuhan dunia kerja.</p>
+          </div>
+        </div>
+        <a href="profile.html" class="about-cta">Pelajari Selengkapnya →</a>
       </div>
-      <div class="stat-item fade-up delay-3">
-        <span class="stat-value">94%</span>
-        <span class="stat-label">Tingkat Kelulusan</span>
+      <div class="about-stat-card fu d1"><div class="about-stat-val">3</div><div class="about-stat-lbl">Lab Aktif</div></div>
+      <div class="about-stat-card accent fu d2"><div class="about-stat-val">42<span style="font-size:1.4rem;font-weight:400">+</span></div><div class="about-stat-lbl">Jurnal Terindeks</div></div>
+    </div>
+    <div class="about-row2">
+      <div class="about-stat-card fu" style="padding:28px 32px;"><div class="about-stat-val" style="font-size:2rem;">18<span style="font-size:1rem;font-weight:400">+</span></div><div class="about-stat-lbl">Mitra Industri</div></div>
+      <div class="about-stat-card fu d1" style="padding:28px 32px;"><div class="about-stat-val" style="font-size:2rem;">4</div><div class="about-stat-lbl">Konsentrasi Studi</div></div>
+      <div class="about-stat-card fu d2" style="padding:28px 32px;"><div class="about-stat-val" style="font-size:1.1rem;font-family:var(--font-display);font-weight:600;color:rgba(245,240,232,.4);line-height:1.6;">"Mencetak insinyur lingkungan yang kompeten, berdedikasi, dan berdampak nyata."</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta2-wrap">
+  <div class="sec sec-sm">
+    <div class="cta2 fu">
+      <div class="cta2-text">
+        <div class="cta2-title">Bergabung &amp; Jadilah<br>Bagian dari Solusi</div>
+        <div class="cta2-sub">Daftarkan dirimu dan jadilah insinyur lingkungan yang dibutuhkan Indonesia.</div>
+      </div>
+      <div class="cta2-btns">
+        <a href="kontak.html" class="btn-cta-primary">Daftar Sekarang →</a>
+        <a href="kontak.html" class="btn-cta-outline">Hubungi Kami</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- HIGHLIGHTS -->
-<!-- NEWS -->
-<section class="section" style="padding-bottom:24px;">
-  <div class="container">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;">
-      <div class="fade-up">
-        <div class="section-tag">— Terkini</div>
-        <h2 class="section-title">Berita &amp; Kegiatan</h2>
-        <div class="gold-divider"></div>
-      </div>
-      <a href="berita.html" style="font-size:0.85rem;color:rgba(26,46,30,0.5);text-decoration:none;font-family:var(--font-body);">Semua Berita ›</a>
-    </div>
-    <div class="grid-3" id="homeNewsGrid">
-      <div class="news-card fade-up" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
-      <div class="news-card fade-up delay-1" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
-      <div class="news-card fade-up delay-2" style="opacity:0.3;pointer-events:none;"><article><div class="news-thumb"><span class="news-thumb-num">…</span></div></article></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top:24px;padding-bottom:40px;">
-  <div class="container">
-    <div class="fade-up">
-      <div class="section-tag">— Bidang Unggulan</div>
-      <h2 class="section-title">Fokus Kajian Kami</h2>
-      <div class="gold-divider"></div>
-    </div>
-    <div class="grid-4" style="margin-top:32px;">
-      <a href="penelitian.html" class="card" style="padding:24px;text-decoration:none;display:block;">
-        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 8.5 4 12.5 4 15.5a8 8 0 0 0 16 0C20 12.5 17.5 8.5 12 2z"/><path d="M12 12v6M9 15l3 3 3-3" stroke-width="1.5"/></svg></div>
-        <div class="card-title">Rekayasa Air &amp; Air Limbah</div>
-        <div class="card-desc">Perancangan sistem pengolahan air bersih, IPAL, dan teknologi daur ulang air limbah domestik maupun industri.</div>
-        <div class="card-link">Selengkapnya →</div>
-      </a>
-      <a href="fasilitas.html" class="card" style="padding:24px;text-decoration:none;display:block;">
-        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
-        <div class="card-title">Kualitas Udara</div>
-        <div class="card-desc">Monitoring, pemodelan dispersi polutan, serta pengendalian emisi gas berbahaya dari sumber industri dan transportasi.</div>
-        <div class="card-link">Selengkapnya →</div>
-      </a>
-      <a href="penelitian.html" class="card" style="padding:24px;text-decoration:none;display:block;">
-        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg></div>
-        <div class="card-title">Pengelolaan Limbah Padat</div>
-        <div class="card-desc">Desain TPS, sistem pengangkutan, landfill engineering, serta teknologi pengolahan sampah berbasis circular economy.</div>
-        <div class="card-link">Selengkapnya →</div>
-      </a>
-      <a href="pencapaian.html" class="card" style="padding:24px;text-decoration:none;display:block;">
-        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
-        <div class="card-title">Analisis Dampak Lingkungan</div>
-        <div class="card-desc">Penyusunan AMDAL, UKL-UPL, dan kajian risiko lingkungan untuk proyek infrastruktur dan industri skala nasional.</div>
-        <div class="card-link">Selengkapnya →</div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT STRIP -->
-<section class="about-strip section" style="padding-bottom:0;">
-  <div class="container">
-    <div class="about-strip-grid">
-      <div class="fade-up">
-        <div class="section-tag">— Tentang Prodi</div>
-        <h2 class="section-title light" style="margin-bottom:16px;">Lebih dari Sekadar<br>Program Studi</h2>
-        <p style="color:rgba(242,245,239,0.6);font-family:var(--font-body);font-weight:300;line-height:1.7;margin-bottom:16px;">
-          Prodi Teknik Lingkungan hadir sebagai jawaban atas tantangan lingkungan yang kian kompleks — dari pencemaran air dan udara hingga krisis sampah perkotaan. Kami menyiapkan lulusan yang tidak hanya paham teori, tapi juga siap turun ke lapangan dengan solusi terukur.
-        </p>
-        <p style="color:rgba(242,245,239,0.6);font-family:var(--font-body);font-weight:300;line-height:1.7;margin-bottom:32px;">
-          Didukung tiga laboratorium aktif dan jaringan mitra industri lingkungan, mahasiswa kami mendapat pengalaman riset dan praktik yang relevan dengan kebutuhan dunia kerja.
-        </p>
-        <a href="profile.html" style="color:var(--gold-light);font-size:0.875rem;font-family:var(--font-body);font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
-          Pelajari Selengkapnya →
-        </a>
-      </div>
-      <div class="about-strip-mini-grid fade-up delay-2">
-        <div class="about-strip-stat">
-          <div class="val">3</div>
-          <div class="lbl">Lab Aktif</div>
-        </div>
-        <div class="about-strip-stat">
-          <div class="val">42+</div>
-          <div class="lbl">Jurnal Terindeks</div>
-        </div>
-        <div class="about-strip-stat">
-          <div class="val">18+</div>
-          <div class="lbl">Mitra Industri</div>
-        </div>
-        <div class="about-strip-stat">
-          <div class="val">4</div>
-          <div class="lbl">Konsentrasi Studi</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA BANNER -->
-<section class="section" style="padding-top:32px;padding-bottom:32px;">
-  <div class="container">
-    <div class="cta-banner fade-up">
-      <div class="cta-banner-bg">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#0e1628"/></pattern></defs>
-          <rect width="100%" height="100%" fill="url(#dots)"/>
-        </svg>
-      </div>
-      <div style="position:relative;">
-        <div class="cta-banner-title">Bergabung &amp; Jadilah Bagian dari Solusi</div>
-        <div class="cta-banner-sub">Daftarkan dirimu dan jadilah insinyur lingkungan yang dibutuhkan Indonesia.</div>
-      </div>
-      <div class="cta-banner-btns">
-        <a href="kontak.html" class="btn-navy">Daftar Sekarang →</a>
-        <a href="kontak.html" class="btn-white">Hubungi Kami</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.5fr;gap:40px;margin-bottom:48px;" class="footer-main-grid">
-      <div class="footer-brand">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <div style="width:36px;height:36px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--navy);font-size:0.65rem;letter-spacing:-0.5px;">TL</div>
+  <div class="footer2-inner">
+    <div class="footer2-grid">
+      <div>
+        <div class="footer2-brand-logo">
+          <div class="footer2-brand-logo-icon">TL</div>
           <div>
-            <div style="font-family:var(--font-display);font-weight:600;color:var(--cream);font-size:0.95rem;">Teknik Lingkungan</div>
-            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--moss);font-family:var(--font-body);">Program Studi</div>
+            <div class="footer2-brand-name">Teknik Lingkungan</div>
+            <div class="footer2-brand-sub">Program Studi</div>
           </div>
         </div>
-        <p>Program Studi Teknik Lingkungan — mencetak insinyur lingkungan yang kompeten, berdedikasi, dan berdampak nyata.</p>
-        <div class="footer-socials" style="margin-top:16px;">
-          <a href="#" class="footer-social">F</a>
-          <a href="#" class="footer-social">I</a>
-          <a href="#" class="footer-social">Y</a>
-          <a href="#" class="footer-social">T</a>
+        <p class="footer2-desc">Program Studi Teknik Lingkungan — mencetak insinyur lingkungan yang kompeten, berdedikasi, dan berdampak nyata bagi ekosistem Indonesia.</p>
+        <div class="footer2-socials">
+          <a href="#" class="footer2-social">F</a>
+          <a href="#" class="footer2-social">I</a>
+          <a href="#" class="footer2-social">Y</a>
+          <a href="#" class="footer2-social">T</a>
         </div>
       </div>
       <div>
-        <div class="footer-heading">Navigasi</div>
-        <ul class="footer-links">
+        <div class="footer2-col-title">Navigasi</div>
+        <ul class="footer2-links">
           <li><a href="index.html">Beranda</a></li>
           <li><a href="penelitian.html">Penelitian</a></li>
           <li><a href="fasilitas.html">Fasilitas Lab</a></li>
@@ -385,8 +549,8 @@
         </ul>
       </div>
       <div>
-        <div class="footer-heading">Layanan</div>
-        <ul class="footer-links">
+        <div class="footer2-col-title">Layanan</div>
+        <ul class="footer2-links">
           <li><a href="staf.html">Keanggotaan</a></li>
           <li><a href="mitra.html">Mitra Industri</a></li>
           <li><a href="pencapaian.html">Pencapaian</a></li>
@@ -394,66 +558,69 @@
         </ul>
       </div>
       <div>
-        <div class="footer-heading">Kontak</div>
-        <div class="footer-contact-item">Gedung Teknik Lingkungan, Kampus Utama</div>
-        <div class="footer-contact-item">(0561) 123-4567</div>
-        <div class="footer-contact-item">tl.ft@untan.ac.id</div>
-        <div class="footer-contact-item">Senin–Jumat 08.00–16.00 WIB</div>
+        <div class="footer2-col-title">Kontak</div>
+        <div class="footer2-contact-item">Gedung Teknik Lingkungan, Kampus Utama</div>
+        <div class="footer2-contact-item">(0561) 123-4567</div>
+        <div class="footer2-contact-item">tl.ft@untan.ac.id</div>
+        <div class="footer2-contact-item">Senin–Jumat 08.00–16.00 WIB</div>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer2-bottom">
       <span>© <span class="footer-year"></span> Prodi Teknik Lingkungan. Hak cipta dilindungi.</span>
-      <div style="display:flex;align-items:center;gap:16px;">
-        <span>Dibuat dengan  dan kepedulian terhadap lingkungan</span><span style="color:rgba(242,245,239,0.4);font-size:0.75rem;">Powered by Sayba.arc</span>
-      </div>
+      <span class="footer2-powered">Powered by Sayba.arc</span>
     </div>
   </div>
 </footer>
-
-<style>
-@media(max-width:768px){
-  .footer-main-grid { grid-template-columns: 1fr 1fr !important; }
-  .footer-brand { grid-column: 1 / -1; }
-}
-@media(max-width:480px){
-  .footer-main-grid { grid-template-columns: 1fr !important; }
-}
-</style>
 
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
 <script>
+// Navbar
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+// Mobile menu
+document.getElementById('hamburgerBtn').addEventListener('click', () => { document.getElementById('mobileOverlay').classList.add('open'); });
+document.getElementById('mobileClose').addEventListener('click',  () => { document.getElementById('mobileOverlay').classList.remove('open'); });
+document.getElementById('mobileOverlay').addEventListener('click', e => { if (e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+// Fade-up
+const fuObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fuObs.unobserve(e.target); } });
+}, { threshold: 0.06 });
+document.querySelectorAll('.fu').forEach(el => fuObs.observe(el));
+
+// Footer year
+document.querySelectorAll('.footer-year').forEach(el => el.textContent = new Date().getFullYear());
+
+// News loader
 (async () => {
   const grid = document.getElementById('homeNewsGrid');
-  let { data, error } = await sb.from('news').select('*').eq('show_on_home', true).order('date', { ascending: false }).limit(3);
-  if (error || !data || !data.length) {
-    const fallback = await sb.from('news').select('*').order('date', { ascending: false }).limit(3);
-    if (fallback.error || !fallback.data || !fallback.data.length) return;
-    data = fallback.data;
-  }
-  const delays = ['', ' delay-1', ' delay-2'];
-  const formatDate = d => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  let data;
+  try {
+    let res = await sb.from('news').select('*').eq('show_on_home', true).order('date',{ascending:false}).limit(3);
+    if (res.error || !res.data?.length) res = await sb.from('news').select('*').order('date',{ascending:false}).limit(3);
+    if (res.error || !res.data?.length) return;
+    data = res.data;
+  } catch(e) { return; }
+  const delays = ['','d1','d2'];
+  const fmtDate = d => new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   function toGDriveImg(url) {
     if (!url) return null;
     if (url.includes('lh3.googleusercontent.com')) return url;
-    var m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+    let m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
     if (!m) m = url.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w800';
+    if (m) return 'https://lh3.googleusercontent.com/d/'+m[1]+'=w800';
     return url;
   }
-  grid.innerHTML = data.map((item, i) => {
+  grid.innerHTML = data.map((item,i) => {
     const imgSrc = toGDriveImg(item.image_url);
-    const thumb = imgSrc
-      ? `<img src="${imgSrc}" alt="${esc(item.title)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`
-      : `<span class="news-thumb-num">${i + 1}</span>`;
-    return `<a href="berita-detail.html?id=${item.id}" class="news-card fade-up${delays[i]}"><article><div class="news-thumb">${thumb}</div><div class="news-body"><div class="news-meta"><span class="tag">${esc(item.category)}</span><span class="news-date">${formatDate(item.date)}</span></div><div class="news-title">${esc(item.title)}</div><div class="news-excerpt">${esc(item.excerpt)}</div><div class="news-read-more">Baca Selengkapnya →</div></div></article></a>`;
+    const thumb = imgSrc ? `<img src="${imgSrc}" alt="${esc(item.title)}" loading="lazy">` : `<span style="font-family:var(--font-display);font-size:2.5rem;color:rgba(245,240,232,.1);">${i+1}</span>`;
+    return `<a href="berita-detail.html?id=${item.id}" class="news-card2 fu ${delays[i]}"><div class="news-thumb2">${thumb}</div><div class="news-body2"><div class="news-meta2"><span class="news-cat">${esc(item.category)}</span><span class="news-dot"></span><span class="news-date2">${fmtDate(item.date)}</span></div><div class="news-title2">${esc(item.title)}</div><div class="news-excerpt2">${esc(item.excerpt)}</div></div><div class="news-footer2"><span class="news-read2">Baca Selengkapnya →</span></div></a>`;
   }).join('');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.05 });
-  grid.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+  grid.querySelectorAll('.fu').forEach(el => fuObs.observe(el));
 })();
 </script>
 </body>
