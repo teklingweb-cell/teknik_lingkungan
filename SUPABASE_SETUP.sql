@@ -120,3 +120,32 @@ insert into mitra (name, category, description, since_year, website_url) values
   ('PT Pertamina Persero', 'Industri', 'Kolaborasi penelitian energi terbarukan dan pengembangan bahan bakar ramah lingkungan.', 2015, 'https://www.pertamina.com'),
   ('Unilever Indonesia', 'Industri', 'Program magang dan penelitian bersama di bidang ilmu bahan dan formulasi produk.', 2018, 'https://www.unilever.co.id'),
   ('Universitas Indonesia', 'Akademik', 'Kerjasama riset kolaboratif dan program pertukaran dosen dan mahasiswa.', 2012, 'https://www.ui.ac.id');
+
+-- ─── CONTACT MESSAGES TABLE ───────────────────────────────────────────────────
+-- Run this to enable the contact form to save messages to Supabase.
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id          BIGSERIAL PRIMARY KEY,
+  nama        TEXT NOT NULL,
+  email       TEXT NOT NULL,
+  phone       TEXT,
+  unit        TEXT,
+  subjek      TEXT NOT NULL,
+  pesan       TEXT NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can INSERT (submit a contact form)
+CREATE POLICY "public can insert contact messages"
+  ON contact_messages FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Only authenticated admins can read messages
+CREATE POLICY "admins can read contact messages"
+  ON contact_messages FOR SELECT
+  TO authenticated
+  USING (true);

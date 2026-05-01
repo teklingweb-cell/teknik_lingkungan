@@ -106,20 +106,41 @@ if (staffSearch) {
 const contactForm = document.getElementById('contactForm');
 const formSuccess = document.getElementById('formSuccess');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('[type=submit]');
+    const inputs = contactForm.querySelectorAll('input, textarea, select');
     btn.disabled = true;
     btn.textContent = 'Mengirim...';
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.innerHTML = ' Kirim Pesan';
-      contactForm.reset();
-      if (formSuccess) {
-        formSuccess.style.display = 'flex';
-        setTimeout(() => formSuccess.style.display = 'none', 5000);
-      }
-    }, 1200);
+
+    const [nama, email, phone, unit, subjek, pesan] = [...inputs].map(i => i.value);
+
+    let submitted = false;
+
+    // Try Supabase first (if sb is available)
+    if (typeof sb !== 'undefined') {
+      try {
+        const { error } = await sb.from('contact_messages').insert([{
+          nama, email, phone, unit, subjek, pesan,
+          created_at: new Date().toISOString()
+        }]);
+        if (!error) submitted = true;
+      } catch (_) { /* fall through */ }
+    }
+
+    // Fallback: mailto link if Supabase unavailable
+    if (!submitted) {
+      const body = encodeURIComponent(`Nama: ${nama}\nEmail: ${email}\nHP: ${phone}\nUnit: ${unit}\n\n${pesan}`);
+      window.location.href = `mailto:tl.ft@untan.ac.id?subject=${encodeURIComponent(subjek)}&body=${body}`;
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = ' Kirim Pesan';
+    inputs.forEach(i => { if (i.tagName !== 'SELECT') i.value = ''; else i.selectedIndex = 0; });
+    if (formSuccess) {
+      formSuccess.style.display = 'flex';
+      setTimeout(() => formSuccess.style.display = 'none', 5000);
+    }
   });
 }
 

@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="logo-untan.png">
   <link rel="apple-touch-icon" href="logo-untan.png">
+    <meta name="description" content="Berita terkini dari Prodi Teknik Lingkungan Universitas Tanjungpura. Penelitian, pencapaian, acara, dan pengumuman akademik.">
+  <meta property="og:title" content="Berita – Prodi Teknik Lingkungan Untan">
+  <meta property="og:description" content="Berita terkini dari Prodi Teknik Lingkungan Universitas Tanjungpura. Penelitian, pencapaian, acara, dan pengumuman akademik.">
+  <meta property="og:type" content="website">
   <title>Berita – Prodi Teknik Lingkungan</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -149,10 +153,20 @@
   sb.from('news').select('*').order('date', { ascending: false })
     .then(function(res){
       if (res.error) throw res.error;
+      if (!res.data || res.data.length === 0) throw new Error('empty');
       allNews = res.data;
       render();
     })
-    .catch(function(){ document.getElementById('emptyState').style.display = ''; });
+    .catch(function(){
+      // Fallback to local news.json when Supabase is unavailable or empty
+      fetch('data/news.json')
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          allNews = data;
+          render();
+        })
+        .catch(function(){ document.getElementById('emptyState').style.display = ''; });
+    });
 })();
 </script>
 </body>
