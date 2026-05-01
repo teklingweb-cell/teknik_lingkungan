@@ -1212,7 +1212,7 @@ textarea.form-input { resize: none; }
   transition: color 0.2s;
 }
 .partner-card:hover .partner-name { color: var(--gold); }
-.partner-desc { font-size: 0.85rem; color: rgba(45,58,46,0.6); font-family: var(--font-body); line-height: 1.6; }
+.partner-desc { font-size: 0.85rem; color: rgba(45,58,46,0.6); font-family: var(--font-body); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
 .partner-footer {
   display: flex;
   align-items: center;

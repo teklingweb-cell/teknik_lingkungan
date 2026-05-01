@@ -93,15 +93,6 @@ function toGDriveImg(url) {
   return url;
 }
 
-function toGDriveImg(url) {
-  if (!url) return null;
-  if (url.includes('lh3.googleusercontent.com')) return url;
-  var m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
-  if (!m) m = url.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-  if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w400';
-  return url;
-}
-
 function render() {
   const items = activeFilter === 'all' ? allData : allData.filter(d => d.category === activeFilter);
   const grid = document.getElementById('mitraGrid');
