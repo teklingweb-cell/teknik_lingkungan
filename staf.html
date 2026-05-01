@@ -37,7 +37,7 @@
         </div>
         <div class="search-wrap" style="position:relative;">
           <span class="search-icon"></span>
-          <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari..." style="width:220px;padding-left:36px;" oninput="filterCards()">
+          <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari nama atau NIP/NIM…" style="width:260px;padding-left:36px;" oninput="filterCards()">
         </div>
       </div>
     </div>
@@ -82,6 +82,7 @@ function render() {
   let items = allStaff.filter(s => s.type === activeTab);
   if (query) items = items.filter(s =>
     (s.name||'').toLowerCase().includes(query) ||
+    (s.nim_nip||'').toLowerCase().includes(query) ||
     (s.bidang||'').toLowerCase().includes(query) ||
     (s.position||'').toLowerCase().includes(query)
   );
@@ -100,6 +101,7 @@ function render() {
           <div style="flex:1;">
             <div class="staff-name">${esc(s.name)}</div>
             <div class="staff-pos">${esc(s.position)} · ${esc(s.bidang)}</div>
+            ${s.nim_nip ? `<div style="font-size:0.7rem;color:rgba(45,58,46,0.45);font-family:monospace;margin-top:3px;letter-spacing:0.04em;">NIP: ${esc(s.nim_nip)}</div>` : ''}
           </div>
         </div>
         <div class="staff-expertise">${esc(s.expertise_desc||'')}</div>
@@ -119,6 +121,7 @@ function render() {
           <div>
             <div class="staff-name">${esc(s.name)}</div>
             <div class="staff-pos">${s.graduation_year ? 'Lulus ' + s.graduation_year : ''}</div>
+            ${s.nim_nip ? `<div style="font-size:0.7rem;color:rgba(45,58,46,0.45);font-family:monospace;margin-top:3px;letter-spacing:0.04em;">NIM: ${esc(s.nim_nip)}</div>` : ''}
           </div>
         </div>
         <div style="margin-top:10px;font-size:0.85rem;color:var(--charcoal);font-family:var(--font-body);">${esc(s.position)}</div>
@@ -136,6 +139,7 @@ function render() {
           <div style="flex:1;">
             <div style="font-size:0.9rem;font-weight:500;color:var(--navy);font-family:var(--font-body);">${esc(s.name)}</div>
             <div style="font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);">${esc(s.position)}</div>
+            ${s.nim_nip ? `<div style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:monospace;margin-top:2px;letter-spacing:0.04em;">NIP: ${esc(s.nim_nip)}</div>` : ''}
           </div>
           <span style="font-size:0.7rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">${esc(s.bidang)}</span>
         </div>

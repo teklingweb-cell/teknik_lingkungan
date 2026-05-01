@@ -147,16 +147,20 @@
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label>NIP / NIM</label>
+          <input class="form-input" id="f_nim_nip" placeholder="cth: 196801011993031001 atau 12345678">
+          <span class="form-hint">NIP untuk dosen/staf, NIM untuk alumni</span>
+        </div>
+        <div class="form-group">
           <label>Jabatan / Gelar *</label>
           <input class="form-input" id="f_position" placeholder="cth: Guru Besar / Lektor Kepala">
         </div>
-        <div class="form-group">
-          <label>Bidang Keahlian *</label>
-          <input class="form-input" id="f_bidang" placeholder="cth: Kimia Organik">
-        </div>
       </div>
 
-      <!-- Org Level -->
+      <div class="form-group">
+        <label>Bidang Keahlian *</label>
+        <input class="form-input" id="f_bidang" placeholder="cth: Kimia Organik">
+      </div>
       <div class="form-group" style="background:#f7faf6;border:1.5px solid rgba(78,140,90,0.18);border-radius:12px;padding:16px 18px;">
         <label style="display:flex;align-items:center;gap:8px;">
           <svg width="14" height="14" fill="none" stroke="#4e8c5a" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -240,6 +244,7 @@ let editId = null;
     if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
     document.getElementById('f_name').value = data.name || '';
     document.getElementById('f_type').value = data.type || 'dosen';
+    document.getElementById('f_nim_nip').value = data.nim_nip || '';
     document.getElementById('f_position').value = data.position || '';
     document.getElementById('f_bidang').value = data.bidang || '';
     document.getElementById('f_expertise_desc').value = data.expertise_desc || '';
@@ -325,6 +330,7 @@ async function doLogout() { await sb.auth.signOut(); window.location.href = '/ad
 async function doSave() {
   const name              = document.getElementById('f_name').value.trim();
   const type              = document.getElementById('f_type').value;
+  const nim_nip           = document.getElementById('f_nim_nip').value.trim() || null;
   const position          = document.getElementById('f_position').value.trim();
   const bidang            = document.getElementById('f_bidang').value.trim();
   const expertise_desc    = document.getElementById('f_expertise_desc').value.trim();
@@ -344,7 +350,7 @@ async function doSave() {
   btn.disabled = true; btn.textContent = 'Menyimpan…';
 
   const photo_url = document.getElementById('f_photo_url').value || null;
-  const payload = { name, type, position, bidang, expertise_desc, email: email||null, publications_count, linkedin_url, graduation_year, photo_url, org_level };
+  const payload = { name, type, nim_nip, position, bidang, expertise_desc, email: email||null, publications_count, linkedin_url, graduation_year, photo_url, org_level };
   let error;
   if (editId) {
     ({ error } = await sb.from('staff').update(payload).eq('id', editId));

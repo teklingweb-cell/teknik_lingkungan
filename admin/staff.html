@@ -228,6 +228,7 @@ function renderTable() {
         </div>
       </div></td>
       <td class="hide-mobile"><span class="badge" style="background:${bg};color:${color};">${TYPE_LABELS[item.type]||item.type}</span></td>
+      <td class="hide-mobile" style="color:var(--muted);font-size:0.78rem;font-family:monospace;">${escHtml(item.nim_nip||'–')}</td>
       <td class="hide-mobile">${renderOrgBadge(item.org_level)}</td>
       <td class="hide-mobile" style="color:var(--muted);">${item.publications_count ?? 0} pub</td>
       <td class="hide-mobile" style="color:var(--muted);font-size:0.78rem;">${escHtml(item.email||'–')}</td>
@@ -239,7 +240,7 @@ function renderTable() {
   }).join('');
 
   document.getElementById('tableWrap').innerHTML = `<div style="overflow-x:auto;"><table>
-    <thead><tr><th>Nama</th><th class="hide-mobile">Tipe</th><th class="hide-mobile"><a href="/admin/struktur" style="color:var(--green);text-decoration:none;font-size:0.68rem;" title="Kelola di halaman Struktur Organisasi">Bagan Org ↗</a></th><th class="hide-mobile">Publikasi</th><th class="hide-mobile">Email</th><th style="text-align:right;">Aksi</th></tr></thead>
+    <thead><tr><th>Nama</th><th class="hide-mobile">Tipe</th><th class="hide-mobile">NIP / NIM</th><th class="hide-mobile"><a href="/admin/struktur" style="color:var(--green);text-decoration:none;font-size:0.68rem;" title="Kelola di halaman Struktur Organisasi">Bagan Org ↗</a></th><th class="hide-mobile">Publikasi</th><th class="hide-mobile">Email</th><th style="text-align:right;">Aksi</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
 }
