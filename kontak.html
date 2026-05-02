@@ -11,15 +11,286 @@
   <meta property="og:url" content="https://tl.ft.untan.ac.id/kontak">
   <meta property="og:type" content="website">
   <title>Kontak – Prodi Teknik Lingkungan</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── KONTAK PAGE OVERRIDES ── */
+    .kontak-main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+    }
+    @media(min-width:1024px){
+      .kontak-main-grid { grid-template-columns: 1fr 1fr; gap: 80px; }
+    }
+
+    /* Info cards */
+    .kinfo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    @media(max-width:480px){
+      .kinfo-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .kinfo-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(26,46,30,0.08);
+      padding: 24px 20px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .kinfo-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(14,22,40,0.09); }
+    .kinfo-icon {
+      width: 40px; height: 40px;
+      background: rgba(122,171,110,0.12);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .kinfo-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .kinfo-line {
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+    .kinfo-line:first-of-type { color: var(--navy); font-weight: 500; }
+
+    /* Map block */
+    .kmap-block {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(26,46,30,0.1);
+      box-shadow: 0 8px 32px rgba(14,22,40,0.08);
+    }
+    .kmap-footer {
+      padding: 16px 20px;
+      background: var(--navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .kmap-addr {
+      font-size: 0.8rem;
+      color: rgba(242,245,239,0.55);
+      font-family: var(--font-body);
+      line-height: 1.4;
+    }
+    .kmap-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-family: var(--font-body);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 7px 14px;
+      border: 1px solid rgba(104,176,119,0.35);
+      border-radius: 8px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .kmap-link:hover { background: rgba(104,176,119,0.12); border-color: var(--gold-light); }
+
+    /* Social */
+    .ksocial-wrap {
+      margin-top: 40px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(26,46,30,0.08);
+    }
+    .ksocial-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(45,58,46,0.45);
+      font-family: var(--font-body);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .ksocial-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ksocial-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(26,46,30,0.1);
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      font-family: var(--font-body);
+      text-decoration: none;
+      background: #fff;
+      transition: all 0.2s;
+    }
+    .ksocial-btn:hover { border-color: var(--gold); color: var(--navy); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(14,22,40,0.07); }
+
+    /* Form card */
+    .kform-card {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid rgba(26,46,30,0.08);
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(14,22,40,0.07);
+    }
+    .kform-header {
+      background: var(--navy);
+      padding: 28px 32px;
+    }
+    .kform-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--cream);
+      font-weight: 300;
+      margin-bottom: 6px;
+    }
+    .kform-header p {
+      color: rgba(242,245,239,0.45);
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+    }
+    .kform-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    @media(max-width:480px){ .kform-body { padding: 24px 20px; } }
+    .kform-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media(max-width:540px){ .kform-row { grid-template-columns: 1fr; gap: 24px; } }
+    .kform-field { display: flex; flex-direction: column; gap: 8px; }
+    .kform-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--navy);
+      font-family: var(--font-body);
+    }
+    .kform-field input,
+    .kform-field select,
+    .kform-field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(26,46,30,0.12);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      color: var(--navy);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .kform-field input:focus,
+    .kform-field select:focus,
+    .kform-field textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(78,140,90,0.12);
+      background: #fff;
+    }
+    .kform-field input::placeholder,
+    .kform-field textarea::placeholder { color: rgba(45,58,46,0.3); }
+    .kform-field select { cursor: pointer; }
+    .kform-field textarea { resize: none; }
+    .kform-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+    }
+    .kform-note { font-size: 0.75rem; color: rgba(45,58,46,0.35); font-family: var(--font-body); }
+    .kform-success {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 14px 18px;
+      border-radius: 12px;
+    }
+    .kform-success.show { display: flex; }
+
+    /* Direktori */
+    .kdir-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media(min-width:540px){ .kdir-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width:1024px){ .kdir-grid { grid-template-columns: repeat(3, 1fr); } }
+    .kdir-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(26,46,30,0.08);
+      padding: 24px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .kdir-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(14,22,40,0.08); }
+    .kdir-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      font-family: var(--font-body);
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(26,46,30,0.07);
+    }
+    .kdir-contacts { display: flex; flex-direction: column; gap: 10px; }
+    .kdir-link {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.82rem;
+      color: rgba(45,58,46,0.65);
+      text-decoration: none;
+      font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+    .kdir-link:hover { color: var(--forest); }
+    .kdir-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: rgba(122,171,110,0.1);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Help banner */
+    .khelp-banner {
+      background: var(--navy);
+      border-radius: 20px;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .khelp-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(104,176,119,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    @media(max-width:480px){ .khelp-banner { padding: 32px 24px; } }
+  </style>
 </head>
 <body>
 <nav class="navbar" id="navbar"><div class="nav-inner"><a href="index.html" class="nav-logo"><img src="logo-untan.png" alt="Logo Universitas Tanjungpura" style="height:44px;width:44px;object-fit:contain;border-radius:50%;background:white;padding:3px;"><div class="nav-logo-text"><div class="nav-logo-name">Teknik Lingkungan</div><div class="nav-logo-sub">Program Studi</div></div></a><ul class="nav-links"><li><a href="index.html">Beranda</a></li><li class="has-dropdown"><a href="profile.html">Tentang Prodi</a><div class="dropdown"><a href="profile.html">Profil</a><a href="sejarah.html">Sejarah</a><a href="visi-misi.html">Visi &amp; Misi</a><a href="struktur.html">Struktur Organisasi</a><a href="fasilitas.html">Fasilitas</a></div></li><li class="has-dropdown"><a href="penelitian.html">Akademik</a><div class="dropdown"><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a></div></li><li class="has-dropdown"><a href="staf.html">Komunitas</a><div class="dropdown"><a href="staf.html">Keanggotaan</a><a href="mitra.html">Mitra</a></div></li><li><a href="berita.html">Berita</a></li><li><a href="kontak.html">Kontak</a></li></ul><div class="nav-right"><button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button></div></div></nav>
 <div class="mobile-overlay"><div class="mobile-drawer"><a href="index.html">Beranda</a><div class="mobile-group-title">Tentang Prodi</div><div class="mobile-sub"><a href="profile.html">Profil</a><a href="sejarah.html">Sejarah</a><a href="visi-misi.html">Visi &amp; Misi</a><a href="struktur.html">Struktur Organisasi</a><a href="fasilitas.html">Fasilitas</a></div><div class="mobile-group-title">Akademik</div><div class="mobile-sub"><a href="penelitian.html">Penelitian</a><a href="pencapaian.html">Pencapaian</a></div><div class="mobile-group-title">Komunitas</div><div class="mobile-sub"><a href="staf.html">Keanggotaan</a><a href="mitra.html">Mitra</a></div><a href="berita.html">Berita</a><a href="kontak.html">Kontak</a></div></div>
 
+<!-- PAGE HERO -->
 <div class="page-hero">
   <div class="page-hero-glow"></div>
   <div class="container" style="position:relative;">
@@ -30,106 +301,127 @@
   </div>
 </div>
 
-<section class="section">
+<!-- MAIN SECTION -->
+<section class="section" style="padding-top:72px;padding-bottom:80px;">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr;gap:48px;" class="kontak-grid">
+    <div class="kontak-main-grid">
 
-      <!-- LEFT: INFO -->
+      <!-- LEFT: INFO + MAP + SOCIAL -->
       <div>
-        <div class="fade-up" style="margin-bottom:32px;">
+        <!-- Heading -->
+        <div class="fade-up" style="margin-bottom:40px;">
           <div class="section-tag">— Informasi Kontak</div>
-          <h2 class="section-title" style="margin-bottom:8px;">Temukan Kami</h2>
+          <h2 class="section-title" style="margin-bottom:10px;">Temukan Kami</h2>
           <div class="gold-divider"></div>
         </div>
-        <div class="grid-2-resp" style="margin-bottom:40px;">
-          <div class="contact-info-card fade-up">
-            <div class="contact-info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-            <div class="contact-info-label">Alamat</div>
-            <div class="contact-info-line">Jl. Prof. Dr. H. Hadari Nawawi</div>
-            <div class="contact-info-line">Budi Utomo, Pontianak Kota</div>
-            <div class="contact-info-line">Kota Pontianak, Kalbar 78124</div>
+
+        <!-- 4 Info Cards -->
+        <div class="kinfo-grid">
+          <div class="kinfo-card fade-up">
+            <div class="kinfo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="kinfo-label">Alamat</div>
+            <div class="kinfo-line">Jl. Prof. Dr. H. Hadari Nawawi</div>
+            <div class="kinfo-line">Budi Utomo, Pontianak Kota</div>
+            <div class="kinfo-line">Kota Pontianak, Kalbar 78124</div>
           </div>
-          <div class="contact-info-card fade-up delay-1">
-            <div class="contact-info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-            <div class="contact-info-label">Telepon</div>
-            <div class="contact-info-line">(0561) 740186 (Pusat)</div>
-            <div class="contact-info-line">(0561) 740187 (Akademik)</div>
-            <div class="contact-info-line">(0561) 740188 (Kemahasiswaan)</div>
+          <div class="kinfo-card fade-up delay-1">
+            <div class="kinfo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="kinfo-label">Telepon</div>
+            <div class="kinfo-line">(0561) 740186 (Pusat)</div>
+            <div class="kinfo-line">(0561) 740187 (Akademik)</div>
+            <div class="kinfo-line">(0561) 740188 (Kemahasiswaan)</div>
           </div>
-          <div class="contact-info-card fade-up delay-2">
-            <div class="contact-info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-            <div class="contact-info-label">Email</div>
-            <div class="contact-info-line">tl.ft@untan.ac.id</div>
-            <div class="contact-info-line">akademik.tl@untan.ac.id</div>
-            <div class="contact-info-line">humas.ft@untan.ac.id</div>
+          <div class="kinfo-card fade-up delay-2">
+            <div class="kinfo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="kinfo-label">Email</div>
+            <div class="kinfo-line">tl.ft@untan.ac.id</div>
+            <div class="kinfo-line">akademik.tl@untan.ac.id</div>
+            <div class="kinfo-line">humas.ft@untan.ac.id</div>
           </div>
-          <div class="contact-info-card fade-up delay-3">
-            <div class="contact-info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div class="contact-info-label">Jam Operasional</div>
-            <div class="contact-info-line">Senin – Jumat: 08.00 – 16.00</div>
-            <div class="contact-info-line">Sabtu: 08.00 – 12.00 WIB</div>
-            <div class="contact-info-line">Minggu &amp; Libur: Tutup</div>
+          <div class="kinfo-card fade-up delay-3">
+            <div class="kinfo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="kinfo-label">Jam Operasional</div>
+            <div class="kinfo-line">Senin – Jumat: 08.00 – 16.00</div>
+            <div class="kinfo-line">Sabtu: 08.00 – 12.00 WIB</div>
+            <div class="kinfo-line">Minggu &amp; Libur: Tutup</div>
           </div>
         </div>
 
-        <!-- MAP — Google Maps embed -->
-        <div class="fade-up delay-1" style="border-radius:12px;overflow:hidden;border:1px solid rgba(26,46,30,0.1);margin-bottom:0;">
+        <!-- Map -->
+        <div class="kmap-block fade-up delay-1">
           <iframe
             src="https://maps.google.com/maps?q=-0.056205852153042184,109.3471306253054&z=17&output=embed"
             width="100%"
-            height="280"
+            height="340"
             style="border:0;display:block;"
             loading="lazy"
             allowfullscreen
             title="Lokasi Workshop Teknik Lingkungan UNTAN, Pontianak">
           </iframe>
-          <div style="padding:12px 16px;background:var(--navy);display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:0.78rem;color:rgba(242,245,239,0.6);font-family:var(--font-body);">Jl. Prof. Dr. H. Hadari Nawawi, Pontianak 78124</span>
+          <div class="kmap-footer">
+            <div class="kmap-addr">Jl. Prof. Dr. H. Hadari Nawawi<br>Pontianak 78124</div>
             <a href="https://www.google.com/maps/dir/?api=1&destination=-0.056205852153042184,109.3471306253054"
-              target="_blank" rel="noopener"
-              style="font-size:0.75rem;color:var(--gold-light);font-family:var(--font-body);text-decoration:underline;white-space:nowrap;">
-              Buka Maps →
+              target="_blank" rel="noopener" class="kmap-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              Buka Maps
             </a>
           </div>
         </div>
 
-        <!-- SOCIAL -->
-        <div style="margin-top:24px;" class="fade-up delay-2">
-          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:12px;">Media Sosial</div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a href="https://www.instagram.com/tl.untan" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid rgba(26,46,30,0.1);font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);text-decoration:none;transition:all 0.2s;"> @tl.untan</a>
-            <a href="https://www.youtube.com/@TeknikLingkunganUntan" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid rgba(26,46,30,0.1);font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);text-decoration:none;transition:all 0.2s;">▶ TL Untan</a>
-            <a href="https://www.facebook.com/TeknikLingkunganUntan" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid rgba(26,46,30,0.1);font-size:0.75rem;color:rgba(45,58,46,0.6);font-family:var(--font-body);text-decoration:none;transition:all 0.2s;">f Teknik Lingkungan Untan</a>
+        <!-- Social -->
+        <div class="ksocial-wrap fade-up delay-2">
+          <div class="ksocial-label">Media Sosial</div>
+          <div class="ksocial-links">
+            <a href="https://www.instagram.com/tl.untan" target="_blank" rel="noopener" class="ksocial-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              @tl.untan
+            </a>
+            <a href="https://www.youtube.com/@TeknikLingkunganUntan" target="_blank" rel="noopener" class="ksocial-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+              TL Untan
+            </a>
+            <a href="https://www.facebook.com/TeknikLingkunganUntan" target="_blank" rel="noopener" class="ksocial-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              Teknik Lingkungan Untan
+            </a>
           </div>
         </div>
       </div>
 
       <!-- RIGHT: FORM -->
       <div class="fade-up delay-1">
-        <div style="background:#fff;border-radius:16px;border:1px solid rgba(26,46,30,0.08);overflow:hidden;">
-          <div style="background:var(--navy);padding:20px 24px;">
-            <h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--cream);font-weight:300;">Kirim Pesan</h3>
-            <p style="color:rgba(242,245,239,0.5);font-size:0.85rem;font-family:var(--font-body);margin-top:4px;">Kami akan merespons dalam 1×24 jam kerja.</p>
+        <div class="kform-card">
+          <div class="kform-header">
+            <h3>Kirim Pesan</h3>
+            <p>Kami akan merespons dalam 1×24 jam kerja.</p>
           </div>
-          <form id="contactForm" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
-            <div class="form-row">
-              <div>
-                <label class="form-label">Nama Lengkap *</label>
-                <input class="form-input" placeholder="Nama Anda" required>
+          <form id="contactForm" class="kform-body">
+            <div class="kform-row">
+              <div class="kform-field">
+                <label>Nama Lengkap *</label>
+                <input placeholder="Nama Anda" required>
               </div>
-              <div>
-                <label class="form-label">Email *</label>
-                <input type="email" class="form-input" placeholder="email@domain.com" required>
+              <div class="kform-field">
+                <label>Email *</label>
+                <input type="email" placeholder="email@domain.com" required>
               </div>
             </div>
-            <div class="form-row">
-              <div>
-                <label class="form-label">Nomor HP</label>
-                <input class="form-input" placeholder="08xx-xxxx-xxxx">
+            <div class="kform-row">
+              <div class="kform-field">
+                <label>Nomor HP</label>
+                <input placeholder="08xx-xxxx-xxxx">
               </div>
-              <div>
-                <label class="form-label">Unit yang Dituju</label>
-                <select class="form-input">
+              <div class="kform-field">
+                <label>Unit yang Dituju</label>
+                <select>
                   <option value="">Pilih unit</option>
                   <option>Biro Akademik</option>
                   <option>Biro Keuangan</option>
@@ -140,23 +432,23 @@
                 </select>
               </div>
             </div>
-            <div>
-              <label class="form-label">Subjek *</label>
-              <input class="form-input" placeholder="Topik pesan Anda" required>
+            <div class="kform-field">
+              <label>Subjek *</label>
+              <input placeholder="Topik pesan Anda" required>
             </div>
-            <div>
-              <label class="form-label">Pesan *</label>
-              <textarea class="form-input" rows="5" placeholder="Tuliskan pesan Anda di sini..." required></textarea>
+            <div class="kform-field">
+              <label>Pesan *</label>
+              <textarea rows="6" placeholder="Tuliskan pesan Anda di sini..." required></textarea>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px;">
-              <span style="font-size:0.75rem;color:rgba(45,58,46,0.4);font-family:var(--font-body);">* Wajib diisi</span>
-              <button type="submit" class="btn-primary" style="gap:8px;"> Kirim Pesan</button>
+            <div class="kform-footer">
+              <span class="kform-note">* Wajib diisi</span>
+              <button type="submit" class="btn-primary" style="gap:8px;">Kirim Pesan</button>
             </div>
-            <div id="formSuccess" style="display:none;align-items:flex-start;gap:12px;background:#f0fdf4;border:1px solid #bbf7d0;padding:12px 16px;border-radius:10px;">
+            <div id="formSuccess" class="kform-success">
               <span style="color:#16a34a;font-size:1rem;">✓</span>
               <div>
                 <div style="font-size:0.875rem;font-weight:500;color:#15803d;font-family:var(--font-body);">Pesan berhasil terkirim!</div>
-                <div style="font-size:0.78rem;color:#16a34a;font-family:var(--font-body);margin-top:2px;">Kami akan menghubungi Anda dalam 1×24 jam kerja.</div>
+                <div style="font-size:0.78rem;color:#16a34a;font-family:var(--font-body);margin-top:4px;">Kami akan menghubungi Anda dalam 1×24 jam kerja.</div>
               </div>
             </div>
           </form>
@@ -165,74 +457,105 @@
     </div>
   </div>
 </section>
-<style>
-@media(min-width:1024px){
-  .kontak-grid { grid-template-columns: 1fr 1fr !important; }
-}
-</style>
 
 <!-- DIREKTORI -->
-<section class="section bg-white">
+<section class="section bg-white" style="padding-top:72px;padding-bottom:72px;">
   <div class="container">
-    <div class="fade-up" style="margin-bottom:40px;">
+    <div class="fade-up" style="margin-bottom:48px;">
       <div class="section-tag">— Direktori</div>
       <h2 class="section-title">Kontak Per Unit</h2>
     </div>
-    <div class="grid-3">
-      <div class="contact-info-card fade-up" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">Biro Akademik &amp; Kemahasiswaan</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401870" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740187</a>
-          <a href="mailto:akademik.tl@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> akademik.tl@untan.ac.id</a>
+    <div class="kdir-grid">
+      <div class="kdir-card fade-up">
+        <div class="kdir-name">Biro Akademik &amp; Kemahasiswaan</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401870" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740187
+          </a>
+          <a href="mailto:akademik.tl@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            akademik.tl@untan.ac.id
+          </a>
         </div>
       </div>
-      <div class="contact-info-card fade-up delay-1" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">Biro Keuangan</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401880" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740188</a>
-          <a href="mailto:keuangan.ft@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> keuangan.ft@untan.ac.id</a>
+      <div class="kdir-card fade-up delay-1">
+        <div class="kdir-name">Biro Keuangan</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401880" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740188
+          </a>
+          <a href="mailto:keuangan.ft@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            keuangan.ft@untan.ac.id
+          </a>
         </div>
       </div>
-      <div class="contact-info-card fade-up delay-2" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">Pusat Riset &amp; Inovasi</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401890" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740189</a>
-          <a href="mailto:riset.tl@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> riset.tl@untan.ac.id</a>
+      <div class="kdir-card fade-up delay-2">
+        <div class="kdir-name">Pusat Riset &amp; Inovasi</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401890" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740189
+          </a>
+          <a href="mailto:riset.tl@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            riset.tl@untan.ac.id
+          </a>
         </div>
       </div>
-      <div class="contact-info-card fade-up" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">Humas &amp; Kemitraan</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401900" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740190</a>
-          <a href="mailto:humas.ft@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> humas.ft@untan.ac.id</a>
+      <div class="kdir-card fade-up">
+        <div class="kdir-name">Humas &amp; Kemitraan</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401900" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740190
+          </a>
+          <a href="mailto:humas.ft@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            humas.ft@untan.ac.id
+          </a>
         </div>
       </div>
-      <div class="contact-info-card fade-up delay-1" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">Laboratorium Terpadu</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401910" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740191</a>
-          <a href="mailto:lab.tl@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> lab.tl@untan.ac.id</a>
+      <div class="kdir-card fade-up delay-1">
+        <div class="kdir-name">Laboratorium Terpadu</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401910" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740191
+          </a>
+          <a href="mailto:lab.tl@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            lab.tl@untan.ac.id
+          </a>
         </div>
       </div>
-      <div class="contact-info-card fade-up delay-2" style="padding:20px;">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--navy);font-family:var(--font-body);margin-bottom:12px;">IT &amp; Sistem Informasi</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <a href="tel:05617401920" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> (0561) 740192</a>
-          <a href="mailto:it.ft@untan.ac.id" style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:rgba(45,58,46,0.6);text-decoration:none;font-family:var(--font-body);"> it.ft@untan.ac.id</a>
+      <div class="kdir-card fade-up delay-2">
+        <div class="kdir-name">IT &amp; Sistem Informasi</div>
+        <div class="kdir-contacts">
+          <a href="tel:05617401920" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.91 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.82 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            (0561) 740192
+          </a>
+          <a href="mailto:it.ft@untan.ac.id" class="kdir-link">
+            <span class="kdir-icon"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            it.ft@untan.ac.id
+          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HELP CENTER BANNER -->
-<section class="section" style="padding-top:0;">
+<!-- HELP BANNER -->
+<section class="section" style="padding-top:48px;padding-bottom:80px;">
   <div class="container">
-    <div class="fade-up" style="background:var(--navy);border-radius:16px;padding:32px 24px;display:flex;flex-direction:column;gap:24px;align-items:flex-start;">
+    <div class="khelp-banner fade-up">
       <div>
         <div class="section-tag">— Butuh Bantuan Cepat?</div>
-        <h3 style="font-family:var(--font-display);font-size:1.8rem;color:var(--cream);font-weight:300;margin-top:4px;">Kunjungi Pusat Bantuan Kami</h3>
-        <p style="color:rgba(242,245,239,0.6);font-size:0.875rem;font-family:var(--font-body);margin-top:8px;">Temukan jawaban atas pertanyaan umum Anda tanpa harus menunggu balasan.</p>
+        <h3 style="font-family:var(--font-display);font-size:1.9rem;color:var(--cream);font-weight:300;margin-top:8px;margin-bottom:10px;">Kunjungi Pusat Bantuan Kami</h3>
+        <p style="color:rgba(242,245,239,0.55);font-size:0.9rem;font-family:var(--font-body);max-width:480px;line-height:1.7;">Temukan jawaban atas pertanyaan umum Anda tanpa harus menunggu balasan.</p>
       </div>
       <a href="#" class="btn-gold">Buka Help Center</a>
     </div>
@@ -240,6 +563,7 @@
 </section>
 
 <footer><div class="footer-inner"><div style="border-top:1px solid rgba(242,245,239,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">© <span class="footer-year"></span> Prodi Teknik Lingkungan.</span><span style="font-size:0.75rem;color:rgba(242,245,239,0.4);font-family:var(--font-body);">Powered by Sayba Arc</span></div></div></footer>
+
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="js/supabase-client.js"></script>
 <script defer src="main.js"></script>
