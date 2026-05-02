@@ -231,8 +231,10 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-03 FIX: module-level so onclick handlers can reach these
 let editId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -257,9 +259,11 @@ let editId = null;
     document.getElementById('f_graduation_year').value = data.graduation_year || '';
     document.getElementById('f_org_level').value = data.org_level || '';
     if (data.photo_url) {
-      document.getElementById('f_photo_url_raw').value = data.photo_url;
-      initGDriveField('f_photo_url_raw', 'f_photo_url_preview', 'f_photo_url_status', 'f_photo_url');
+      // BUG-12 FIX: don't re-call initGDriveField; dispatch input event on already-initialized field
+      const rawInp = document.getElementById('f_photo_url_raw');
+      rawInp.value = data.photo_url;
       document.getElementById('f_photo_url').value = data.photo_url;
+      rawInp.dispatchEvent(new Event('input'));
     }
   }
 })();
@@ -328,6 +332,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
   if (stored) stored.value = '';
 }
 
+});
 
 async function doSave() {
   const name              = document.getElementById('f_name').value.trim();
@@ -397,7 +402,6 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
-});
 </script>
 <!-- NIM/NIP Conflict Modal -->
 <div id="nimConflictModal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(26,46,30,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;">

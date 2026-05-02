@@ -115,6 +115,20 @@ if (contactForm) {
 
     const [nama, email, phone, unit, subjek, pesan] = [...inputs].map(i => i.value);
 
+    // BUG-15 FIX: validate email and phone format before inserting into Supabase
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      btn.disabled = false;
+      btn.textContent = 'Kirim Pesan';
+      alert('Format email tidak valid.');
+      return;
+    }
+    if (phone && !/^[\d\s\+\-\(\)]{6,20}$/.test(phone)) {
+      btn.disabled = false;
+      btn.textContent = 'Kirim Pesan';
+      alert('Format nomor telepon tidak valid.');
+      return;
+    }
+
     let submitted = false;
 
     // Try Supabase first (if sb is available)

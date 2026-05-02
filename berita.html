@@ -60,10 +60,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   var allNews = [];
   var activeFilter = 'all';
 
+  // BUG-11 FIX: null guard prevents TypeError when date field is missing
   function fmtDate(str) {
+    if (!str) return '–';
     var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
     var parts = str.split('-');
     return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+  }
+
+  // BUG-08 FIX: esc() helper for XSS prevention in innerHTML
+  function esc(str) {
+    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
 
@@ -93,12 +100,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       + '</div>'
       + '<div class="featured-body">'
       + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">'
-      + '<span class="tag">'+item.category+'</span>'
+      + '<span class="tag">'+esc(item.category)+'</span>'
       + '<span style="font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);"> '+fmtDate(item.date)+'</span>'
       + '</div>'
-      + '<div class="featured-title">'+item.title+'</div>'
-      + '<div class="featured-excerpt">'+item.excerpt+'</div>'
-      + '<div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'13\' height=\'13\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'/><circle cx=\'12\' cy=\'7\' r=\'4\'/></svg><span>'+item.author+'</span></div>'
+      + '<div class="featured-title">'+esc(item.title)+'</div>'
+      + '<div class="featured-excerpt">'+esc(item.excerpt)+'</div>'
+      + '<div style="display:flex;align-items:center;gap:12px;font-size:0.75rem;color:rgba(45,58,46,0.5);font-family:var(--font-body);margin-bottom:24px;"><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'13\' height=\'13\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'/><circle cx=\'12\' cy=\'7\' r=\'4\'/></svg><span>'+esc(item.author)+'</span></div>'
       + '<div style="display:flex;align-items:center;gap:6px;color:var(--gold-light);font-size:0.875rem;font-weight:500;font-family:var(--font-body);">Baca Selengkapnya ›</div>'
       + '</div></a>';
     setTimeout(function(){ var el = wrap.querySelector('.featured-card'); if(el) el.classList.add('visible'); }, 50);
@@ -115,9 +122,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       + '<a href="'+_cardUrl+'"'+_cardTarget+' class="news-card" style="width:100%;"><article>'
       + '<div class="news-thumb">'+thumb+'</div>'
       + '<div class="news-body">'
-      + '<div class="news-meta"><span class="tag">'+item.category+'</span><span class="news-date">'+fmtDate(item.date)+'</span></div>'
-      + '<div class="news-title">'+item.title+'</div>'
-      + '<div class="news-excerpt">'+item.excerpt+'</div>'
+      + '<div class="news-meta"><span class="tag">'+esc(item.category)+'</span><span class="news-date">'+fmtDate(item.date)+'</span></div>'
+      + '<div class="news-title">'+esc(item.title)+'</div>'
+      + '<div class="news-excerpt">'+esc(item.excerpt)+'</div>'
       + '<div class="news-read-more">Baca Selengkapnya →</div>'
       + '</div></article></a></div>';
   }

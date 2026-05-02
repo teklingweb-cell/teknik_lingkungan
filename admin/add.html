@@ -251,29 +251,32 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-02 FIX: module-level state so onclick-called functions can access it
 let editId = null;
 
-// ── Auth guard + init ─────────────────────────────────────
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = '/admin/login'; return; }
-  document.getElementById('auth-hide')?.remove();
+document.addEventListener('DOMContentLoaded', async () => {
+  // ── Auth guard + init ─────────────────────────────────────
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = '/admin/login'; return; }
+    document.getElementById('auth-hide')?.remove();
 
-  // Set today as default date
-  document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+    // Set today as default date
+    document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
 
-  // Always init the GDrive field (needed for both new and edit)
-  initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
+    // Init the GDrive field once
+    initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
 
-  // Check if editing
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('edit')) {
-    editId = parseInt(params.get('edit'));
-    await loadEditItem();
-  }
-})();
+    // Check if editing
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('edit')) {
+      editId = parseInt(params.get('edit'));
+      await loadEditItem();
+    }
+  })();
+});
 
+// BUG-02 FIX: all functions moved to global scope
 async function loadEditItem() {
   const { data, error } = await sb.from('news').select('*').eq('id', editId).single();
   if (error || !data) { window.location.href = '/admin'; return; }
@@ -291,26 +294,25 @@ async function loadEditItem() {
   document.getElementById('f_featured').checked = data.featured;
   document.getElementById('f_show_on_home').checked = data.show_on_home || false;
   document.getElementById('f_link_url').value = data.link_url || '';
-    if (data.image_url) {
-      document.getElementById('f_image_url_raw').value = data.image_url;
-      initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
-      document.getElementById('f_image_url').value = data.image_url;
-    }
+  if (data.image_url) {
+    // BUG-12 FIX: don't call initGDriveField again (avoids duplicate listeners).
+    // Just set the raw input value and dispatch 'input' to trigger the existing listener.
+    const rawInp = document.getElementById('f_image_url_raw');
+    rawInp.value = data.image_url;
+    document.getElementById('f_image_url').value = data.image_url;
+    rawInp.dispatchEvent(new Event('input'));
+  }
 }
-
 
 // ── Google Drive URL helper ───────────────────────────────
 function parseGDriveUrl(raw) {
   if (!raw) return null;
   raw = raw.trim();
-  // Already an lh3 CDN URL – use as-is
   if (raw.includes('lh3.googleusercontent.com')) return raw;
-  // Extract file ID from any Drive share URL format
   var m = raw.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
   if (!m) m = raw.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
   if (!m) m = raw.match(/open\?id=([a-zA-Z0-9_-]{10,})/);
   if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1200';
-  // Already a direct URL (non-Drive) – pass through
   if (raw.startsWith('http')) return raw;
   return null;
 }
@@ -345,10 +347,7 @@ function initGDriveField(inputId, previewId, statusId, storedId) {
 
   inp.addEventListener('input', update);
   inp.addEventListener('paste', () => setTimeout(update, 50));
-
-  // Init if value already set
   if (inp.value) update();
-
   return { update };
 }
 
@@ -362,7 +361,6 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
   if (stored) stored.value = '';
 }
 
-
 // ── Submit ────────────────────────────────────────────────
 async function doSubmit() {
   const title    = document.getElementById('f_title').value.trim();
@@ -375,7 +373,6 @@ async function doSubmit() {
   const image_url = document.getElementById('f_image_url').value || null;
   const link_url  = document.getElementById('f_link_url').value.trim() || null;
 
-  // Validate
   const errors = [];
   if (!title)    errors.push('Judul wajib diisi.');
   if (!excerpt)  errors.push('Ringkasan wajib diisi.');
@@ -395,7 +392,6 @@ async function doSubmit() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan…';
 
-  // If featured, unfeature all others first
   if (featured) {
     await sb.from('news').update({ featured: false }).neq('id', -1);
   }
@@ -421,7 +417,6 @@ async function doSubmit() {
 
   window.location.href = `/admin?msg=${editId ? 'updated' : 'added'}`;
 }
-});
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

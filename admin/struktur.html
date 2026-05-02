@@ -250,7 +250,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-07 FIX: module-level state so onclick handlers can access them
 const TIERS = [
   { key: 'rektor', label: 'Rektor',                 color: '#1a2e1e' },
   { key: 'wakil',  label: 'Wakil Rektor',            color: '#2d6a40' },
@@ -266,6 +266,15 @@ let allStaff = [];
 let editTargetId = null;
 let deleteTargetId = null;
 
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showAlert(type, msg) {
+  const box = document.getElementById('alertBox');
+  box.className = `alert alert-${type}`; box.textContent = msg; box.style.display = 'flex';
+  setTimeout(() => { box.style.display = 'none'; }, 4000);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
@@ -273,6 +282,7 @@ let deleteTargetId = null;
   await loadData();
 })();
 
+});
 
 async function loadData() {
   const { data, error } = await sb.from('staff').select('*').order('name', { ascending: true });
@@ -384,8 +394,6 @@ async function saveLevel() {
   showAlert('success', '✓ Level hierarki berhasil diperbarui.');
   await loadData();
 }
-document.getElementById('editModal').addEventListener('click', e => { if (e.target === document.getElementById('editModal')) closeEditModal(); });
-
 /* ── Delete (remove from org) Modal ── */
 function confirmRemove(id, name) {
   deleteTargetId = id;
@@ -403,17 +411,7 @@ async function doRemoveFromOrg() {
   showAlert('success', '✓ Anggota dikeluarkan dari bagan organisasi.');
   await loadData();
 }
-document.getElementById('deleteModal').addEventListener('click', e => { if (e.target === document.getElementById('deleteModal')) closeDeleteModal(); });
-
-/* ── Helpers ── */
-function showAlert(type, msg) {
-  const box = document.getElementById('alertBox');
-  box.className = `alert alert-${type}`; box.textContent = msg; box.style.display = 'flex';
-  setTimeout(() => { box.style.display = 'none'; }, 4000);
-}
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-});
+/* ── Helpers already at module scope above ── */
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

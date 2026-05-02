@@ -114,17 +114,28 @@
           <input class="form-input" id="f_year" type="number" min="2000" max="2100" placeholder="2024">
         </div>
       </div>
-      
+      <!-- BUG-05 FIX: save button was missing from the HTML -->
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button class="btn btn-green" id="saveBtn" onclick="doSave()">Simpan</button>
+        <a href="/admin/pencapaian" class="btn btn-ghost">Batal</a>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-04 FIX: module-level so onclick="doSave()" can reach it
 let editId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
   document.getElementById('auth-hide')?.remove();
+  // BUG-13 FIX: set default year so the field is not empty on new entry
+  if (!document.getElementById('f_year').value) {
+    document.getElementById('f_year').value = new Date().getFullYear();
+  }
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));
@@ -138,12 +149,14 @@ let editId = null;
   }
 })();
 
+});
+
 async function doSave() {
   const title       = document.getElementById('f_title').value.trim();
   const description = document.getElementById('f_description').value.trim();
   const category    = document.getElementById('f_category').value;
   const year        = parseInt(document.getElementById('f_year').value);
-  const icon        =
+  const icon        = null; // BUG-05 FIX: was a syntax error (incomplete assignment)
 
   const errors = [];
   if (!title)       errors.push('Judul wajib diisi.');
@@ -168,7 +181,6 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
-});
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

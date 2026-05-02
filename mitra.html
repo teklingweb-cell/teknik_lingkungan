@@ -108,11 +108,13 @@ function render() {
   grid.innerHTML = items.map((item, i) => {
     const imgSrc = toGDriveImg(item.logo_url);
     const firstLetter = (item.name || '?')[0].toUpperCase();
+    // BUG-10 FIX: escape firstLetter so it can't break out of the onerror attribute
+    const firstLetterSafe = firstLetter.replace(/[&<>"']/g, c => '&#'+c.charCodeAt(0)+';');
     const avatarHtml = imgSrc
       ? `<div style="display:inline-flex;align-items:center;justify-content:center;max-width:120px;height:48px;padding:6px 10px;border-radius:8px;background:#fff;border:1px solid rgba(26,46,30,0.08);flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
            <img src="${imgSrc}" alt="${esc(item.name)}" loading="lazy"
              style="max-width:100%;max-height:36px;width:auto;height:auto;object-fit:contain;display:block;"
-             onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-weight:600;font-size:1.2rem;color:var(--moss)>${firstLetter}</span>'">
+             onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-weight:600;font-size:1.2rem;color:var(--moss)>${firstLetterSafe}</span>'">
          </div>`
       : `<div class="partner-avatar">${firstLetter}</div>`;
     return `

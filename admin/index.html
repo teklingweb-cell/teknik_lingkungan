@@ -217,7 +217,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-06 FIX: module-level state and helpers so onclick attributes can reach them
 const CAT_COLORS = {
   'Penelitian': '#2563eb', 'Pencapaian': '#16a34a',
   'Acara': '#9333ea', 'Pengumuman': '#d97706', 'Beasiswa': '#0891b2'
@@ -226,6 +226,31 @@ const CAT_COLORS = {
 let allNews = [];
 let deleteTargetId = null;
 
+// BUG-14 FIX: single shared fmtDate instead of two identical copies
+// BUG-11 FIX: null guard so missing dates don't throw TypeError
+function fmtDate(str) {
+  if (!str) return '–';
+  const [y,m,d] = str.split('-');
+  const months  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+  return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showAlert(type, msg) {
+  const box = document.getElementById('alertBox');
+  box.className = `alert alert-${type}`;
+  box.textContent = msg;
+  box.style.display = 'flex';
+  setTimeout(() => { box.style.display = 'none'; }, 4000);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
 // ── Auth guard ────────────────────────────────────────────
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -234,6 +259,10 @@ let deleteTargetId = null;
   loadNews();
 })();
 
+document.getElementById('deleteModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('deleteModal')) closeModal();
+});
+});
 
 // ── Load & render ─────────────────────────────────────────
 async function loadNews() {
@@ -247,7 +276,6 @@ async function loadNews() {
   renderStats();
   renderTable();
 
-  // Check URL params for success messages
   const params = new URLSearchParams(window.location.search);
   if (params.get('msg') === 'added')   showAlert('success', '✓ Berita berhasil ditambahkan.');
   if (params.get('msg') === 'updated') showAlert('success', '✓ Berita berhasil diperbarui.');
@@ -261,13 +289,6 @@ function renderStats() {
   allNews.forEach(n => { catCount[n.category] = (catCount[n.category] || 0) + 1; });
   const topCat   = Object.entries(catCount).sort((a,b) => b[1]-a[1])[0];
   const newest   = allNews[0];
-
-  const fmtDate = str => {
-    if (!str) return '–';
-    const [y,m,d] = str.split('-');
-    const months  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-    return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
-  };
 
   document.getElementById('statsRow').innerHTML = `
     <div class="stat-card"><div class="stat-label">Total Berita</div><div class="stat-value">${total}</div><div class="stat-sub">Semua kategori</div></div>
@@ -289,12 +310,6 @@ function renderTable() {
       </div>`;
     return;
   }
-
-  const fmtDate = str => {
-    const [y,m,d] = str.split('-');
-    const months  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-    return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
-  };
 
   const rows = allNews.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
@@ -340,16 +355,19 @@ function renderTable() {
 }
 
 // ── Toggle featured ───────────────────────────────────────
+// BUG-09 FIX: properly handle error from the second update (re-feature) call
 async function toggleFeatured(id) {
-  const item    = allNews.find(n => n.id === id);
-  const newVal  = !item.featured;
+  const item   = allNews.find(n => n.id === id);
+  const newVal = !item.featured;
 
-  // Unfeature all first, then set this one
-  const { error } = await sb.from('news').update({ featured: false }).neq('id', -1);
-  if (!error && newVal) {
-    await sb.from('news').update({ featured: true }).eq('id', id);
+  const { error: e1 } = await sb.from('news').update({ featured: false }).neq('id', -1);
+  if (e1) { showAlert('error', 'Gagal mengubah featured.'); return; }
+
+  if (newVal) {
+    const { error: e2 } = await sb.from('news').update({ featured: true }).eq('id', id);
+    if (e2) { showAlert('error', 'Gagal mengaktifkan featured.'); return; }
   }
-  if (error) { showAlert('error', 'Gagal mengubah status featured.'); return; }
+
   await loadNews();
 }
 
@@ -372,25 +390,6 @@ async function doDelete() {
   showAlert('success', '✓ Berita berhasil dihapus.');
   await loadNews();
 }
-document.getElementById('deleteModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('deleteModal')) closeModal();
-});
-
-// ── Helpers ───────────────────────────────────────────────
-function showAlert(type, msg) {
-  const box = document.getElementById('alertBox');
-  box.className = `alert alert-${type}`;
-  box.textContent = msg;
-  box.style.display = 'flex';
-  setTimeout(() => { box.style.display = 'none'; }, 4000);
-}
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-});
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

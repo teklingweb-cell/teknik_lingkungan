@@ -161,8 +161,10 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-04 FIX: module-level so onclick handlers can reach these
 let editId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
@@ -250,6 +252,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
   if (stored) stored.value = '';
 }
 
+});
 
 async function doSave() {
   const name        = document.getElementById('f_name').value.trim();
@@ -281,7 +284,6 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
-});
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

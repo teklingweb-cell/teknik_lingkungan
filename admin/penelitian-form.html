@@ -181,8 +181,10 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+// BUG-04 FIX: module-level so onclick handlers can reach these
 let editId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
@@ -204,9 +206,11 @@ let editId = null;
     document.getElementById('f_abstract').value       = data.abstract || '';
     document.getElementById('f_keywords').value      = data.keywords || '';
     if (data.image_url) {
-      document.getElementById('f_image_url_raw').value = data.image_url;
-      initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
+      // BUG-12 FIX: dispatch input event on already-initialized field instead of re-calling initGDriveField
+      const rawInp = document.getElementById('f_image_url_raw');
+      rawInp.value = data.image_url;
       document.getElementById('f_image_url').value = data.image_url;
+      rawInp.dispatchEvent(new Event('input'));
     }
   }
 })();
@@ -274,6 +278,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
   if (stored) stored.value = '';
 }
 
+});
 
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
@@ -310,7 +315,6 @@ function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
 }
-});
 </script>
 <script>
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }

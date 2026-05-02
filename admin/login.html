@@ -93,33 +93,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (session) { window.location.href = '/admin'; } else { document.getElementById('auth-hide')?.remove(); }
   })();
 
-  async function doLogin() {
-    const email    = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const btn      = document.getElementById('loginBtn');
-    const errBox   = document.getElementById('errBox');
-
-    errBox.className = 'alert';
-    if (!email || !password) {
-      errBox.textContent = 'Email dan password wajib diisi.';
-      errBox.classList.add('alert-error'); return;
-    }
-
-    btn.disabled = true; btn.textContent = 'Memproses…';
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      errBox.textContent = 'Login gagal: ' + error.message;
-      errBox.classList.add('alert-error');
-      btn.disabled = false; btn.textContent = 'Masuk';
-    } else {
-      window.location.href = '/admin';
-    }
-  }
-
   // Allow Enter key
   document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 });
+
+// BUG-01 FIX: moved to global scope so onclick="doLogin()" can reach it
+async function doLogin() {
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('loginBtn');
+  const errBox   = document.getElementById('errBox');
+
+  errBox.className = 'alert';
+  if (!email || !password) {
+    errBox.textContent = 'Email dan password wajib diisi.';
+    errBox.classList.add('alert-error'); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Memproses…';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errBox.textContent = 'Login gagal: ' + error.message;
+    errBox.classList.add('alert-error');
+    btn.disabled = false; btn.textContent = 'Masuk';
+  } else {
+    window.location.href = '/admin';
+  }
+}
 </script>
 </body>
 </html>
