@@ -41,7 +41,7 @@
         </div>
         <div class="search-wrap" style="position:relative;">
           <span class="search-icon"></span>
-          <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari nama atau NIP/NIM…" style="width:260px;padding-left:36px;" oninput="filterCards()">
+          <input type="text" id="staffSearch" class="form-input search-input" placeholder="Cari nama atau NIP/NIM…" style="width:260px;padding-left:36px;">
         </div>
       </div>
     </div>
@@ -84,6 +84,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 function filterCards() { render(); }
+
+// BUG-001 FIX: attach search listener inside DOMContentLoaded so filterCards is in scope
+document.getElementById('staffSearch').addEventListener('input', filterCards);
 
 function render() {
   const query = document.getElementById('staffSearch').value.toLowerCase();
