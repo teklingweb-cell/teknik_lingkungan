@@ -1325,6 +1325,8 @@ textarea.form-input { resize: none; }
   border: 1px solid rgba(26,46,30,0.08);
   padding: 24px;
   transition: all 0.3s;
+  overflow: hidden;
+  min-width: 0;
 }
 .achievement-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(14,22,40,0.12); }
 .achievement-title {
@@ -1338,9 +1340,11 @@ textarea.form-input { resize: none; }
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .achievement-card:hover .achievement-title { color: var(--gold); }
-.achievement-desc { font-size: 0.85rem; color: rgba(45,58,46,0.6); font-family: var(--font-body); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+.achievement-desc { font-size: 0.85rem; color: rgba(45,58,46,0.6); font-family: var(--font-body); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; overflow-wrap: break-word; }
 
 /* ─── GALLERY ─── */
 .gallery-grid {
