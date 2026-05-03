@@ -76,6 +76,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeTab = btn.dataset.tab;
+    // BUG-001 FIX: clear search input when switching tabs so filter resets
+    const searchInput = document.getElementById('staffSearch');
+    if (searchInput) searchInput.value = '';
     render();
   });
 });
@@ -119,10 +122,16 @@ function render() {
         </div>
       </div>`).join('');
   } else if (activeTab === 'alumni') {
-    grid.innerHTML = items.map(s => `
+    grid.innerHTML = items.map(s => {
+      // BUG-003 FIX: show photo when photo_url is available, fallback to initials
+      const initial = (s.name||'?')[0].toUpperCase();
+      const avatarHtml = s.photo_url
+        ? `<img src="${esc(s.photo_url)}" alt="${esc(s.name)}" class="staff-avatar alumni" style="object-fit:cover;" onerror="this.outerHTML='<div class=\\'staff-avatar alumni\\'>${initial}</div>'">`
+        : `<div class="staff-avatar alumni">${initial}</div>`;
+      return `
       <div class="staff-card fade-up">
         <div style="display:flex;align-items:center;gap:16px;">
-          <div class="staff-avatar">${(s.name||'?')[0].toUpperCase()}</div>
+          ${avatarHtml}
           <div>
             <div class="staff-name">${esc(s.name)}</div>
             <div class="staff-pos">${s.graduation_year ? 'Lulus ' + s.graduation_year : ''}</div>
@@ -135,7 +144,8 @@ function render() {
           ${s.email ? `<a href="mailto:${esc(s.email)}" class="staff-btn"></a>` : ''}
           ${s.linkedin_url ? `<a href="${esc(s.linkedin_url)}" target="_blank" class="staff-btn">in</a>` : ''}
         </div></div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } else {
     grid.innerHTML = items.map(s => `
       <div class="staff-card fade-up">

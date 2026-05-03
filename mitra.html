@@ -74,8 +74,14 @@ let allData = [], activeFilter = 'all';
   const withYear = data.filter(d => d.since_year);
   if (withYear.length) {
     const currentYear = new Date().getFullYear();
-    const avgYears = Math.round(withYear.reduce((s,d) => s + (currentYear - d.since_year), 0) / withYear.length);
-    document.getElementById('stat-tahun').textContent = avgYears;
+    // BUG-008 FIX: filter out invalid years (future or unrealistically old) before calculating
+    const validItems = withYear.filter(d => d.since_year >= 1900 && d.since_year <= currentYear);
+    if (validItems.length) {
+      const avgYears = Math.round(validItems.reduce((s,d) => s + Math.max(0, currentYear - d.since_year), 0) / validItems.length);
+      document.getElementById('stat-tahun').textContent = avgYears;
+    } else {
+      document.getElementById('stat-tahun').textContent = '–';
+    }
   }
   render();
 })();

@@ -72,7 +72,7 @@
     /* Bio Modal */
     .bio-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(16,28,17,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
     .bio-overlay.open{display:flex;}
-    .bio-modal{background:#fff;border-radius:24px;max-width:560px;width:100%;box-shadow:0 32px 80px rgba(16,28,17,0.22);overflow:hidden;position:relative;animation:bioIn 0.3s cubic-bezier(.34,1.4,.64,1) both;}
+    .bio-modal{background:#fff;border-radius:24px;max-width:560px;width:100%;box-shadow:0 32px 80px rgba(16,28,17,0.22);overflow:hidden;position:relative;animation:bioIn 0.3s cubic-bezier(.34,1.4,.64,1) both;max-height:90vh;display:flex;flex-direction:column;}
     @keyframes bioIn{from{opacity:0;transform:scale(0.88) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
     .bio-header{padding:36px 36px 28px;display:flex;gap:24px;align-items:flex-start;position:relative;}
     .bio-header-accent{position:absolute;top:0;left:0;right:0;height:4px;}
@@ -83,9 +83,9 @@
     .bio-name{font-size:1.25rem;font-weight:700;color:#1a2e1e;line-height:1.25;margin-bottom:4px;font-family:var(--font-display,serif);}
     .bio-position{font-size:0.82rem;color:var(--text-muted);font-family:var(--font-body);margin-bottom:2px;}
     .bio-dept{font-size:0.78rem;color:rgba(78,140,90,0.8);font-weight:500;font-family:var(--font-body);}
-    .bio-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(26,46,30,0.07);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;color:#2d3a2e;font-size:1.1rem;line-height:1;}
+    .bio-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(26,46,30,0.07);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;color:#2d3a2e;font-size:1.1rem;line-height:1;z-index:10;}
     .bio-close:hover{background:rgba(26,46,30,0.15);}
-    .bio-body{padding:0 36px 36px;}
+    .bio-body{padding:0 36px 36px;overflow-y:auto;flex:1;}
     .bio-divider{height:1px;background:rgba(26,46,30,0.07);margin-bottom:22px;}
     .bio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
     .bio-stat{background:#f7faf6;border-radius:12px;padding:14px 16px;}

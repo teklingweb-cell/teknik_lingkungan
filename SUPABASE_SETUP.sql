@@ -18,6 +18,9 @@ create table if not exists staff (
   email             text,
   publications_count integer default 0,      -- Jumlah publikasi (dosen only)
   linkedin_url      text,
+  photo_url         text,                    -- BUG-003 FIX: foto profil (alumni/dosen)
+  nim_nip           text,                    -- NIM (alumni) / NIP (dosen/staf)
+  org_level         text,                    -- Level dalam bagan org (Ketua, Sekretaris, dll)
   graduation_year   integer,                 -- Tahun lulus (alumni only)
   created_at        timestamptz default now()
 );
@@ -149,3 +152,9 @@ CREATE POLICY "admins can read contact messages"
   ON contact_messages FOR SELECT
   TO authenticated
   USING (true);
+
+-- ─── MIGRATION: add missing columns to existing staff table ────────────────
+-- Run these if the staff table already exists and needs the new columns:
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS photo_url     text;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS nim_nip       text;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS org_level     text;
