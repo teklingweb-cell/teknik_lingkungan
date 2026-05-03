@@ -107,13 +107,14 @@ function render() {
   grid.innerHTML = items.map((item, i) => `
     <div class="achievement-card fade-up${i%4===1?' delay-1':i%4===2?' delay-2':i%4===3?' delay-3':''}">
       <div class="achievement-year">${item.year}</div>
-      <div class="achievement-title">${esc(item.title)}</div>
-      <div class="achievement-desc">${esc((item.description||'').substring(0,300))}</div>
+      <div class="achievement-title">${esc(trunc(item.title, 80))}</div>
+      <div class="achievement-desc">${esc(trunc(item.description, 160))}</div>
       <div style="margin-top:12px;"><span style="font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;padding:3px 10px;border-radius:999px;background:rgba(26,46,30,0.08);color:rgba(45,58,46,0.6);">${esc(item.category)}</span></div>
     </div>`).join('');
   observeNewCards('achievementGrid');
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function trunc(s, n) { s = String(s||'').trim(); return s.length > n ? s.substring(0, n) + '…' : s; }
 
 function observeNewCards(gridId) {
   const obs = new IntersectionObserver((entries) => {
