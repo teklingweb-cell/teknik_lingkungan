@@ -283,9 +283,10 @@ function openBio(person,tier){
   document.getElementById('bioOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closeBio(){document.getElementById('bioOverlay').classList.remove('open');document.body.style.overflow='';}
-function handleOverlayClick(e){if(e.target===document.getElementById('bioOverlay'))closeBio();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBio();});
+// BUG-002 FIX: assign to window so inline onclick="closeBio()" and onclick="handleOverlayClick(event)" can resolve them from global scope
+window.closeBio = function closeBio(){document.getElementById('bioOverlay').classList.remove('open');document.body.style.overflow='';}
+window.handleOverlayClick = function handleOverlayClick(e){if(e.target===document.getElementById('bioOverlay'))window.closeBio();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')window.closeBio();});
 function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 });
 </script>

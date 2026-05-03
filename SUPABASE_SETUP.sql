@@ -6,7 +6,7 @@
 
 -- ─────────────────────────────────────────────────
 -- TABLE: staff
--- Used by: staf.html (public), admin/staff.htmll
+-- Used by: staf.html (public), admin/staff.html
 -- ─────────────────────────────────────────────────
 create table if not exists staff (
   id                serial primary key,
