@@ -238,7 +238,7 @@ function renderTable() {
       <td class="hide-mobile" style="color:var(--muted);font-size:0.78rem;">${escHtml(item.email||'–')}</td>
       <td><div class="actions-cell">
         <a href="/admin/staff-form?edit=${item.id}" class="btn btn-ghost btn-sm">Edit</a>
-        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${item.id},'${escAttr(item.name)}')">Hapus</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${item.id}','${escAttr(item.name)}')">Hapus</button>
       </div></td>
     </tr>`;
   }).join('');
