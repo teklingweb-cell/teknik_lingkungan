@@ -180,7 +180,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
 const TYPE_LABELS = { dosen:'Dosen', alumni:'Alumni', staf:'Staf' };
 const TYPE_COLORS = { dosen:'#2563eb', alumni:'#16a34a', staf:'#9333ea' };
-let allData = [], currentFilter = 'all', deleteTargetId = null;
+let allData = [], currentFilter = 'all';
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -249,22 +249,7 @@ function renderTable() {
   </table></div>`;
 }
 
-function confirmDelete(id, name) {
-  deleteTargetId = id;
-  document.getElementById('deleteModalBody').textContent = `Hapus "${name}"? Tindakan ini tidak dapat dibatalkan.`;
-  document.getElementById('deleteModal').classList.add('open');
-}
-function closeModal() { document.getElementById('deleteModal').classList.remove('open'); deleteTargetId = null; }
-async function doDelete() {
-  if (!deleteTargetId) return;
-  document.getElementById('confirmDeleteBtn').textContent = 'Menghapus…';
-  const { error } = await sb.from('staff').delete().eq('id', deleteTargetId);
-  closeModal();
-  if (error) { showAlert('error', 'Gagal menghapus data.'); return; }
-  showAlert('success', '✓ Data berhasil dihapus.');
-  await loadData();
-}
-document.getElementById('deleteModal').addEventListener('click', e => { if (e.target === document.getElementById('deleteModal')) closeModal(); });
+
 
 function showAlert(type, msg) {
   const box = document.getElementById('alertBox');
@@ -288,6 +273,29 @@ function renderOrgBadge(level) {
 });
 </script>
 <script>
+
+// --- Global delete state & handlers (must be global for inline onclick) ---
+let deleteTargetId = null;
+function confirmDelete(id, name) {
+  deleteTargetId = id;
+  document.getElementById('deleteModalBody').textContent = `Hapus "${name}"? Tindakan ini tidak dapat dibatalkan.`;
+  document.getElementById('deleteModal').classList.add('open');
+}
+function closeModal() { document.getElementById('deleteModal').classList.remove('open'); deleteTargetId = null; }
+async function doDelete() {
+  if (!deleteTargetId) return;
+  document.getElementById('confirmDeleteBtn').textContent = 'Menghapus…';
+  const { error } = await sb.from('staff').delete().eq('id', deleteTargetId);
+  closeModal();
+  document.getElementById('confirmDeleteBtn').textContent = 'Ya, Hapus';
+  if (error) { alert('Gagal menghapus data: ' + error.message); return; }
+  window.location.reload();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('deleteModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('deleteModal')) closeModal();
+  });
+});
 async function doLogout() { await sb.auth.signOut(); window.location.href = '/admin/login'; }
 function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
 function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
