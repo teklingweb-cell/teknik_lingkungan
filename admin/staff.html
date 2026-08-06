@@ -51,6 +51,14 @@
     .card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
     .card-title{font-size:0.9rem;font-weight:600;color:var(--navy);}
     .card-count{font-size:0.75rem;color:var(--muted);background:var(--cream);padding:2px 10px;border-radius:999px;}
+    .card-header{flex-wrap:wrap;gap:10px;}
+    .search-box{position:relative;display:flex;align-items:center;margin-left:auto;}
+    .search-box>svg{position:absolute;left:10px;color:var(--muted);pointer-events:none;}
+    .search-input{width:250px;padding:7px 12px 7px 32px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;}
+    .search-input:focus{border-color:var(--green);}
+    .search-input::placeholder{color:var(--muted);}
+    .search-input::-webkit-search-cancel-button{cursor:pointer;}
+    @media(max-width:640px){.search-box{width:100%;margin-left:0;}.search-input{width:100%;}}
     table{width:100%;border-collapse:collapse;}
     th{padding:10px 16px;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;background:#fafafa;white-space:nowrap;}
     td{padding:13px 16px;font-size:0.83rem;border-bottom:1px solid var(--border);vertical-align:middle;}
@@ -155,6 +163,10 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Daftar Staf & Alumni</span>
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="searchInput" class="search-input" placeholder="Cari nama, jabatan, bidang…" autocomplete="off">
+        </div>
         <span class="card-count" id="cardCount">memuat…</span>
       </div>
       <div id="tableWrap">
@@ -180,7 +192,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
 const TYPE_LABELS = { dosen:'Dosen', alumni:'Alumni', staf:'Staf' };
 const TYPE_COLORS = { dosen:'#2563eb', alumni:'#16a34a', staf:'#9333ea' };
-let allData = [], currentFilter = 'all';
+let allData = [], currentFilter = 'all', searchQuery = '';
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderTable();
+});
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -210,9 +227,22 @@ document.querySelectorAll('.filter-chip').forEach(btn => {
   });
 });
 
+function matchesSearch(item) {
+  if (!searchQuery) return true;
+  return [item.name, item.position, item.bidang, item.type, item.email, item.nim_nip, item.org_level, item.graduation_year]
+    .some(v => String(v ?? '').toLowerCase().includes(searchQuery));
+}
+
 function renderTable() {
-  const filtered = currentFilter === 'all' ? allData : allData.filter(d => d.type === currentFilter);
-  document.getElementById('cardCount').textContent = filtered.length + ' item';
+  const byType = currentFilter === 'all' ? allData : allData.filter(d => d.type === currentFilter);
+  const filtered = byType.filter(matchesSearch);
+  document.getElementById('cardCount').textContent =
+    searchQuery ? `${filtered.length} dari ${byType.length} item` : `${filtered.length} item`;
+
+  if (byType.length && !filtered.length) {
+    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Tidak ada hasil untuk “${escHtml(searchQuery)}”</div></div>`;
+    return;
+  }
 
   if (!filtered.length) {
     document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon" style="font-size:0;"><div style="width:56px;height:56px;background:var(--cream);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(45,58,46,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div></div><div class="empty-title">Belum ada data</div><div class="empty-sub">Klik "Tambah" untuk menambahkan data pertama.</div></div>`;
@@ -285,10 +315,14 @@ function closeModal() { document.getElementById('deleteModal').classList.remove(
 async function doDelete() {
   if (!deleteTargetId) return;
   document.getElementById('confirmDeleteBtn').textContent = 'Menghapus…';
-  const { error } = await sb.from('staff').delete().eq('id', deleteTargetId);
+  // .select() makes Supabase return the deleted rows. Without it an RLS
+  // denial looks identical to success: DELETE filters non-permitted rows
+  // out rather than raising an error, so zero rows go quietly.
+  const { data, error } = await sb.from('staff').delete().eq('id', deleteTargetId).select();
   closeModal();
   document.getElementById('confirmDeleteBtn').textContent = 'Ya, Hapus';
   if (error) { alert('Gagal menghapus data: ' + error.message); return; }
+  if (!data || !data.length) { alert('Gagal menghapus: tidak punya izin atau data sudah terhapus.'); return; }
   window.location.reload();
 }
 document.addEventListener('DOMContentLoaded', () => {

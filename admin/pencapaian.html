@@ -39,6 +39,14 @@
     .card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
     .card-title{font-size:0.9rem;font-weight:600;color:var(--navy);}
     .card-count{font-size:0.75rem;color:var(--muted);background:var(--cream);padding:2px 10px;border-radius:999px;}
+    .card-header{flex-wrap:wrap;gap:10px;}
+    .search-box{position:relative;display:flex;align-items:center;margin-left:auto;}
+    .search-box>svg{position:absolute;left:10px;color:var(--muted);pointer-events:none;}
+    .search-input{width:250px;padding:7px 12px 7px 32px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;}
+    .search-input:focus{border-color:var(--green);}
+    .search-input::placeholder{color:var(--muted);}
+    .search-input::-webkit-search-cancel-button{cursor:pointer;}
+    @media(max-width:640px){.search-box{width:100%;margin-left:0;}.search-input{width:100%;}}
     table{width:100%;border-collapse:collapse;}
     th{padding:10px 16px;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;background:#fafafa;}
     td{padding:13px 16px;font-size:0.83rem;border-bottom:1px solid var(--border);vertical-align:middle;}
@@ -104,6 +112,10 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Daftar Pencapaian</span>
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="searchInput" class="search-input" placeholder="Cari judul, deskripsi, kategori…" autocomplete="off">
+        </div>
         <span class="card-count" id="cardCount">memuat…</span>
       </div>
       <div id="tableWrap"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-title">Memuat data…</div></div></div>
@@ -126,7 +138,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
 const CAT_COLORS = {'Riset':'#2563eb','Akreditasi':'#16a34a','Prestasi':'#d97706','Hibah':'#9333ea','Ranking':'#0891b2','Lainnya':'#6b7a6c'};
-let allData = [], deleteTargetId = null;
+let allData = [], deleteTargetId = null, searchQuery = '';
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
@@ -134,6 +146,11 @@ let allData = [], deleteTargetId = null;
   document.getElementById('auth-hide')?.remove();
   loadData();
 })();
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderTable();
+});
 
 async function loadData() {
   const { data, error } = await sb.from('pencapaian').select('*').order('year', { ascending: false });
@@ -146,13 +163,25 @@ async function loadData() {
   window.history.replaceState({}, '', 'pencapaian.html');
 }
 
+function matchesSearch(item) {
+  if (!searchQuery) return true;
+  return [item.title, item.description, item.category, item.year]
+    .some(v => String(v ?? '').toLowerCase().includes(searchQuery));
+}
+
 function renderTable() {
-  document.getElementById('cardCount').textContent = allData.length + ' item';
+  const view = allData.filter(matchesSearch);
+  document.getElementById('cardCount').textContent =
+    searchQuery ? `${view.length} dari ${allData.length} item` : `${allData.length} item`;
+  if (allData.length && !view.length) {
+    document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Tidak ada hasil untuk “${escHtml(searchQuery)}”</div></div>`;
+    return;
+  }
   if (!allData.length) {
     document.getElementById('tableWrap').innerHTML = `<div class="empty"><div class="empty-icon" style="font-size:0;"><div style="width:56px;height:56px;background:var(--cream);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(45,58,46,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div></div><div class="empty-title">Belum ada pencapaian</div></div>`;
     return;
   }
-  const rows = allData.map(item => {
+  const rows = view.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
     return `<tr>
       <td style="width:44px;"><div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:${color}18;"><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='6'/><path d='M15.477 12.89L17 22l-5-3-5 3 1.523-9.11'/></svg></div></td>
@@ -177,13 +206,27 @@ function confirmDelete(id, title) {
 }
 function closeModal() { document.getElementById('deleteModal').classList.remove('open'); deleteTargetId = null; }
 async function doDelete() {
-  document.getElementById('confirmDeleteBtn').textContent = 'Menghapus…';
-  const { error } = await sb.from('pencapaian').delete().eq('id', deleteTargetId);
+  if (!deleteTargetId) return;
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.textContent = 'Menghapus…';
+  // .select() makes Supabase return the deleted rows. Without it an RLS
+  // denial looks identical to success: DELETE filters non-permitted rows
+  // out rather than raising an error, so zero rows go quietly.
+  const { data, error } = await sb.from('pencapaian').delete().eq('id', deleteTargetId).select();
   closeModal();
-  if (error) { showAlert('error', 'Gagal menghapus.'); return; }
+  btn.textContent = 'Ya, Hapus';
+  if (error) { showAlert('error', 'Gagal menghapus: ' + error.message); return; }
+  if (!data || !data.length) { showAlert('error', 'Gagal menghapus: tidak punya izin atau data sudah terhapus.'); return; }
   showAlert('success', '✓ Berhasil dihapus.');
   await loadData();
 }
+
+// Inline onclick= attributes resolve against global scope only, but this
+// script runs inside a DOMContentLoaded callback — so these must be
+// published to window or every delete button throws ReferenceError.
+window.confirmDelete = confirmDelete;
+window.closeModal    = closeModal;
+window.doDelete      = doDelete;
 document.getElementById('deleteModal').addEventListener('click', e => { if (e.target === document.getElementById('deleteModal')) closeModal(); });
 
 function showAlert(type, msg) {

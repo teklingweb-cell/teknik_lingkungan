@@ -1682,3 +1682,17 @@ textarea.form-input { resize: none; }
 @media (min-width: 1440px) {
   .hero-content { max-width: 900px; }
 }
+
+/* Footer credit link — inherits the muted footer colour so it reads as
+   part of the line, and only lifts on hover/focus. */
+.powered-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(242, 245, 239, 0.22);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.powered-link:hover,
+.powered-link:focus-visible {
+  color: rgba(242, 245, 239, 0.85);
+  border-bottom-color: rgba(242, 245, 239, 0.6);
+}
