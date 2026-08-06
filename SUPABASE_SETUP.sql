@@ -1,6 +1,17 @@
 -- =====================================================
 -- SUPABASE SQL SETUP — Universitas Lorem Ipsum
 -- Run all of this in: Supabase Dashboard > SQL Editor
+--
+-- !! INCOMPLETE ON ITS OWN — RUN SUPABASE_SECURITY.sql AFTER THIS FILE !!
+--
+--   * This file does NOT create the `news` table, which the site
+--     depends on heavily. SUPABASE_SECURITY.sql creates it WITH RLS.
+--   * The write policies below grant access to ANY authenticated user.
+--     Since anyone can self-register with the public anon key, that
+--     lets a stranger edit or delete all site content.
+--     SUPABASE_SECURITY.sql replaces them with an admin allowlist.
+--
+-- Stopping after this file leaves the site editable by the public.
 -- =====================================================
 
 
