@@ -226,6 +226,28 @@ create policy "news_admin_delete" on public.news for delete to authenticated usi
 create policy "contact_public_insert" on public.contact_messages
   for insert to anon, authenticated with check (true);
 
+-- Anonymous INSERT is required for the contact form, so the real exposure
+-- here is abuse rather than disclosure. Length caps stop a bot writing
+-- multi-megabyte rows to run up storage. They match the limits the form
+-- already enforces client-side, which an attacker calling the API directly
+-- would simply skip.
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'contact_messages_length_guard'
+  ) then
+    alter table public.contact_messages
+      add constraint contact_messages_length_guard check (
+        char_length(nama)                 between 1 and 200
+        and char_length(email)            between 3 and 320
+        and char_length(coalesce(phone,'')) <= 50
+        and char_length(coalesce(unit,''))  <= 200
+        and char_length(subjek)           between 1 and 300
+        and char_length(pesan)            between 1 and 5000
+      );
+  end if;
+end $$;
+
 create policy "contact_admin_read" on public.contact_messages
   for select to authenticated using (public.is_admin());
 
@@ -275,10 +297,16 @@ where schemaname = 'public'
 
 -- MUST RETURN 0 ROWS. Any write policy still keyed to bare authentication
 -- rather than public.is_admin() lets any self-registered user through.
+--
+-- contact_public_insert is excluded on purpose: the contact form has to
+-- accept submissions from anonymous visitors, so `with check (true)` is
+-- correct there. It grants INSERT only — reads are gated by
+-- contact_admin_read — so nothing is readable through it.
 select tablename, policyname, cmd, qual::text, with_check::text
 from pg_policies
 where schemaname = 'public'
   and cmd <> 'SELECT'
+  and policyname <> 'contact_public_insert'
   and coalesce(qual::text,'') || coalesce(with_check::text,'') not like '%is_admin%';
 
 -- Confirm the admin bootstrap worked (must return at least 1 row):
