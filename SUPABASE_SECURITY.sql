@@ -156,53 +156,62 @@ create index if not exists news_show_on_home_idx on public.news (show_on_home) w
 -- 3. REPLACE THE WEAK POLICIES
 -- Old rule: auth.role() = 'authenticated'  -> any signed-up user
 -- New rule: public.is_admin()              -> allowlisted users only
+--
+-- RLS policies are PERMISSIVE: Postgres ORs them together, so a single
+-- leftover loose policy re-opens the table no matter how strict the
+-- others are. Dropping by name is unreliable because policies created
+-- by hand in the dashboard use names this script cannot predict — an
+-- earlier run left "Auth insert news" alive next to "news_admin_insert",
+-- which silently defeated the allowlist on that table.
+--
+-- So: enumerate and drop EVERY existing policy on these tables first,
+-- whatever it is called, then recreate the canonical set below.
 -- ─────────────────────────────────────────────────
+do $$
+declare
+  pol record;
+begin
+  for pol in
+    select policyname, tablename
+    from pg_policies
+    where schemaname = 'public'
+      and tablename in (
+        'staff','penelitian','pencapaian','mitra','news','contact_messages'
+      )
+  loop
+    execute format(
+      'drop policy if exists %I on public.%I',
+      pol.policyname, pol.tablename
+    );
+  end loop;
+end $$;
+
 
 -- staff
-drop policy if exists "Public read staff" on public.staff;
-drop policy if exists "Auth insert staff" on public.staff;
-drop policy if exists "Auth update staff" on public.staff;
-drop policy if exists "Auth delete staff" on public.staff;
 create policy "staff_public_read" on public.staff for select using (true);
 create policy "staff_admin_insert" on public.staff for insert to authenticated with check (public.is_admin());
 create policy "staff_admin_update" on public.staff for update to authenticated using (public.is_admin()) with check (public.is_admin());
 create policy "staff_admin_delete" on public.staff for delete to authenticated using (public.is_admin());
 
 -- penelitian
-drop policy if exists "Public read penelitian" on public.penelitian;
-drop policy if exists "Auth insert penelitian" on public.penelitian;
-drop policy if exists "Auth update penelitian" on public.penelitian;
-drop policy if exists "Auth delete penelitian" on public.penelitian;
 create policy "penelitian_public_read" on public.penelitian for select using (true);
 create policy "penelitian_admin_insert" on public.penelitian for insert to authenticated with check (public.is_admin());
 create policy "penelitian_admin_update" on public.penelitian for update to authenticated using (public.is_admin()) with check (public.is_admin());
 create policy "penelitian_admin_delete" on public.penelitian for delete to authenticated using (public.is_admin());
 
 -- pencapaian
-drop policy if exists "Public read pencapaian" on public.pencapaian;
-drop policy if exists "Auth insert pencapaian" on public.pencapaian;
-drop policy if exists "Auth update pencapaian" on public.pencapaian;
-drop policy if exists "Auth delete pencapaian" on public.pencapaian;
 create policy "pencapaian_public_read" on public.pencapaian for select using (true);
 create policy "pencapaian_admin_insert" on public.pencapaian for insert to authenticated with check (public.is_admin());
 create policy "pencapaian_admin_update" on public.pencapaian for update to authenticated using (public.is_admin()) with check (public.is_admin());
 create policy "pencapaian_admin_delete" on public.pencapaian for delete to authenticated using (public.is_admin());
 
 -- mitra
-drop policy if exists "Public read mitra" on public.mitra;
-drop policy if exists "Auth insert mitra" on public.mitra;
-drop policy if exists "Auth update mitra" on public.mitra;
-drop policy if exists "Auth delete mitra" on public.mitra;
 create policy "mitra_public_read" on public.mitra for select using (true);
 create policy "mitra_admin_insert" on public.mitra for insert to authenticated with check (public.is_admin());
 create policy "mitra_admin_update" on public.mitra for update to authenticated using (public.is_admin()) with check (public.is_admin());
 create policy "mitra_admin_delete" on public.mitra for delete to authenticated using (public.is_admin());
 
 -- news (public reads the site, admins manage it)
-drop policy if exists "news_public_read"  on public.news;
-drop policy if exists "news_admin_insert" on public.news;
-drop policy if exists "news_admin_update" on public.news;
-drop policy if exists "news_admin_delete" on public.news;
 create policy "news_public_read" on public.news for select using (true);
 create policy "news_admin_insert" on public.news for insert to authenticated with check (public.is_admin());
 create policy "news_admin_update" on public.news for update to authenticated using (public.is_admin()) with check (public.is_admin());
@@ -214,11 +223,6 @@ create policy "news_admin_delete" on public.news for delete to authenticated usi
 -- Public may submit. Only admins may read. Nobody edits or deletes
 -- from the client — omitted policies deny by default.
 -- ─────────────────────────────────────────────────
-drop policy if exists "public can insert contact messages" on public.contact_messages;
-drop policy if exists "admins can read contact messages"   on public.contact_messages;
-drop policy if exists "contact_public_insert" on public.contact_messages;
-drop policy if exists "contact_admin_read"    on public.contact_messages;
-
 create policy "contact_public_insert" on public.contact_messages
   for insert to anon, authenticated with check (true);
 
@@ -252,6 +256,30 @@ select tablename, policyname, cmd, roles
 from pg_policies
 where schemaname = 'public'
 order by tablename, cmd;
+
+-- MUST RETURN 0 ROWS. Anything listed here is an unexpected policy that
+-- survived the cleanup, and because policies are OR'd it may be granting
+-- access the allowlist is trying to deny. Investigate before going live.
+select tablename, policyname, cmd, roles, 'UNEXPECTED POLICY' as warning
+from pg_policies
+where schemaname = 'public'
+  and tablename in ('staff','penelitian','pencapaian','mitra','news','contact_messages')
+  and policyname not in (
+    'staff_public_read','staff_admin_insert','staff_admin_update','staff_admin_delete',
+    'penelitian_public_read','penelitian_admin_insert','penelitian_admin_update','penelitian_admin_delete',
+    'pencapaian_public_read','pencapaian_admin_insert','pencapaian_admin_update','pencapaian_admin_delete',
+    'mitra_public_read','mitra_admin_insert','mitra_admin_update','mitra_admin_delete',
+    'news_public_read','news_admin_insert','news_admin_update','news_admin_delete',
+    'contact_public_insert','contact_admin_read'
+  );
+
+-- MUST RETURN 0 ROWS. Any write policy still keyed to bare authentication
+-- rather than public.is_admin() lets any self-registered user through.
+select tablename, policyname, cmd, qual::text, with_check::text
+from pg_policies
+where schemaname = 'public'
+  and cmd <> 'SELECT'
+  and coalesce(qual::text,'') || coalesce(with_check::text,'') not like '%is_admin%';
 
 -- Confirm the admin bootstrap worked (must return at least 1 row):
 select a.email, a.added_at from public.admins a;
