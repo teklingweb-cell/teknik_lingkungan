@@ -14,6 +14,87 @@
 
 
 -- ─────────────────────────────────────────────────
+-- 0. ENSURE ALL TABLES EXIST
+-- `create table if not exists` never touches an existing table, so
+-- this is safe to run against a live database. It exists because a
+-- partial SUPABASE_SETUP.sql run can leave tables missing — which is
+-- what happened to contact_messages (the contact form was silently
+-- failing against a table that was never created).
+-- ─────────────────────────────────────────────────
+create table if not exists public.staff (
+  id                 serial primary key,
+  name               text not null,
+  type               text not null check (type in ('dosen', 'alumni', 'staf')),
+  position           text not null,
+  bidang             text not null,
+  expertise_desc     text,
+  email              text,
+  publications_count integer default 0,
+  linkedin_url       text,
+  photo_url          text,
+  nim_nip            text,
+  org_level          text,
+  graduation_year    integer,
+  created_at         timestamptz default now()
+);
+-- columns added after the original schema shipped
+alter table public.staff add column if not exists photo_url text;
+alter table public.staff add column if not exists nim_nip   text;
+alter table public.staff add column if not exists org_level text;
+
+create table if not exists public.penelitian (
+  id              serial primary key,
+  title           text not null,
+  author          text not null,
+  category        text not null,
+  year            integer not null,
+  funding         text,
+  status          text default 'Aktif' check (status in ('Aktif', 'Selesai')),
+  publication_url text,
+  abstract        text,
+  created_at      timestamptz default now()
+);
+
+create table if not exists public.pencapaian (
+  id          serial primary key,
+  title       text not null,
+  description text not null,
+  category    text not null,
+  year        integer not null,
+  icon        text default '🏆',
+  created_at  timestamptz default now()
+);
+
+create table if not exists public.mitra (
+  id          serial primary key,
+  name        text not null,
+  category    text not null,
+  description text not null,
+  since_year  integer,
+  website_url text,
+  created_at  timestamptz default now()
+);
+
+-- This is the one that was missing. Columns match the insert in main.js.
+create table if not exists public.contact_messages (
+  id         bigserial primary key,
+  nama       text not null,
+  email      text not null,
+  phone      text,
+  unit       text,
+  subjek     text not null,
+  pesan      text not null,
+  created_at timestamptz default now()
+);
+
+alter table public.staff            enable row level security;
+alter table public.penelitian       enable row level security;
+alter table public.pencapaian       enable row level security;
+alter table public.mitra            enable row level security;
+alter table public.contact_messages enable row level security;
+
+
+-- ─────────────────────────────────────────────────
 -- 1. ADMIN ALLOWLIST
 -- Being logged in is no longer enough. A user must be
 -- explicitly listed here to write anything.
