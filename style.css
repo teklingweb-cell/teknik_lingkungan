@@ -86,8 +86,8 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   transition: background 0.3s;
 }
 .navbar.scrolled .nav-logo-icon { background: var(--navy); }
-.nav-logo-text { display: none; }
-@media(min-width:640px){ .nav-logo-text { display: block; } }
+.nav-logo-text { display: flex; flex-direction: column; min-width: 0; }
+.nav-logo-img { height: 56px; width: 56px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.35)); }
 .nav-logo-name {
   font-family: var(--font-display);
   font-weight: 600;
@@ -95,6 +95,7 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   color: #fff;
   line-height: 1.2;
   transition: color 0.3s;
+  white-space: nowrap;
 }
 .nav-logo-sub {
   font-size: 0.6rem;
@@ -103,9 +104,21 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   color: var(--moss);
   font-family: var(--font-body);
   transition: color 0.3s;
+  white-space: nowrap;
 }
 .navbar.scrolled .nav-logo-name { color: var(--navy); }
 .navbar.scrolled .nav-logo-sub { color: var(--gold); }
+@media(max-width:639px){
+  .nav-logo { gap: 9px; }
+  .nav-logo-img { height: 40px; width: 40px; }
+  .nav-logo-name { font-size: 0.78rem; }
+  .nav-logo-sub { font-size: 0.52rem; letter-spacing: 0.1em; }
+}
+@media(max-width:380px){
+  .nav-logo-img { height: 36px; width: 36px; }
+  .nav-logo-name { font-size: 0.72rem; }
+  .nav-logo-sub { font-size: 0.48rem; }
+}
 
 .nav-links {
   display: none;
