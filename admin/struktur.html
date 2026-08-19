@@ -224,9 +224,8 @@
     <label class="form-label">Level Hierarki di Bagan Organisasi</label>
     <select class="form-select" id="editLevelSelect">
       <option value="">— Tidak tampil di bagan —</option>
-      <option value="rektor">Rektor</option>
-      <option value="wakil">Wakil Rektor</option>
-      <option value="dekan">Dekan / Ketua Lembaga</option>
+      <option value="ketua_jurusan">Ketua Jurusan</option>
+      <option value="koordinator_prodi">Koordinator Program Studi</option>
       <option value="dosen">Dosen / Profesor</option>
       <option value="staf">Staf Administrasi</option>
     </select>
@@ -253,15 +252,16 @@
 <script>
 // BUG-07 FIX: module-level state so onclick handlers can access them
 const TIERS = [
-  { key: 'rektor', label: 'Rektor',                 color: '#1a2e1e' },
-  { key: 'wakil',  label: 'Wakil Rektor',            color: '#2d6a40' },
-  { key: 'dekan',  label: 'Dekan / Ketua Lembaga',  color: '#4e8c5a' },
+  { key: 'ketua_jurusan', label: 'Ketua Jurusan',              color: '#1a2e1e' },
+  { key: 'koordinator_prodi', label: 'Koordinator Program Studi', color: '#2d6a40' },
   { key: 'dosen',  label: 'Dosen / Profesor',        color: '#2563eb' },
   { key: 'staf',   label: 'Staf Administrasi',       color: '#9333ea' },
 ];
+const LEGACY_LEVELS = { rektor: 'ketua_jurusan', wakil: 'koordinator_prodi' };
 
 const TYPE_LABELS = { dosen:'Dosen', alumni:'Alumni', staf:'Staf' };
 const TYPE_COLORS = { dosen:'#2563eb', alumni:'#16a34a', staf:'#9333ea' };
+function normalizedOrgLevel(level) { return LEGACY_LEVELS[level] || level; }
 
 let allStaff = [];
 let editTargetId = null;
@@ -301,7 +301,7 @@ function renderAll() {
   const grid = document.getElementById('tierGrid');
 
   const tiersHtml = TIERS.map(tier => {
-    const members = allStaff.filter(s => s.org_level === tier.key);
+    const members = allStaff.filter(s => normalizedOrgLevel(s.org_level) === tier.key);
     const rows = members.length ? members.map(m => memberRow(m, tier.color)).join('') : '';
     return `
       <div class="tier-card">
@@ -328,7 +328,7 @@ function renderAll() {
   grid.innerHTML = tiersHtml;
 
   // Unassigned
-  const unassigned = allStaff.filter(s => !s.org_level);
+  const unassigned = allStaff.filter(s => !TIERS.some(t => t.key === (LEGACY_LEVELS[s.org_level] || s.org_level)));
   document.getElementById('unassignedCount').textContent = unassigned.length + ' orang';
   if (!unassigned.length) {
     document.getElementById('unassignedWrap').innerHTML = '<div class="tier-empty">Semua staf sudah memiliki posisi di bagan.</div>';
@@ -378,7 +378,7 @@ function openEditModal(id) {
   editTargetId = id;
   document.getElementById('editModalName').textContent = m.name;
   document.getElementById('editModalSub').textContent = (m.position || '') + (m.bidang ? ' · ' + m.bidang : '');
-  document.getElementById('editLevelSelect').value = m.org_level || '';
+  document.getElementById('editLevelSelect').value = normalizedOrgLevel(m.org_level || '');
   document.getElementById('editModal').classList.add('open');
 }
 function closeEditModal() { document.getElementById('editModal').classList.remove('open'); editTargetId = null; }

@@ -71,14 +71,13 @@
     .org-node.sz-sm .org-node-name{font-size:0.72rem;}
     .org-empty-tier{font-size:0.8rem;color:var(--text-muted);font-family:var(--font-body);border:1.5px dashed rgba(78,140,90,0.2);border-radius:12px;padding:16px 28px;text-align:center;font-style:italic;opacity:0.7;}
     /* Tier color classes */
-    .tier-rektor{--tier-color:#1a2e1e;}
-    .tier-wakil{--tier-color:#2d6a40;}
-    .tier-dekan{--tier-color:#4e8c5a;}
+    .tier-ketua-jurusan{--tier-color:#1a2e1e;}
+    .tier-koordinator-prodi{--tier-color:#2d6a40;}
     .tier-dosen{--tier-color:#2563eb;}
     .tier-staf{--tier-color:#9333ea;}
-    .tier-rektor .org-node-card::before,.tier-wakil .org-node-card::before,.tier-dekan .org-node-card::before,.tier-dosen .org-node-card::before,.tier-staf .org-node-card::before{background:var(--tier-color);}
-    .tier-rektor .org-node-initials,.tier-wakil .org-node-initials,.tier-dekan .org-node-initials,.tier-dosen .org-node-initials,.tier-staf .org-node-initials{background:var(--tier-color);}
-    .tier-rektor .org-node-role,.tier-wakil .org-node-role,.tier-dekan .org-node-role,.tier-dosen .org-node-role,.tier-staf .org-node-role{color:var(--tier-color);}
+    .tier-ketua-jurusan .org-node-card::before,.tier-koordinator-prodi .org-node-card::before,.tier-dosen .org-node-card::before,.tier-staf .org-node-card::before{background:var(--tier-color);}
+    .tier-ketua-jurusan .org-node-initials,.tier-koordinator-prodi .org-node-initials,.tier-dosen .org-node-initials,.tier-staf .org-node-initials{background:var(--tier-color);}
+    .tier-ketua-jurusan .org-node-role,.tier-koordinator-prodi .org-node-role,.tier-dosen .org-node-role,.tier-staf .org-node-role{color:var(--tier-color);}
     /* Loading skeleton */
     .org-loading{display:flex;flex-direction:column;align-items:center;gap:32px;padding:40px 0;}
     .skel{background:linear-gradient(90deg,#e8ede8 25%,#f2f5ef 50%,#e8ede8 75%);background-size:200%;animation:shimmer 1.4s infinite;border-radius:12px;}
@@ -148,9 +147,8 @@
       <p style="font-family:var(--font-body);color:var(--text-muted);font-size:0.9rem;margin-top:8px;">Klik kartu untuk melihat profil lengkap</p>
     </div>
     <div class="org-legend fade-up">
-      <div class="org-legend-item"><div class="org-legend-dot" style="background:#1a2e1e"></div> Rektor</div>
-      <div class="org-legend-item"><div class="org-legend-dot" style="background:#2d6a40"></div> Wakil Rektor</div>
-      <div class="org-legend-item"><div class="org-legend-dot" style="background:#4e8c5a"></div> Dekan</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#1a2e1e"></div> Ketua Jurusan</div>
+      <div class="org-legend-item"><div class="org-legend-dot" style="background:#2d6a40"></div> Koordinator Program Studi</div>
       <div class="org-legend-item"><div class="org-legend-dot" style="background:#2563eb"></div> Dosen / Profesor</div>
       <div class="org-legend-item"><div class="org-legend-dot" style="background:#9333ea"></div> Staf Administrasi</div>
     </div>
@@ -211,13 +209,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
 const TIERS=[
-  {key:'rektor', label:'Rektor',            sz:'sz-xl',cssClass:'tier-rektor',color:'#1a2e1e'},
-  {key:'wakil',  label:'Wakil Rektor',      sz:'sz-lg',cssClass:'tier-wakil', color:'#2d6a40'},
-  {key:'dekan',  label:'Dekan',             sz:'',     cssClass:'tier-dekan', color:'#4e8c5a'},
+  {key:'ketua_jurusan', label:'Ketua Jurusan',              sz:'sz-xl',cssClass:'tier-ketua-jurusan',color:'#1a2e1e'},
+  {key:'koordinator_prodi', label:'Koordinator Program Studi', sz:'sz-lg',cssClass:'tier-koordinator-prodi',color:'#2d6a40'},
   {key:'dosen',  label:'Dosen / Profesor',  sz:'sz-sm',cssClass:'tier-dosen', color:'#2563eb'},
   {key:'staf',   label:'Staf Administrasi', sz:'sz-sm',cssClass:'tier-staf',  color:'#9333ea'},
 ];
-const TIER_LABELS={rektor:'Rektor',wakil:'Wakil Rektor',dekan:'Dekan',dosen:'Dosen / Profesor',staf:'Staf Administrasi'};
+const TIER_LABELS={ketua_jurusan:'Ketua Jurusan',koordinator_prodi:'Koordinator Program Studi',dosen:'Dosen / Profesor',staf:'Staf Administrasi'};
+const LEGACY_LEVELS={rektor:'ketua_jurusan',wakil:'koordinator_prodi'};
 
 (async()=>{
   try{
@@ -225,7 +223,7 @@ const TIER_LABELS={rektor:'Rektor',wakil:'Wakil Rektor',dekan:'Dekan',dosen:'Dos
     document.getElementById('orgLoading').remove();
     if(error||!data||data.length===0){renderFallback();return;}
     const groups={};
-    for(const p of data){const lv=(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
+    for(const p of data){const lv=LEGACY_LEVELS[(p.org_level||'').toLowerCase()]||(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
     renderTree(groups);
   }catch(e){document.getElementById('orgLoading').remove();renderFallback();}
 })();

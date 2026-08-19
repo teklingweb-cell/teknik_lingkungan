@@ -291,9 +291,10 @@ function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderOrgBadge(level) {
   const map = {
-    rektor: {label:'Rektor',       color:'#1a2e1e'},
-    wakil:  {label:'Wakil Rektor', color:'#2d6a40'},
-    dekan:  {label:'Dekan',        color:'#4e8c5a'},
+    ketua_jurusan: {label:'Ketua Jurusan', color:'#1a2e1e'},
+    koordinator_prodi: {label:'Koordinator Program Studi', color:'#2d6a40'},
+    rektor: {label:'Ketua Jurusan', color:'#1a2e1e'},
+    wakil:  {label:'Koordinator Program Studi', color:'#2d6a40'},
     dosen:  {label:'Dosen/Prof.',  color:'#2563eb'},
     staf:   {label:'Staf Admin',   color:'#9333ea'},
   };
