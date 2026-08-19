@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" href="../logo-untan.png">
   <link rel="apple-touch-icon" href="../logo-untan.png">
   <title>Admin — Penelitian</title>
@@ -190,7 +189,7 @@ function renderTable() {
     const statusColor = item.status === 'Aktif' ? '#16a34a' : '#d97706';
     const statusBg    = item.status === 'Aktif' ? '#f0fdf4' : '#fffbeb';
     return `<tr>
-      <td><div style="font-weight:500;color:var(--navy);max-width:280px;">${escHtml(item.title)}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;">${String(item.author || '').split(',').map(name => name.trim()).filter(Boolean).map(name => `<span class="badge" style="background:#eaf4ec;color:var(--green);">${escHtml(name)}</span>`).join('')}</div></td>
+      <td><div style="font-weight:500;color:var(--navy);max-width:280px;">${escHtml(item.title)}</div><div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">${escHtml(item.author)}</div></td>
       <td class="hide-mobile"><span class="badge" style="background:${color}18;color:${color};">${escHtml(item.category)}</span></td>
       <td class="hide-mobile" style="color:var(--muted);">${item.year}</td>
       <td class="hide-mobile" style="font-weight:500;">${escHtml(item.funding||'–')}</td>
