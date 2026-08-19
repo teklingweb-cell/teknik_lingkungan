@@ -219,14 +219,27 @@ const LEGACY_LEVELS={rektor:'ketua_jurusan',wakil:'koordinator_prodi'};
 
 (async()=>{
   try{
-    const {data,error}=await sb.from('staff').select('*').not('org_level','is',null).order('org_level').order('name').limit(100);
+    const [{data,error},{data:researchData,error:researchError}]=await Promise.all([
+      sb.from('staff').select('*').not('org_level','is',null).order('org_level').order('name').limit(100),
+      sb.from('penelitian').select('author')
+    ]);
     document.getElementById('orgLoading').remove();
-    if(error||!data||data.length===0){renderFallback();return;}
+    if(error||researchError||!data||data.length===0){renderFallback();return;}
+    const publicationCounts=countPublications(researchData||[]);
     const groups={};
-    for(const p of data){if(p.type==='alumni')continue;const lv=LEGACY_LEVELS[(p.org_level||'').toLowerCase()]||(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
+    for(const person of data){if(person.type==='alumni')continue;const p={...person,publications_count:publicationCounts.get((person.name||'').trim().toLowerCase())||0};const lv=LEGACY_LEVELS[(p.org_level||'').toLowerCase()]||(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
     renderTree(groups);
   }catch(e){document.getElementById('orgLoading').remove();renderFallback();}
 })();
+
+function countPublications(researchRows){
+  const counts=new Map();
+  researchRows.forEach(row=>{
+    const authors=String(row.author||'').split(',').map(name=>name.trim().toLowerCase()).filter(Boolean);
+    new Set(authors).forEach(name=>counts.set(name,(counts.get(name)||0)+1));
+  });
+  return counts;
+}
 
 function renderTree(groups){
   const tree=document.getElementById('orgTree');

@@ -39,6 +39,8 @@
     label{font-size:0.78rem;font-weight:500;}
     .form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;}
     .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);}
+    .author-picker{min-height:120px;}
+    .form-hint{font-size:0.72rem;color:var(--muted);line-height:1.5;}
     .form-textarea{resize:vertical;min-height:90px;}
     .alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:0.85rem;font-weight:500;}
     .alert-error{background:var(--dangerBg);border:1px solid #fecaca;color:var(--danger);}
@@ -111,8 +113,11 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Peneliti Utama *</label>
-          <input class="form-input" id="f_author" placeholder="cth: Dr. Hendra Wahyudi">
+          <label>Dosen Peneliti *</label>
+          <select class="form-select author-picker" id="f_authors" multiple aria-describedby="authorHint">
+            <option disabled>Memuat daftar dosen...</option>
+          </select>
+          <span class="form-hint" id="authorHint">Pilih satu atau beberapa dosen yang berkontribusi pada penelitian ini.</span>
         </div>
         <div class="form-group">
           <label>Kategori *</label>
@@ -184,6 +189,7 @@
 <script>
 // BUG-04 FIX: module-level so onclick handlers can reach these
 let editId = null;
+let authorNamesForEdit = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
@@ -191,6 +197,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!session) { window.location.href = '/admin/login'; return; }
   document.getElementById('auth-hide')?.remove();
   initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
+  const { data: lecturers, error: lecturersError } = await sb.from('staff').select('id, name').eq('type', 'dosen').order('name');
+  if (lecturersError) { showAlert('Gagal memuat daftar dosen: ' + lecturersError.message); return; }
+  renderAuthorOptions(lecturers || []);
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));
@@ -198,7 +207,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await sb.from('penelitian').select('*').eq('id', editId).single();
     if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
     document.getElementById('f_title').value          = data.title || '';
-    document.getElementById('f_author').value         = data.author || '';
+    authorNamesForEdit = String(data.author || '').split(',').map(name => name.trim()).filter(Boolean);
+    selectAuthors(authorNamesForEdit);
     document.getElementById('f_category').value       = data.category || 'Sains & Teknologi';
     document.getElementById('f_year').value           = data.year || '';
     document.getElementById('f_funding').value        = data.funding || '';
@@ -215,6 +225,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 })();
+
+function renderAuthorOptions(lecturers) {
+  const select = document.getElementById('f_authors');
+  if (!lecturers.length) {
+    select.innerHTML = '<option disabled>Tidak ada dosen terdaftar</option>';
+    return;
+  }
+  select.innerHTML = lecturers.map(lecturer => `<option value="${escAttr(lecturer.name)}">${escHtml(lecturer.name)}</option>`).join('');
+  selectAuthors(authorNamesForEdit);
+}
+
+function selectAuthors(names) {
+  const selected = new Set(names.map(name => name.toLowerCase()));
+  document.querySelectorAll('#f_authors option').forEach(option => {
+    option.selected = selected.has(option.value.toLowerCase());
+  });
+}
+
+function escHtml(value) { return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function escAttr(value) { return escHtml(value).replace(/'/g, '&#39;'); }
 
 // ── Google Drive URL helper ───────────────────────────────
 function parseGDriveUrl(raw) {
@@ -283,7 +313,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
 
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
-  const author          = document.getElementById('f_author').value.trim();
+  const author          = [...document.getElementById('f_authors').selectedOptions].map(option => option.value).join(', ');
   const category        = document.getElementById('f_category').value;
   const year            = parseInt(document.getElementById('f_year').value);
   const funding         = document.getElementById('f_funding').value.trim() || null;

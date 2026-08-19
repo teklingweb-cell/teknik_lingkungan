@@ -73,12 +73,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 let allStaff = [], activeTab = 'dosen';
 
 (async () => {
-  const { data, error } = await sb.from('staff').select('*').order('publications_count', { ascending: false }).limit(100);
+  const [{ data, error }, { data: researchData, error: researchError }] = await Promise.all([
+    sb.from('staff').select('*').order('name').limit(100),
+    sb.from('penelitian').select('author')
+  ]);
   if (error) { document.getElementById('staffGrid').innerHTML = '<p style="color:red;text-align:center;">Gagal memuat data.</p>'; return; }
-  allStaff = data;
+  if (researchError) { document.getElementById('staffGrid').innerHTML = '<p style="color:red;text-align:center;">Gagal memuat data publikasi.</p>'; return; }
+  const publicationCounts = countPublications(researchData || []);
+  allStaff = (data || []).map(staff => ({ ...staff, publications_count: publicationCounts.get(staff.name.trim().toLowerCase()) || 0 }))
+    .sort((a, b) => b.publications_count - a.publications_count || a.name.localeCompare(b.name));
   updateCounts();
   render();
 })();
+
+function countPublications(researchRows) {
+  const counts = new Map();
+  researchRows.forEach(row => {
+    const authors = String(row.author || '').split(',').map(name => name.trim().toLowerCase()).filter(Boolean);
+    new Set(authors).forEach(name => counts.set(name, (counts.get(name) || 0) + 1));
+  });
+  return counts;
+}
 
 function updateCounts() {
   ['dosen','alumni','staf'].forEach(t => {
