@@ -52,8 +52,16 @@ create table if not exists public.penelitian (
   status          text default 'Aktif' check (status in ('Aktif', 'Selesai')),
   publication_url text,
   abstract        text,
+  slug            text,
+  seo_title       text,
+  seo_description text,
+  og_image_url    text,
   created_at      timestamptz default now()
 );
+alter table public.penelitian add column if not exists slug text;
+alter table public.penelitian add column if not exists seo_title text;
+alter table public.penelitian add column if not exists seo_description text;
+alter table public.penelitian add column if not exists og_image_url text;
 
 create table if not exists public.pencapaian (
   id          serial primary key,
@@ -142,8 +150,17 @@ create table if not exists public.news (
   show_on_home  boolean default false,
   image_url     text,
   link_url      text,
+  slug          text,
+  seo_title     text,
+  seo_description text,
+  og_image_url  text,
   created_at    timestamptz default now()
 );
+
+alter table public.news add column if not exists slug text;
+alter table public.news add column if not exists seo_title text;
+alter table public.news add column if not exists seo_description text;
+alter table public.news add column if not exists og_image_url text;
 
 alter table public.news enable row level security;
 

@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var featImg = _featSrc
       ? '<img src="'+_featSrc+'" alt="'+item.title+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">'
       : '<span style="font-family:var(--font-display);font-size:6rem;font-weight:300;color:rgba(26,46,30,0.15);">'+item.id+'</span>';
-    var _featUrl = 'berita-detail.html?id='+item.id;
+    var _featUrl = 'berita-detail?slug='+encodeURIComponent(item.slug || '')+'&id='+item.id;
     var _featTarget = '';
     wrap.innerHTML = '<a href="'+_featUrl+'"'+_featTarget+' class="featured-card fade-up" style="text-decoration:none;" data-cat="'+item.category+'">'  
       + '<div class="featured-thumb" style="position:relative;overflow:hidden;">'
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var thumb = _thumbSrc
       ? '<img src="'+_thumbSrc+'" alt="'+item.title+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;">'
       : '<span class="news-thumb-num">'+item.id+'</span>';
-    var _cardUrl = 'berita-detail.html?id='+item.id;
+    var _cardUrl = 'berita-detail?slug='+encodeURIComponent(item.slug || '')+'&id='+item.id;
     var _cardTarget = '';
     return '<div class="research-card-wrap" data-cat="'+item.category+'" style="display:flex;">'
       + '<a href="'+_cardUrl+'"'+_cardTarget+' class="news-card" style="width:100%;"><article>'

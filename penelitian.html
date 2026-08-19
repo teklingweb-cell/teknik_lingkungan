@@ -167,7 +167,7 @@ function render() {
   }
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    const detailUrl = `penelitian-detail.html?id=${encodeURIComponent(item.id)}`;
+    const detailUrl = `penelitian-detail?slug=${encodeURIComponent(item.slug || '')}&id=${encodeURIComponent(item.id)}`;
     const statusRaw   = (item.status || '').toLowerCase();
     const statusClass = statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
     const statusLabel = item.status || 'Aktif';

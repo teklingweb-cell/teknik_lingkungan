@@ -227,6 +227,24 @@
           <label>Link Artikel Lengkap <span style="font-size:0.72rem;color:var(--muted);font-weight:400;">(opsional — jika ada sumber eksternal)</span></label>
           <input type="url" id="f_link_url" placeholder="https://... (kosongkan jika tidak ada)" autocomplete="off">
         </div>
+        <div class="field">
+          <label>Slug URL</label>
+          <input type="text" id="f_slug" placeholder="dibuat otomatis dari judul">
+          <div class="checkbox-sub">URL detail: /berita-detail?slug=slug-berita</div>
+        </div>
+        <div class="field">
+          <label>SEO Title</label>
+          <input type="text" id="f_seo_title" maxlength="70" placeholder="Otomatis dari judul berita">
+        </div>
+        <div class="field">
+          <label>SEO Description</label>
+          <textarea id="f_seo_description" maxlength="160" placeholder="Otomatis dari ringkasan berita"></textarea>
+        </div>
+        <div class="field">
+          <label>OG Image (Google Drive)</label>
+          <input type="url" id="f_og_image_url" placeholder="Kosongkan untuk memakai gambar cover">
+          <div class="checkbox-sub">Gunakan link Drive publik. Cover berita dipakai otomatis bila kosong.</div>
+        </div>
         <label class="checkbox-row">
           <input type="checkbox" id="f_featured">
           <div>
@@ -295,6 +313,10 @@ async function loadEditItem() {
   document.getElementById('f_featured').checked = data.featured;
   document.getElementById('f_show_on_home').checked = data.show_on_home || false;
   document.getElementById('f_link_url').value = data.link_url || '';
+  document.getElementById('f_slug').value = data.slug || '';
+  document.getElementById('f_seo_title').value = data.seo_title || '';
+  document.getElementById('f_seo_description').value = data.seo_description || '';
+  document.getElementById('f_og_image_url').value = data.og_image_url || '';
   if (data.image_url) {
     // BUG-12 FIX: don't call initGDriveField again (avoids duplicate listeners).
     // Just set the raw input value and dispatch 'input' to trigger the existing listener.
@@ -317,6 +339,8 @@ function parseGDriveUrl(raw) {
   if (raw.startsWith('http')) return raw;
   return null;
 }
+
+function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
 
 function initGDriveField(inputId, previewId, statusId, storedId) {
   const inp    = document.getElementById(inputId);
@@ -373,6 +397,10 @@ async function doSubmit() {
   const show_on_home = document.getElementById('f_show_on_home').checked;
   const image_url = document.getElementById('f_image_url').value || null;
   const link_url  = document.getElementById('f_link_url').value.trim() || null;
+  const slug = slugify(document.getElementById('f_slug').value.trim() || title);
+  const seo_title = document.getElementById('f_seo_title').value.trim() || title;
+  const seo_description = document.getElementById('f_seo_description').value.trim() || excerpt;
+  const og_image_url = parseGDriveUrl(document.getElementById('f_og_image_url').value.trim()) || null;
 
   const errors = [];
   if (!title)    errors.push('Judul wajib diisi.');
@@ -399,9 +427,9 @@ async function doSubmit() {
 
   let error;
   if (editId) {
-    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url }).eq('id', editId));
+    ({ error } = await sb.from('news').update({ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url, slug, seo_title, seo_description, og_image_url }).eq('id', editId));
   } else {
-    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url }]));
+    ({ error } = await sb.from('news').insert([{ title, excerpt, category, date, author, featured, show_on_home, image_url, link_url, slug, seo_title, seo_description, og_image_url }]));
   }
 
   if (error) {

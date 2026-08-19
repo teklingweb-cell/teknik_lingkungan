@@ -126,6 +126,8 @@
     .detail-meta-item span.icon {
       font-size: 0.9rem;
     }
+    .detail-authors{display:flex;flex-wrap:wrap;gap:6px;}
+    .detail-author-chip{display:inline-flex;padding:4px 9px;border:1px solid rgba(78,140,90,0.25);border-radius:999px;color:var(--cream);background:rgba(78,140,90,0.18);font-size:0.75rem;line-height:1.2;}
 
     /* ── Main content layout ── */
     .detail-layout {
@@ -391,10 +393,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
 function setResearchMetadata(research) {
-  var title = research.title + ' | Penelitian Teknik Lingkungan Untan';
-  var description = research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
+  var title = research.seo_title || research.title + ' | Penelitian Teknik Lingkungan Untan';
+  var description = research.seo_description || research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
   var canonical = new URL('/penelitian-detail', window.location.origin);
-  canonical.search = '?id=' + encodeURIComponent(research.id);
+  canonical.search = research.slug ? '?slug=' + encodeURIComponent(research.slug) : '?id=' + encodeURIComponent(research.id);
+  var image = research.og_image_url || research.image_url || 'https://tekniklingkungan.com/og-image.png';
 
   document.title = title;
   document.querySelector('meta[name="robots"]').setAttribute('content', 'index, follow');
@@ -403,8 +406,10 @@ function setResearchMetadata(research) {
   document.querySelector('meta[property="og:title"]').setAttribute('content', title);
   document.querySelector('meta[property="og:description"]').setAttribute('content', description);
   document.querySelector('meta[property="og:url"]').setAttribute('content', canonical.href);
+  document.querySelector('meta[property="og:image"]').setAttribute('content', image);
   document.querySelector('meta[name="twitter:title"]').setAttribute('content', title);
   document.querySelector('meta[name="twitter:description"]').setAttribute('content', description);
+  document.querySelector('meta[name="twitter:image"]').setAttribute('content', image);
 
   var schema = document.createElement('script');
   schema.type = 'application/ld+json';
@@ -414,7 +419,7 @@ function setResearchMetadata(research) {
     '@id': canonical.href + '#research',
     headline: research.title,
     description: description,
-    author: { '@type': 'Person', name: research.author || 'Teknik Lingkungan Untan' },
+    author: String(research.author || '').split(',').map(name => ({ '@type': 'Person', name: name.trim() })).filter(person => person.name),
     datePublished: research.year ? String(research.year) : undefined,
     keywords: research.keywords || research.category,
     isPartOf: { '@id': 'https://tekniklingkungan.com/#organization' },
@@ -451,10 +456,15 @@ function formatFunding(f) {
   return f || '–';
 }
 
+function authorCapsules(value) {
+  return String(value || '').split(',').map(name => name.trim()).filter(Boolean).map(name => '<span class="detail-author-chip">' + esc(name) + '</span>').join('');
+}
+
 (async () => {
   try {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
+    const slug = params.get('slug');
 
     if (!id) { showError(); return; }
 
@@ -463,7 +473,7 @@ function formatFunding(f) {
       setTimeout(() => reject(new Error('timeout')), 10000)
     );
 
-    const query = sb.from('penelitian').select('*').eq('id', id).single();
+    const query = sb.from('penelitian').select('*').eq(slug ? 'slug' : 'id', slug || id).single();
     const { data, error } = await Promise.race([query, timeout]);
 
     if (error || !data) { showError(); return; }
@@ -502,7 +512,7 @@ function renderHero(d) {
     + '</div>'
     + '<h1 class="detail-title">' + esc(d.title) + '</h1>'
     + '<div class="detail-meta-row">'
-    + '<div class="detail-meta-item"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>' + esc(d.author) + '</span></div>'
+    + '<div class="detail-meta-item"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="detail-authors">' + authorCapsules(d.author) + '</span></div>'
     + '<div class="detail-meta-item"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span>' + esc(String(d.year)) + '</span></div>'
     + fundingMeta
     + '</div>'

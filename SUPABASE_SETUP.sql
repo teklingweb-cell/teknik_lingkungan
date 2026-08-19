@@ -58,8 +58,17 @@ create table if not exists penelitian (
   status          text default 'Aktif' check (status in ('Aktif', 'Selesai')),
   publication_url text,                      -- DOI / URL publikasi
   abstract        text,
+  slug            text,
+  seo_title       text,
+  seo_description text,
+  og_image_url    text,
   created_at      timestamptz default now()
 );
+
+alter table penelitian add column if not exists slug text;
+alter table penelitian add column if not exists seo_title text;
+alter table penelitian add column if not exists seo_description text;
+alter table penelitian add column if not exists og_image_url text;
 
 alter table penelitian enable row level security;
 create policy "Public read penelitian"  on penelitian for select using (true);
