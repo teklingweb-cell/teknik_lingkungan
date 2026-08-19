@@ -102,6 +102,13 @@
     .unassigned-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:28px;}
     .unassigned-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
     .unassigned-title{font-size:0.88rem;font-weight:600;color:var(--muted);}
+    .org-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--border);background:#fcfdfb;}
+    .org-search{flex:1 1 220px;min-width:180px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:0.82rem;color:var(--text);background:#fff;}
+    .org-search:focus{outline:none;border-color:var(--green);}
+    .bulk-select{padding:9px 32px 9px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:0.82rem;color:var(--text);background:#fff;}
+    .bulk-count{font-size:0.75rem;color:var(--muted);white-space:nowrap;}
+    .select-cell{width:42px;text-align:center;}
+    .select-cell input{width:16px;height:16px;accent-color:var(--green);cursor:pointer;}
 
     /* ── Skeleton loading ── */
     .skel{background:linear-gradient(90deg,#e8ede8 25%,#f2f5ef 50%,#e8ede8 75%);background-size:200%;animation:shimmer 1.4s infinite;border-radius:8px;}
@@ -209,6 +216,20 @@
         <span class="unassigned-title">Tidak Tampil di Bagan</span>
         <span id="unassignedCount" class="tier-count" style="font-size:0.72rem;color:var(--muted);background:var(--cream);padding:2px 10px;border-radius:999px;">—</span>
       </div>
+      <div class="org-tools">
+        <input id="orgSearch" class="org-search" type="search" placeholder="Cari nama, jabatan, atau bidang..." aria-label="Cari staf untuk struktur organisasi">
+        <select id="bulkLevel" class="bulk-select" aria-label="Level bulk assignment">
+          <option value="">Pilih level...</option>
+          <option value="ketua_jurusan">Ketua Jurusan</option>
+          <option value="koordinator_prodi">Koordinator Program Studi</option>
+          <option value="dosen">Dosen / Profesor</option>
+          <option value="staf">Staf Administrasi</option>
+          <option value="__remove">Keluarkan dari bagan</option>
+        </select>
+        <button class="btn btn-green btn-sm" onclick="applyBulkLevel()">Terapkan ke Pilihan</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleVisibleSelection()">Pilih Semua Hasil</button>
+        <span id="bulkCount" class="bulk-count">0 dipilih</span>
+      </div>
       <div id="unassignedWrap">
         <div class="tier-empty">Memuat data…</div>
       </div>
@@ -266,6 +287,7 @@ function normalizedOrgLevel(level) { return LEGACY_LEVELS[level] || level; }
 let allStaff = [];
 let editTargetId = null;
 let deleteTargetId = null;
+let selectedStaffIds = new Set();
 
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -299,9 +321,10 @@ async function loadData() {
 
 function renderAll() {
   const grid = document.getElementById('tierGrid');
+  const eligibleStaff = allStaff.filter(s => s.type !== 'alumni');
 
   const tiersHtml = TIERS.map(tier => {
-    const members = allStaff.filter(s => normalizedOrgLevel(s.org_level) === tier.key);
+    const members = eligibleStaff.filter(s => normalizedOrgLevel(s.org_level) === tier.key);
     const rows = members.length ? members.map(m => memberRow(m, tier.color)).join('') : '';
     return `
       <div class="tier-card">
@@ -328,14 +351,15 @@ function renderAll() {
   grid.innerHTML = tiersHtml;
 
   // Unassigned
-  const unassigned = allStaff.filter(s => !TIERS.some(t => t.key === (LEGACY_LEVELS[s.org_level] || s.org_level)));
+  const unassigned = eligibleStaff.filter(s => !TIERS.some(t => t.key === normalizedOrgLevel(s.org_level)));
   document.getElementById('unassignedCount').textContent = unassigned.length + ' orang';
   if (!unassigned.length) {
     document.getElementById('unassignedWrap').innerHTML = '<div class="tier-empty">Semua staf sudah memiliki posisi di bagan.</div>';
   } else {
-    const rows = unassigned.map(m => memberRow(m, '#9ca3af')).join('');
+    const rows = unassigned.map(m => memberRow(m, '#9ca3af', true)).join('');
     document.getElementById('unassignedWrap').innerHTML = `<div style="overflow-x:auto;"><table>
       <thead><tr>
+        <th class="select-cell"><input type="checkbox" aria-label="Pilih semua staf yang terlihat" onchange="toggleVisibleSelection(this.checked)"></th>
         <th>Nama</th>
         <th class="hide-mobile">Jabatan</th>
         <th class="hide-mobile">Tipe</th>
@@ -344,14 +368,17 @@ function renderAll() {
       <tbody>${rows}</tbody>
     </table></div>`;
   }
+  updateBulkCount();
 }
 
-function memberRow(m, color) {
+function memberRow(m, color, selectable = false) {
   const initial = (m.name || '?')[0].toUpperCase();
   const tipeColor = TYPE_COLORS[m.type] || '#6b7a6c';
   const tipeBg = tipeColor + '18';
   const tipeLabel = TYPE_LABELS[m.type] || m.type || '—';
-  return `<tr>
+  const searchText = `${m.name || ''} ${m.position || ''} ${m.bidang || ''}`.toLowerCase();
+  return `<tr data-org-search="${escAttr(searchText)}">
+    ${selectable ? `<td class="select-cell"><input type="checkbox" class="staff-picker" value="${m.id}" ${selectedStaffIds.has(m.id) ? 'checked' : ''} onchange="updateBulkCount()" aria-label="Pilih ${escAttr(m.name)}"></td>` : ''}
     <td><div style="display:flex;align-items:center;gap:12px;">
       <div class="avatar-circle" style="background:${color};">${initial}</div>
       <div>
@@ -369,6 +396,48 @@ function memberRow(m, color) {
         : ''}
     </div></td>
   </tr>`;
+}
+
+function updateBulkCount() {
+  document.querySelectorAll('.staff-picker').forEach(input => {
+    if (input.checked) selectedStaffIds.add(Number(input.value));
+    else selectedStaffIds.delete(Number(input.value));
+  });
+  const count = document.getElementById('bulkCount');
+  if (count) count.textContent = selectedStaffIds.size + ' dipilih';
+}
+
+function toggleVisibleSelection(force) {
+  const rows = [...document.querySelectorAll('#unassignedWrap tbody tr')].filter(row => row.style.display !== 'none');
+  const shouldSelect = typeof force === 'boolean' ? force : rows.some(row => !row.querySelector('.staff-picker')?.checked);
+  rows.forEach(row => {
+    const input = row.querySelector('.staff-picker');
+    if (input) input.checked = shouldSelect;
+  });
+  updateBulkCount();
+}
+
+document.getElementById('orgSearch').addEventListener('input', event => {
+  const query = event.target.value.trim().toLowerCase();
+  document.querySelectorAll('#unassignedWrap tbody tr').forEach(row => {
+    row.style.display = !query || (row.dataset.orgSearch || '').includes(query) ? '' : 'none';
+  });
+});
+
+async function applyBulkLevel() {
+  updateBulkCount();
+  const level = document.getElementById('bulkLevel').value;
+  const ids = [...selectedStaffIds];
+  if (!level || !ids.length) {
+    showAlert('error', !ids.length ? 'Pilih minimal satu staf terlebih dahulu.' : 'Pilih level yang akan diterapkan.');
+    return;
+  }
+  const { error } = await sb.from('staff').update({ org_level: level === '__remove' ? null : level }).in('id', ids);
+  if (error) { showAlert('error', 'Gagal memperbarui pilihan: ' + error.message); return; }
+  selectedStaffIds.clear();
+  document.getElementById('bulkLevel').value = '';
+  showAlert('success', `✓ ${ids.length} staf berhasil diperbarui.`);
+  await loadData();
 }
 
 /* ── Edit Modal ── */

@@ -58,6 +58,7 @@
     .org-node-role{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-body);font-weight:600;margin-bottom:5px;}
     .org-node-name{font-size:0.78rem;font-weight:600;color:var(--nav-bg);line-height:1.3;font-family:var(--font-body);}
     .org-node-dept{font-size:0.67rem;color:var(--text-muted);margin-top:4px;font-family:var(--font-body);line-height:1.3;}
+    .org-node-id{font-size:0.62rem;color:rgba(45,58,46,0.62);margin-top:5px;font-family:var(--font-body);line-height:1.3;word-break:break-word;}
     .org-node-click-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:0.55rem;color:rgba(78,140,90,0.6);font-family:var(--font-body);letter-spacing:0.05em;opacity:0;transition:opacity 0.2s;padding:0 8px;}
     .org-node:hover .org-node-click-hint{opacity:1;}
     .org-node.sz-xl .org-node-card{width:200px;padding:24px 24px 36px;}
@@ -223,7 +224,7 @@ const LEGACY_LEVELS={rektor:'ketua_jurusan',wakil:'koordinator_prodi'};
     document.getElementById('orgLoading').remove();
     if(error||!data||data.length===0){renderFallback();return;}
     const groups={};
-    for(const p of data){const lv=LEGACY_LEVELS[(p.org_level||'').toLowerCase()]||(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
+    for(const p of data){if(p.type==='alumni')continue;const lv=LEGACY_LEVELS[(p.org_level||'').toLowerCase()]||(p.org_level||'').toLowerCase();if(!groups[lv])groups[lv]=[];groups[lv].push(p);}
     renderTree(groups);
   }catch(e){document.getElementById('orgLoading').remove();renderFallback();}
 })();
@@ -255,7 +256,9 @@ function makeNode(person,tier){
   const av=person.photo_url
     ?`<img class="org-node-photo" src="${e(person.photo_url)}" alt="${e(person.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="org-node-initials" style="display:none">${initial}</div>`
     :`<div class="org-node-initials">${initial}</div>`;
-  node.innerHTML=`<div class="org-node-card">${av}<div class="org-node-role">${e(TIER_LABELS[tier.key]||tier.label)}</div><div class="org-node-name">${e(person.name)}</div>${person.bidang?`<div class="org-node-dept">${e(person.bidang)}</div>`:''}<div class="org-node-click-hint">lihat profil &#x2197;</div></div>`;
+  const idLabel = person.type === 'alumni' ? 'NIM' : 'NIP';
+  const idValue = person.nim_nip ? `<div class="org-node-id">${idLabel}: ${e(person.nim_nip)}</div>` : '';
+  node.innerHTML=`<div class="org-node-card">${av}<div class="org-node-role">${e(TIER_LABELS[tier.key]||tier.label)}</div><div class="org-node-name">${e(person.name)}</div>${person.bidang?`<div class="org-node-dept">${e(person.bidang)}</div>`:''}${idValue}<div class="org-node-click-hint">lihat profil &#x2197;</div></div>`;
   node.addEventListener('click',()=>openBio(person,tier));
   node.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' ')openBio(person,tier);});
   return node;
