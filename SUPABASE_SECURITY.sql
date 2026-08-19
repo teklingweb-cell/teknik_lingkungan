@@ -63,6 +63,11 @@ alter table public.penelitian add column if not exists seo_title text;
 alter table public.penelitian add column if not exists seo_description text;
 alter table public.penelitian add column if not exists og_image_url text;
 
+-- Keep the form and database in sync for research lifecycle statuses.
+alter table public.penelitian drop constraint if exists penelitian_status_check;
+alter table public.penelitian add constraint penelitian_status_check
+  check (status in ('Aktif', 'Sedang Berjalan', 'Selesai'));
+
 create table if not exists public.pencapaian (
   id          serial primary key,
   title       text not null,

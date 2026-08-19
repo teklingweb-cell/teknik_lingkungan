@@ -69,6 +69,9 @@ alter table penelitian add column if not exists slug text;
 alter table penelitian add column if not exists seo_title text;
 alter table penelitian add column if not exists seo_description text;
 alter table penelitian add column if not exists og_image_url text;
+alter table penelitian drop constraint if exists penelitian_status_check;
+alter table penelitian add constraint penelitian_status_check
+  check (status in ('Aktif', 'Sedang Berjalan', 'Selesai'));
 
 alter table penelitian enable row level security;
 create policy "Public read penelitian"  on penelitian for select using (true);
