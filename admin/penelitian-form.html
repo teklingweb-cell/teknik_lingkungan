@@ -404,13 +404,21 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
 
 });
 
+function normalizeResearchStatus(value) {
+  const safeValue = String(value || '').trim();
+  if (!safeValue) return 'Aktif';
+  if (safeValue === 'Sedang Berjalan') return 'Aktif';
+  if (['Aktif', 'Selesai'].includes(safeValue)) return safeValue;
+  return 'Aktif';
+}
+
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
   const author          = [...selectedAuthors].join(' | ');
   const category        = document.getElementById('f_category').value;
   const year            = parseInt(document.getElementById('f_year').value);
   const funding         = document.getElementById('f_funding').value.trim() || null;
-  const status          = document.getElementById('f_status').value;
+  const status          = normalizeResearchStatus(document.getElementById('f_status').value);
   const publication_url = document.getElementById('f_publication_url').value.trim() || null;
   const abstract        = document.getElementById('f_abstract').value.trim() || null;
   const keywords        = document.getElementById('f_keywords').value.trim() || null;

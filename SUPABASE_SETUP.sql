@@ -55,7 +55,7 @@ create table if not exists penelitian (
   category        text not null,             -- Sains & Teknologi | Lingkungan | Kesehatan | Sosial & Humaniora | Ekonomi
   year            integer not null,
   funding         text,                      -- cth: Rp 450 Juta
-  status          text default 'Aktif' check (status in ('Aktif', 'Selesai')),
+  status          text default 'Aktif' check (status in ('Aktif', 'Sedang Berjalan', 'Selesai')),
   publication_url text,                      -- DOI / URL publikasi
   abstract        text,
   slug            text,

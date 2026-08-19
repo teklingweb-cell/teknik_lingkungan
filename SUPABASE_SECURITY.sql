@@ -49,7 +49,7 @@ create table if not exists public.penelitian (
   category        text not null,
   year            integer not null,
   funding         text,
-  status          text default 'Aktif' check (status in ('Aktif', 'Selesai')),
+  status          text default 'Aktif' check (status in ('Aktif', 'Sedang Berjalan', 'Selesai')),
   publication_url text,
   abstract        text,
   slug            text,
