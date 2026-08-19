@@ -29,6 +29,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap">
   <link rel="stylesheet" href="style.css?v=2">
+  <style>
+    .research-authors{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .research-author-chip{display:inline-flex;align-items:center;padding:4px 9px;border:1px solid rgba(78,140,90,0.18);border-radius:999px;background:rgba(78,140,90,0.07);color:var(--forest);font-size:0.68rem;line-height:1.2;font-family:var(--font-body);}
+  </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "EducationalOrganization", "@id": "https://tekniklingkungan.com/#organization", "name": "Program Studi Teknik Lingkungan Universitas Tanjungpura", "alternateName": ["Teknik Lingkungan Untan", "TL Untan"], "url": "https://tekniklingkungan.com/", "logo": "https://tekniklingkungan.com/logo-untan-v3.png", "image": "https://tekniklingkungan.com/og-image.png", "description": "Program Studi Teknik Lingkungan, Fakultas Teknik, Universitas Tanjungpura (Untan), Pontianak, Kalimantan Barat. Terakreditasi Unggul BAN-PT.", "address": {"@type": "PostalAddress", "addressLocality": "Pontianak", "addressRegion": "Kalimantan Barat", "addressCountry": "ID"}, "parentOrganization": {"@type": "CollegeOrUniversity", "name": "Universitas Tanjungpura", "url": "https://untan.ac.id"}, "sameAs": ["https://www.instagram.com/tl.untan", "https://www.youtube.com/@TeknikLingkunganUntan", "https://www.facebook.com/TeknikLingkunganUntan"]}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://tekniklingkungan.com/"}, {"@type": "ListItem", "position": 2, "name": "Penelitian", "item": "https://tekniklingkungan.com/penelitian"}]}</script>
 </head>
@@ -101,10 +105,11 @@ const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Keseha
   const { data, error } = await sb.from('penelitian').select('*').order('year', { ascending: false }).limit(100);
   if (error) { document.getElementById('researchGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
   allData = data;
+  updateResearchSchema(data);
 
   // Update stats from live data
   document.getElementById('stat-publikasi').textContent = data.length;
-  const uniqueAuthors = new Set(data.map(d => d.author)).size;
+  const uniqueAuthors = new Set(data.flatMap(d => String(d.author || '').split(',').map(name => name.trim().toLowerCase()).filter(Boolean))).size;
   document.getElementById('stat-tim').textContent = uniqueAuthors;
   const totalJuta = data.reduce((sum, d) => {
     if (!d.funding) return sum;
@@ -118,6 +123,31 @@ const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Keseha
   document.getElementById('stat-dana').textContent = dana;
   render();
 })();
+
+function updateResearchSchema(items) {
+  const schema = document.createElement('script');
+  schema.type = 'application/ld+json';
+  schema.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': 'https://tekniklingkungan.com/penelitian#collection',
+    name: 'Penelitian Teknik Lingkungan Universitas Tanjungpura',
+    description: 'Daftar penelitian dan pengabdian Program Studi Teknik Lingkungan Universitas Tanjungpura di bidang lingkungan hidup dan teknologi hijau.',
+    url: 'https://tekniklingkungan.com/penelitian',
+    isPartOf: { '@id': 'https://tekniklingkungan.com/#organization' },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: items.length,
+      itemListElement: items.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.title,
+        url: `https://tekniklingkungan.com/penelitian-detail?id=${encodeURIComponent(item.id)}`
+      }))
+    }
+  });
+  document.head.appendChild(schema);
+}
 
 document.querySelectorAll('.tab-btn[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -151,7 +181,7 @@ function render() {
             <span class="research-card-year">${item.year}</span>
           </div>
           <div class="research-card-title">${esc(item.title)}</div>
-          <div class="research-card-author">${esc(item.author)}</div>
+          <div class="research-authors">${String(item.author || '').split(',').map(name => name.trim()).filter(Boolean).map(name => `<span class="research-author-chip">${esc(name)}</span>`).join('')}</div>
           ${abstract ? `<div class="research-card-abstract">${abstract}</div>` : '<div style="flex:1;"></div>'}
         </div>
         <div class="research-card-footer">
