@@ -7,6 +7,10 @@
       "destination": "/api/sitemap"
     },
     {
+      "source": "/penelitian/:slug",
+      "destination": "/penelitian-detail.html?slug=:slug"
+    },
+    {
       "source": "/penelitian-detail",
       "destination": "/penelitian-detail.html"
     },

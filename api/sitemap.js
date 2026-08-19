@@ -8,9 +8,10 @@ function escapeXml(value) {
 
 function contentUrl(path, item) {
   const slug = item.title ? slugify(item.title) : item.slug;
-  const query = path === 'penelitian-detail'
-    ? (slug ? `?slug=${encodeURIComponent(item.slug || slug)}` : '')
-    : (slug ? `?slug=${encodeURIComponent(item.slug || slug)}&id=${encodeURIComponent(item.id)}` : `?id=${encodeURIComponent(item.id)}`);
+  if (path === 'penelitian') {
+    return slug ? `${SITE}/penelitian/${encodeURIComponent(item.slug || slug)}` : `${SITE}/penelitian`;
+  }
+  const query = slug ? `?slug=${encodeURIComponent(item.slug || slug)}&id=${encodeURIComponent(item.id)}` : `?id=${encodeURIComponent(item.id)}`;
   return `${SITE}/${path}${query}`;
 }
 
@@ -31,7 +32,7 @@ module.exports = async function handler(req, res) {
     const staticUrls = ['/', '/profile', '/sejarah', '/visi-misi', '/struktur', '/advisory-board', '/fasilitas', '/penelitian', '/pencapaian', '/staf', '/mitra', '/berita', '/kontak'];
     const urls = staticUrls.map(path => ({ loc: `${SITE}${path}`, changefreq: path === '/' || path === '/berita' || path === '/penelitian' ? 'weekly' : 'monthly', priority: path === '/' ? '1.0' : '0.7' }));
     news.forEach(item => urls.push({ loc: contentUrl('berita-detail', item), changefreq: 'monthly', priority: '0.6', lastmod: item.date || item.created_at }));
-    research.forEach(item => urls.push({ loc: contentUrl('penelitian-detail', item), changefreq: 'monthly', priority: '0.6', lastmod: item.created_at || (item.year ? `${item.year}-01-01` : undefined) }));
+    research.forEach(item => urls.push({ loc: contentUrl('penelitian', item), changefreq: 'monthly', priority: '0.6', lastmod: item.created_at || (item.year ? `${item.year}-01-01` : undefined) }));
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${escapeXml(url.loc)}</loc>${url.lastmod ? `<lastmod>${escapeXml(String(url.lastmod).slice(0, 10))}</lastmod>` : ''}<changefreq>${url.changefreq}</changefreq><priority>${url.priority}</priority></url>`).join('\n')}\n</urlset>`;
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=3600');

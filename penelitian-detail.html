@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
   <link rel="icon" type="image/png" href="favicon-v3.png">
   <link rel="apple-touch-icon" href="logo-untan-v3.png">
     <meta name="description" content="Detail penelitian dari Prodi Teknik Lingkungan Universitas Tanjungpura.">
@@ -10,7 +11,7 @@
   <meta name="robots" content="noindex, follow">
   <meta property="og:title" content="Penelitian – Prodi Teknik Lingkungan Untan">
   <meta property="og:description" content="Detail penelitian dari Prodi Teknik Lingkungan Universitas Tanjungpura.">
-  <meta property="og:url" content="https://tekniklingkungan.com/penelitian-detail">
+  <meta property="og:url" content="https://tekniklingkungan.com/penelitian">
   <meta property="og:image" content="https://tekniklingkungan.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="1200">
@@ -22,7 +23,7 @@
   <meta name="twitter:description" content="Detail penelitian dari Prodi Teknik Lingkungan Universitas Tanjungpura.">
   <meta name="twitter:image" content="https://tekniklingkungan.com/og-image.png">
   <title>Detail Penelitian – Teknik Lingkungan Untan</title>
-  <link rel="canonical" href="https://tekniklingkungan.com/penelitian-detail">
+  <link rel="canonical" href="https://tekniklingkungan.com/penelitian">
   <meta name="geo.region" content="ID-KB">
   <meta name="geo.placename" content="Pontianak">
   <meta name="geo.position" content="-0.056205852153042184;109.3471306253054">
@@ -361,7 +362,7 @@
     }
   </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "EducationalOrganization", "@id": "https://tekniklingkungan.com/#organization", "name": "Program Studi Teknik Lingkungan Universitas Tanjungpura", "alternateName": ["Teknik Lingkungan Untan", "TL Untan"], "url": "https://tekniklingkungan.com/", "logo": "https://tekniklingkungan.com/logo-untan-v3.png", "image": "https://tekniklingkungan.com/og-image.png", "description": "Program Studi Teknik Lingkungan, Fakultas Teknik, Universitas Tanjungpura (Untan), Pontianak, Kalimantan Barat. Terakreditasi Unggul BAN-PT.", "address": {"@type": "PostalAddress", "addressLocality": "Pontianak", "addressRegion": "Kalimantan Barat", "addressCountry": "ID"}, "parentOrganization": {"@type": "CollegeOrUniversity", "name": "Universitas Tanjungpura", "url": "https://untan.ac.id"}, "sameAs": ["https://www.instagram.com/tl.untan", "https://www.youtube.com/@TeknikLingkunganUntan", "https://www.facebook.com/TeknikLingkunganUntan"]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://tekniklingkungan.com/"}, {"@type": "ListItem", "position": 2, "name": "Detail Penelitian", "item": "https://tekniklingkungan.com/penelitian-detail"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://tekniklingkungan.com/"}, {"@type": "ListItem", "position": 2, "name": "Penelitian", "item": "https://tekniklingkungan.com/penelitian"}]}</script>
 </head>
 <body>
 
@@ -395,8 +396,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function setResearchMetadata(research) {
   var title = research.title + ' | Penelitian Teknik Lingkungan Untan';
   var description = research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
-  var canonical = new URL('/penelitian-detail', window.location.origin);
-  canonical.search = '?slug=' + encodeURIComponent(research.slug || slugify(research.title));
+  var canonical = new URL('/penelitian/' + encodeURIComponent(research.slug || slugify(research.title)), window.location.origin);
   var image = research.image_url || 'https://tekniklingkungan.com/og-image.png';
 
   document.title = title;
@@ -482,7 +482,8 @@ function authorCapsules(value) {
   try {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    const slug = params.get('slug');
+    const pathMatch = window.location.pathname.match(/^\/penelitian\/([^/]+)\/?$/);
+    const slug = pathMatch ? decodeURIComponent(pathMatch[1]) : params.get('slug');
 
     if (!slug && !id) { showError(); return; }
 

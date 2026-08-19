@@ -148,7 +148,7 @@ function updateResearchSchema(items) {
         '@type': 'ListItem',
         position: index + 1,
         name: item.title,
-        url: `https://tekniklingkungan.com/penelitian-detail?slug=${encodeURIComponent(item.slug || slugify(item.title))}`
+        url: `https://tekniklingkungan.com/penelitian/${encodeURIComponent(item.slug || slugify(item.title))}`
       }))
     }
   });
@@ -173,7 +173,7 @@ function render() {
   }
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    const detailUrl = `penelitian-detail?slug=${encodeURIComponent(item.slug || slugify(item.title))}`;
+    const detailUrl = `penelitian/${encodeURIComponent(item.slug || slugify(item.title))}`;
     const statusRaw   = (item.status || '').toLowerCase();
     const statusClass = statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
     const statusLabel = item.status || 'Aktif';
