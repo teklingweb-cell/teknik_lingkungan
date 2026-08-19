@@ -99,17 +99,23 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
 let allData = [], activeFilter = 'all';
+let knownAuthors = [];
 const CAT_COLORS = {'Sains & Teknologi':'#2563eb','Lingkungan':'#16a34a','Kesehatan':'#dc2626','Sosial & Humaniora':'#9333ea','Ekonomi':'#d97706'};
 
 (async () => {
-  const { data, error } = await sb.from('penelitian').select('*').order('year', { ascending: false }).limit(100);
+  const [{ data, error }, { data: staffData, error: staffError }] = await Promise.all([
+    sb.from('penelitian').select('*').order('year', { ascending: false }).limit(100),
+    sb.from('staff').select('name').eq('type', 'dosen').order('name')
+  ]);
   if (error) { document.getElementById('researchGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data.</p>'; return; }
+  if (staffError) { document.getElementById('researchGrid').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data kontributor.</p>'; return; }
   allData = data;
+  knownAuthors = (staffData || []).map(staff => staff.name).filter(Boolean);
   updateResearchSchema(data);
 
   // Update stats from live data
   document.getElementById('stat-publikasi').textContent = data.length;
-  const uniqueAuthors = new Set(data.flatMap(d => String(d.author || '').split(',').map(name => name.trim().toLowerCase()).filter(Boolean))).size;
+  const uniqueAuthors = new Set(data.flatMap(d => parseAuthorNames(d.author, knownAuthors).map(name => name.toLowerCase()))).size;
   document.getElementById('stat-tim').textContent = uniqueAuthors;
   const totalJuta = data.reduce((sum, d) => {
     if (!d.funding) return sum;
@@ -181,7 +187,7 @@ function render() {
             <span class="research-card-year">${item.year}</span>
           </div>
           <div class="research-card-title">${esc(item.title)}</div>
-          <div class="research-authors">${String(item.author || '').split(',').map(name => name.trim()).filter(Boolean).map(name => `<span class="research-author-chip">${esc(name)}</span>`).join('')}</div>
+          <div class="research-authors">${parseAuthorNames(item.author, knownAuthors).map(name => `<span class="research-author-chip">${esc(name)}</span>`).join('')}</div>
           ${abstract ? `<div class="research-card-abstract">${abstract}</div>` : '<div style="flex:1;"></div>'}
         </div>
         <div class="research-card-footer">
@@ -195,6 +201,16 @@ function render() {
   observeNewCards('researchGrid');
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function parseAuthorNames(value, knownNames) {
+  const raw = String(value || '').trim();
+  if (!raw) return [];
+  if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
+  const lower = raw.toLowerCase();
+  return knownNames
+    .filter(name => lower.includes(name.toLowerCase()))
+    .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
+}
 
 function observeNewCards(gridId) {
   const obs = new IntersectionObserver((entries) => {

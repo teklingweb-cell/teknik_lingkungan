@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await sb.from('penelitian').select('*').eq('id', editId).single();
     if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
     document.getElementById('f_title').value          = data.title || '';
-    authorNamesForEdit = String(data.author || '').split(',').map(name => name.trim()).filter(Boolean);
+    authorNamesForEdit = parseAuthorNames(data.author, lecturerNames);
     selectAuthors(authorNamesForEdit);
     document.getElementById('f_category').value       = data.category || 'Sains & Teknologi';
     document.getElementById('f_year').value           = data.year || '';
@@ -283,6 +283,16 @@ function selectAuthors(names) {
   const available = new Map(lecturerNames.map(name => [name.toLowerCase(), name]));
   selectedAuthors = new Set(names.map(name => available.get(name.toLowerCase()) || name).filter(Boolean));
   renderAuthorChips();
+}
+
+function parseAuthorNames(value, knownNames) {
+  const raw = String(value || '').trim();
+  if (!raw) return [];
+  if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
+  const lower = raw.toLowerCase();
+  return knownNames
+    .filter(name => lower.includes(name.toLowerCase()))
+    .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
 }
 
 function addAuthor(name) {
@@ -388,7 +398,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
 
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
-  const author          = [...selectedAuthors].join(', ');
+  const author          = [...selectedAuthors].join(' | ');
   const category        = document.getElementById('f_category').value;
   const year            = parseInt(document.getElementById('f_year').value);
   const funding         = document.getElementById('f_funding').value.trim() || null;

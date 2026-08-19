@@ -456,8 +456,20 @@ function formatFunding(f) {
   return f || '–';
 }
 
+let knownAuthorNames = [];
+
+function parseAuthorNames(value, knownNames) {
+  const raw = String(value || '').trim();
+  if (!raw) return [];
+  if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
+  const lower = raw.toLowerCase();
+  return knownNames
+    .filter(name => lower.includes(name.toLowerCase()))
+    .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
+}
+
 function authorCapsules(value) {
-  return String(value || '').split(',').map(name => name.trim()).filter(Boolean).map(name => '<span class="detail-author-chip">' + esc(name) + '</span>').join('');
+  return parseAuthorNames(value, knownAuthorNames).map(name => '<span class="detail-author-chip">' + esc(name) + '</span>').join('');
 }
 
 (async () => {
@@ -466,7 +478,7 @@ function authorCapsules(value) {
     const id = params.get('id');
     const slug = params.get('slug');
 
-    if (!id) { showError(); return; }
+    if (!id && !slug) { showError(); return; }
 
     // Race against a 10-second timeout so the page never hangs forever
     const timeout = new Promise((_, reject) =>
@@ -474,9 +486,13 @@ function authorCapsules(value) {
     );
 
     const query = sb.from('penelitian').select('*').eq(slug ? 'slug' : 'id', slug || id).single();
-    const { data, error } = await Promise.race([query, timeout]);
+    const [{ data, error }, { data: staffData, error: staffError }] = await Promise.all([
+      Promise.race([query, timeout]),
+      sb.from('staff').select('name').eq('type', 'dosen').order('name')
+    ]);
 
-    if (error || !data) { showError(); return; }
+    if (error || staffError || !data) { showError(); return; }
+    knownAuthorNames = (staffData || []).map(staff => staff.name).filter(Boolean);
 
     setResearchMetadata(data);
     renderHero(data);
