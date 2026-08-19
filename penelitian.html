@@ -148,7 +148,7 @@ function updateResearchSchema(items) {
         '@type': 'ListItem',
         position: index + 1,
         name: item.title,
-        url: `https://tekniklingkungan.com/penelitian-detail?id=${encodeURIComponent(item.id)}`
+        url: `https://tekniklingkungan.com/penelitian-detail?slug=${encodeURIComponent(slugify(item.title))}&id=${encodeURIComponent(item.id)}`
       }))
     }
   });
@@ -173,7 +173,7 @@ function render() {
   }
   grid.innerHTML = items.map(item => {
     const color = CAT_COLORS[item.category] || '#6b7a6c';
-    const detailUrl = `penelitian-detail?slug=${encodeURIComponent(item.slug || '')}&id=${encodeURIComponent(item.id)}`;
+    const detailUrl = `penelitian-detail?slug=${encodeURIComponent(slugify(item.title))}&id=${encodeURIComponent(item.id)}`;
     const statusRaw   = (item.status || '').toLowerCase();
     const statusClass = statusRaw === 'sedang berjalan' ? 'wip' : 'aktif';
     const statusLabel = item.status || 'Aktif';
@@ -207,10 +207,12 @@ function parseAuthorNames(value, knownNames) {
   if (!raw) return [];
   if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
   const lower = raw.toLowerCase();
-  return knownNames
+  const matches = knownNames
     .filter(name => lower.includes(name.toLowerCase()))
     .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
+  return matches.length ? matches : [raw];
 }
+function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
 
 function observeNewCards(gridId) {
   const obs = new IntersectionObserver((entries) => {

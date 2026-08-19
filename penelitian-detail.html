@@ -396,7 +396,7 @@ function setResearchMetadata(research) {
   var title = research.seo_title || research.title + ' | Penelitian Teknik Lingkungan Untan';
   var description = research.seo_description || research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
   var canonical = new URL('/penelitian-detail', window.location.origin);
-  canonical.search = research.slug ? '?slug=' + encodeURIComponent(research.slug) : '?id=' + encodeURIComponent(research.id);
+    canonical.search = '?slug=' + encodeURIComponent(slugify(research.title)) + '&id=' + encodeURIComponent(research.id);
   var image = research.og_image_url || research.image_url || 'https://tekniklingkungan.com/og-image.png';
 
   document.title = title;
@@ -472,6 +472,10 @@ function authorCapsules(value) {
   return parseAuthorNames(value, knownAuthorNames).map(name => '<span class="detail-author-chip">' + esc(name) + '</span>').join('');
 }
 
+  function slugify(value) {
+    return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90);
+  }
+
 (async () => {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -491,12 +495,18 @@ function authorCapsules(value) {
       sb.from('staff').select('name').eq('type', 'dosen').order('name')
     ]);
 
-    if (error || staffError || !data) { showError(); return; }
+    let researchData = data;
+    if (error && slug && id) {
+      const fallback = await sb.from('penelitian').select('*').eq('id', id).single();
+      researchData = fallback.data;
+      if (fallback.error) { showError(); return; }
+    } else if (error || !data) { showError(); return; }
+    if (staffError) { showError(); return; }
     knownAuthorNames = (staffData || []).map(staff => staff.name).filter(Boolean);
 
-    setResearchMetadata(data);
-    renderHero(data);
-    renderBody(data);
+    setResearchMetadata(researchData);
+    renderHero(researchData);
+    renderBody(researchData);
   } catch (err) {
     console.error('penelitian-detail error:', err);
     showError();

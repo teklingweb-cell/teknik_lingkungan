@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('f_publication_url').value = data.publication_url || '';
     document.getElementById('f_abstract').value       = data.abstract || '';
     document.getElementById('f_keywords').value      = data.keywords || '';
-    document.getElementById('f_slug').value = data.slug || '';
+    document.getElementById('f_slug').value = isLegacySlug(data.slug, data.title) ? slugify(data.title) : (data.slug || '');
     document.getElementById('f_seo_title').value = data.seo_title || '';
     document.getElementById('f_seo_description').value = data.seo_description || '';
     document.getElementById('f_og_image_url').value = data.og_image_url || '';
@@ -290,9 +290,10 @@ function parseAuthorNames(value, knownNames) {
   if (!raw) return [];
   if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
   const lower = raw.toLowerCase();
-  return knownNames
+  const matches = knownNames
     .filter(name => lower.includes(name.toLowerCase()))
     .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
+  return matches.length ? matches : [raw];
 }
 
 function addAuthor(name) {
@@ -318,6 +319,7 @@ function renderAuthorChips() {
 function escHtml(value) { return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function escAttr(value) { return escHtml(value).replace(/'/g, '&#39;'); }
 function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
+function isLegacySlug(slug, title) { return Boolean(slug && title && slug === `${slugify(title)}-${editId}`); }
 
 document.getElementById('authorSearch').addEventListener('focus', event => {
   renderAuthorResults(event.target.value);

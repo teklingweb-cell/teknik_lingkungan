@@ -7,16 +7,21 @@ function escapeXml(value) {
 }
 
 function contentUrl(path, item) {
-  const query = item.slug ? `?slug=${encodeURIComponent(item.slug)}` : `?id=${encodeURIComponent(item.id)}`;
+  const slug = item.title ? slugify(item.title) : item.slug;
+  const query = slug ? `?slug=${encodeURIComponent(slug)}&id=${encodeURIComponent(item.id)}` : `?id=${encodeURIComponent(item.id)}`;
   return `${SITE}/${path}${query}`;
+}
+
+function slugify(value) {
+  return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90);
 }
 
 module.exports = async function handler(req, res) {
   try {
     const headers = { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` };
     const [newsResponse, researchResponse] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/news?select=id,slug,date,created_at&order=date.desc`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/penelitian?select=id,slug,year,created_at&order=year.desc`, { headers })
+      fetch(`${SUPABASE_URL}/rest/v1/news?select=id,title,slug,date,created_at&order=date.desc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/penelitian?select=id,title,slug,year,created_at&order=year.desc`, { headers })
     ]);
     if (!newsResponse.ok || !researchResponse.ok) throw new Error('Supabase sitemap query failed');
     const news = await newsResponse.json();
