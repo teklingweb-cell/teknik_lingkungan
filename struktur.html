@@ -283,7 +283,8 @@ function openBio(person,tier){
   document.getElementById('bioPosition').textContent=person.position||'';
   document.getElementById('bioDept').textContent=person.bidang||'';
   const stats=[];
-  if(person.publications_count>0)stats.push({label:'Publikasi',value:person.publications_count});
+  if(person.nim_nip)stats.push({label:person.type==='alumni'?'NIM':'NIP',value:person.nim_nip});
+  stats.push({label:'Publikasi',value:Number(person.publications_count)||0});
   if(person.email)stats.push({label:'Email',value:person.email});
   if(person.graduation_year)stats.push({label:'Tahun Lulus',value:person.graduation_year});
   if(person.type){const tm={dosen:'Dosen',alumni:'Alumni',staf:'Staf'};stats.push({label:'Tipe',value:tm[person.type]||person.type});}
