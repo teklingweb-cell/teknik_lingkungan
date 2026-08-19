@@ -8,7 +8,9 @@ function escapeXml(value) {
 
 function contentUrl(path, item) {
   const slug = item.title ? slugify(item.title) : item.slug;
-  const query = slug ? `?slug=${encodeURIComponent(slug)}&id=${encodeURIComponent(item.id)}` : `?id=${encodeURIComponent(item.id)}`;
+  const query = path === 'penelitian-detail'
+    ? (slug ? `?slug=${encodeURIComponent(item.slug || slug)}` : '')
+    : (slug ? `?slug=${encodeURIComponent(item.slug || slug)}&id=${encodeURIComponent(item.id)}` : `?id=${encodeURIComponent(item.id)}`);
   return `${SITE}/${path}${query}`;
 }
 

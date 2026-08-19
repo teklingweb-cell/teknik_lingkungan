@@ -393,11 +393,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
 function setResearchMetadata(research) {
-  var title = research.seo_title || research.title + ' | Penelitian Teknik Lingkungan Untan';
-  var description = research.seo_description || research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
+  var title = research.title + ' | Penelitian Teknik Lingkungan Untan';
+  var description = research.abstract || 'Detail penelitian Program Studi Teknik Lingkungan Universitas Tanjungpura.';
   var canonical = new URL('/penelitian-detail', window.location.origin);
-    canonical.search = '?slug=' + encodeURIComponent(slugify(research.title)) + '&id=' + encodeURIComponent(research.id);
-  var image = research.og_image_url || research.image_url || 'https://tekniklingkungan.com/og-image.png';
+  canonical.search = '?slug=' + encodeURIComponent(research.slug || slugify(research.title));
+  var image = research.image_url || 'https://tekniklingkungan.com/og-image.png';
 
   document.title = title;
   document.querySelector('meta[name="robots"]').setAttribute('content', 'index, follow');
@@ -419,7 +419,7 @@ function setResearchMetadata(research) {
     '@id': canonical.href + '#research',
     headline: research.title,
     description: description,
-    author: String(research.author || '').split(',').map(name => ({ '@type': 'Person', name: name.trim() })).filter(person => person.name),
+    author: parseAuthorNames(research.author, knownAuthorNames).map(name => ({ '@type': 'Person', name: name.trim() })).filter(person => person.name),
     datePublished: research.year ? String(research.year) : undefined,
     keywords: research.keywords || research.category,
     isPartOf: { '@id': 'https://tekniklingkungan.com/#organization' },
@@ -462,10 +462,12 @@ function parseAuthorNames(value, knownNames) {
   const raw = String(value || '').trim();
   if (!raw) return [];
   if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
+  if (raw.includes(',')) return raw.split(',').map(name => name.trim()).filter(Boolean);
   const lower = raw.toLowerCase();
-  return knownNames
+  const matches = knownNames
     .filter(name => lower.includes(name.toLowerCase()))
     .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
+  return matches.length ? matches : [raw];
 }
 
 function authorCapsules(value) {
@@ -482,7 +484,7 @@ function authorCapsules(value) {
     const id = params.get('id');
     const slug = params.get('slug');
 
-    if (!id && !slug) { showError(); return; }
+    if (!slug && !id) { showError(); return; }
 
     // Race against a 10-second timeout so the page never hangs forever
     const timeout = new Promise((_, reject) =>
@@ -496,11 +498,15 @@ function authorCapsules(value) {
     ]);
 
     let researchData = data;
-    if (error && slug && id) {
-      const fallback = await sb.from('penelitian').select('*').eq('id', id).single();
-      researchData = fallback.data;
-      if (fallback.error) { showError(); return; }
-    } else if (error || !data) { showError(); return; }
+    if ((error || !data) && slug && id) {
+      const legacyIdLookup = await sb.from('penelitian').select('*').eq('id', id).single();
+      researchData = legacyIdLookup.data;
+      if (legacyIdLookup.error || !researchData) { showError(); return; }
+    } else if (error || !data) {
+      const legacyLookup = await sb.from('penelitian').select('*').limit(200);
+      researchData = (legacyLookup.data || []).find(item => slugify(item.slug || item.title) === slug);
+      if (legacyLookup.error || !researchData) { showError(); return; }
+    }
     if (staffError) { showError(); return; }
     knownAuthorNames = (staffData || []).map(staff => staff.name).filter(Boolean);
 

@@ -70,6 +70,15 @@
     .gdrive-status { font-size: 0.72rem; font-weight: 500; }
     .gdrive-status.ok  { color: #15803d; }
     .gdrive-status.err { color: var(--danger); }
+    .author-picker { position: relative; }
+    .author-selected { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .author-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; background: rgba(78,140,90,0.1); border: 1px solid rgba(78,140,90,0.2); font-size: 0.76rem; }
+    .author-chip button { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 0; line-height: 1; font-size: 1rem; }
+    .author-results { display: none; position: absolute; z-index: 4; left: 0; right: 0; top: 100%; max-height: 220px; overflow-y: auto; margin-top: 4px; padding: 4px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 20px rgba(26,46,30,0.12); }
+    .author-results.show { display: block; }
+    .author-option { display: block; width: 100%; border: 0; background: transparent; text-align: left; padding: 9px 10px; border-radius: 6px; cursor: pointer; color: var(--text); font: inherit; font-size: 0.8rem; }
+    .author-option:hover { background: var(--cream); }
+    .author-empty { padding: 9px 10px; color: var(--muted); font-size: 0.78rem; }
   </style>
   <style id="auth-hide">body{visibility:hidden!important}</style>
 </head>
@@ -110,8 +119,12 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Peneliti Utama *</label>
-          <input class="form-input" id="f_author" placeholder="cth: Dr. Hendra Wahyudi">
+          <label for="f_author_search">Dosen Peneliti *</label>
+          <div class="author-picker">
+            <div class="author-selected" id="authorSelected"></div>
+            <input class="form-input" id="f_author_search" placeholder="Cari dan pilih nama dosen…" autocomplete="off">
+            <div class="author-results" id="authorResults"></div>
+          </div>
         </div>
         <div class="form-group">
           <label>Kategori *</label>
@@ -183,6 +196,8 @@
 <script>
 // BUG-04 FIX: module-level so onclick handlers can reach these
 let editId = null;
+let selectedAuthors = [];
+let availableAuthors = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
@@ -190,6 +205,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!session) { window.location.href = '/admin/login'; return; }
   document.getElementById('auth-hide')?.remove();
   initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
+  const { data: staffData, error: staffError } = await sb.from('staff').select('name').eq('type', 'dosen').order('name');
+  if (staffError) { showAlert('Gagal memuat daftar dosen: ' + staffError.message); return; }
+  availableAuthors = (staffData || []).map(item => item.name).filter(Boolean);
+  initAuthorPicker();
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));
@@ -197,7 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await sb.from('penelitian').select('*').eq('id', editId).single();
     if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
     document.getElementById('f_title').value          = data.title || '';
-    document.getElementById('f_author').value         = data.author || '';
+    setStoredAuthors(data.author);
     document.getElementById('f_category').value       = data.category || 'Sains & Teknologi';
     document.getElementById('f_year').value           = data.year || '';
     document.getElementById('f_funding').value        = data.funding || '';
@@ -214,6 +233,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 })();
+
+function initAuthorPicker() {
+  const input = document.getElementById('f_author_search');
+  input.addEventListener('focus', renderAuthorResults);
+  input.addEventListener('input', renderAuthorResults);
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.author-picker')) document.getElementById('authorResults').classList.remove('show');
+  });
+}
+
+function setStoredAuthors(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return;
+  if (raw.includes('|')) {
+    raw.split('|').map(name => name.trim()).filter(Boolean).forEach(addAuthor);
+    return;
+  }
+  const lower = raw.toLowerCase();
+  const matches = availableAuthors.filter(name => lower.includes(name.toLowerCase()));
+  (matches.length ? matches : [raw]).forEach(addAuthor);
+}
+
+function addAuthor(name) {
+  const cleanName = String(name || '').trim();
+  if (!cleanName || selectedAuthors.some(item => item.toLowerCase() === cleanName.toLowerCase())) return;
+  selectedAuthors.push(cleanName);
+  renderSelectedAuthors();
+  renderAuthorResults();
+}
+
+function removeAuthor(name) {
+  selectedAuthors = selectedAuthors.filter(item => item !== name);
+  renderSelectedAuthors();
+  renderAuthorResults();
+}
+
+function renderSelectedAuthors() {
+  document.getElementById('authorSelected').innerHTML = selectedAuthors.map(name =>
+    '<span class="author-chip">' + escHtml(name) + '<button type="button" data-remove-author="' + escAttr(name) + '" aria-label="Hapus ' + escAttr(name) + '">×</button></span>'
+  ).join('');
+  document.querySelectorAll('[data-remove-author]').forEach(button => {
+    button.addEventListener('click', () => removeAuthor(button.dataset.removeAuthor));
+  });
+}
+
+function renderAuthorResults() {
+  const input = document.getElementById('f_author_search');
+  const results = document.getElementById('authorResults');
+  const query = input.value.trim().toLowerCase();
+  const matches = availableAuthors.filter(name => !selectedAuthors.includes(name) && name.toLowerCase().includes(query)).slice(0, 30);
+  results.innerHTML = matches.length
+    ? matches.map(name => '<button type="button" class="author-option" data-add-author="' + escAttr(name) + '">' + escHtml(name) + '</button>').join('')
+    : '<div class="author-empty">Dosen tidak ditemukan.</div>';
+  results.classList.add('show');
+  results.querySelectorAll('[data-add-author]').forEach(button => {
+    button.addEventListener('click', () => {
+      addAuthor(button.dataset.addAuthor);
+      input.value = '';
+      input.focus();
+    });
+  });
+}
 
 // ── Google Drive URL helper ───────────────────────────────
 function parseGDriveUrl(raw) {
@@ -282,7 +363,7 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
 
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
-  const author          = document.getElementById('f_author').value.trim();
+  const author          = selectedAuthors.join(' | ');
   const category        = document.getElementById('f_category').value;
   const year            = parseInt(document.getElementById('f_year').value);
   const funding         = document.getElementById('f_funding').value.trim() || null;
@@ -300,7 +381,18 @@ async function doSave() {
   const btn = document.getElementById('saveBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan…';
   const image_url = document.getElementById('f_image_url').value || null;
-  const payload = { title, author, category, year, funding, status, publication_url, abstract, keywords, image_url };
+  const baseSlug = slugify(title) || 'penelitian';
+  let slug = baseSlug;
+  let suffix = 2;
+  while (true) {
+    let slugQuery = sb.from('penelitian').select('id').eq('slug', slug).limit(1);
+    if (editId) slugQuery = slugQuery.neq('id', editId);
+    const { data: duplicateRows, error: slugError } = await slugQuery;
+    if (slugError) { btn.disabled = false; btn.textContent = 'Simpan'; showAlert('Gagal memeriksa URL penelitian: ' + slugError.message); return; }
+    if (!duplicateRows || !duplicateRows.length) break;
+    slug = baseSlug + '-' + suffix++;
+  }
+  const payload = { title, author, category, year, funding, status, publication_url, abstract, keywords, image_url, slug, seo_title: null, seo_description: null, og_image_url: null };
   let error;
   if (editId) {
     ({ error } = await sb.from('penelitian').update(payload).eq('id', editId));
@@ -311,6 +403,9 @@ async function doSave() {
   if (error) { showAlert('Gagal menyimpan: ' + error.message); return; }
   window.location.href = '/admin/penelitian?msg=' + (editId ? 'updated' : 'added');
 }
+function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
+function escHtml(value) { return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(value) { return String(value || '').replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function showAlert(msg) {
   const box = document.getElementById('alertBox');
   box.className = 'alert alert-error'; box.textContent = msg; box.style.display = 'flex';
