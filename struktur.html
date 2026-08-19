@@ -50,24 +50,24 @@
     .org-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;transition:transform 0.22s cubic-bezier(.34,1.56,.64,1);}
     .org-node:hover{transform:translateY(-4px);}
     .org-node:hover .org-node-card{box-shadow:0 12px 36px rgba(26,46,30,0.18);}
-    .org-node-card{background:#fff;border:1.5px solid rgba(78,140,90,0.18);border-radius:16px;padding:18px 20px 32px;text-align:center;width:160px;box-sizing:border-box;transition:box-shadow 0.22s,border-color 0.22s;position:relative;overflow:hidden;}
+    .org-node-card{background:#fff;border:1.5px solid rgba(78,140,90,0.18);border-radius:16px;padding:18px 16px 32px;text-align:center;width:190px;min-height:232px;display:flex;flex-direction:column;align-items:center;box-sizing:border-box;transition:box-shadow 0.22s,border-color 0.22s;position:relative;overflow:hidden;}
     .org-node-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;}
     .org-node:hover .org-node-card{border-color:rgba(78,140,90,0.45);}
     .org-node-photo{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 10px;border:2px solid rgba(78,140,90,0.2);display:block;}
     .org-node-initials{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:#fff;margin:0 auto 10px;letter-spacing:-0.02em;}
-    .org-node-role{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-body);font-weight:600;margin-bottom:5px;}
-    .org-node-name{font-size:0.78rem;font-weight:600;color:var(--nav-bg);line-height:1.3;font-family:var(--font-body);}
-    .org-node-dept{font-size:0.67rem;color:var(--text-muted);margin-top:4px;font-family:var(--font-body);line-height:1.3;}
-    .org-node-id{font-size:0.62rem;color:rgba(45,58,46,0.62);margin-top:5px;font-family:var(--font-body);line-height:1.3;word-break:break-word;}
+    .org-node-role{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-body);font-weight:600;margin-bottom:5px;min-height:1.6em;display:flex;align-items:center;justify-content:center;}
+    .org-node-name{font-size:0.78rem;font-weight:600;color:var(--nav-bg);line-height:1.3;font-family:var(--font-body);height:2.6em;display:-webkit-box;display:box;-webkit-box-orient:vertical;box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;}
+    .org-node-dept{font-size:0.67rem;color:var(--text-muted);margin-top:4px;font-family:var(--font-body);line-height:1.3;height:2.6em;display:-webkit-box;display:box;-webkit-box-orient:vertical;box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;}
+    .org-node-id{font-size:0.62rem;color:rgba(45,58,46,0.62);margin-top:5px;font-family:var(--font-body);line-height:1.3;height:1.3em;display:-webkit-box;display:box;-webkit-box-orient:vertical;box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden;word-break:break-all;}
     .org-node-click-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:0.55rem;color:rgba(78,140,90,0.6);font-family:var(--font-body);letter-spacing:0.05em;opacity:0;transition:opacity 0.2s;padding:0 8px;}
     .org-node:hover .org-node-click-hint{opacity:1;}
-    .org-node.sz-xl .org-node-card{width:200px;padding:24px 24px 36px;}
+    .org-node.sz-xl .org-node-card{width:190px;min-height:232px;padding:24px 16px 36px;}
     .org-node.sz-xl .org-node-photo,.org-node.sz-xl .org-node-initials{width:76px;height:76px;font-size:1.6rem;}
     .org-node.sz-xl .org-node-name{font-size:0.88rem;}
     .org-node.sz-xl .org-node-role{font-size:0.63rem;}
-    .org-node.sz-lg .org-node-card{width:178px;padding:20px 20px 34px;}
+    .org-node.sz-lg .org-node-card{width:190px;min-height:232px;padding:20px 16px 34px;}
     .org-node.sz-lg .org-node-photo,.org-node.sz-lg .org-node-initials{width:68px;height:68px;font-size:1.4rem;}
-    .org-node.sz-sm .org-node-card{width:138px;padding:12px 14px 28px;}
+    .org-node.sz-sm .org-node-card{width:190px;min-height:232px;padding:18px 16px 32px;}
     .org-node.sz-sm .org-node-photo,.org-node.sz-sm .org-node-initials{width:46px;height:46px;font-size:1rem;}
     .org-node.sz-sm .org-node-name{font-size:0.72rem;}
     .org-empty-tier{font-size:0.8rem;color:var(--text-muted);font-family:var(--font-body);border:1.5px dashed rgba(78,140,90,0.2);border-radius:12px;padding:16px 28px;text-align:center;font-style:italic;opacity:0.7;}
@@ -115,8 +115,7 @@
     .admin-add-notice a:hover{text-decoration:underline;}
     @media(max-width:640px){
       .org-tier-nodes{gap:10px;}
-      .org-node-card{min-width:110px;max-width:140px;padding:12px 12px 10px;}
-      .org-node.sz-xl .org-node-card{min-width:140px;}
+      .org-node-card,.org-node.sz-xl .org-node-card,.org-node.sz-lg .org-node-card,.org-node.sz-sm .org-node-card{width:100%;min-width:150px;max-width:190px;min-height:220px;padding:14px 12px 30px;}
       .bio-header{flex-direction:column;align-items:center;text-align:center;padding:28px 24px 20px;}
       .bio-body{padding:0 24px 28px;}
       .bio-grid{grid-template-columns:1fr;}
@@ -257,8 +256,9 @@ function makeNode(person,tier){
     ?`<img class="org-node-photo" src="${e(person.photo_url)}" alt="${e(person.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="org-node-initials" style="display:none">${initial}</div>`
     :`<div class="org-node-initials">${initial}</div>`;
   const idLabel = person.type === 'alumni' ? 'NIM' : 'NIP';
-  const idValue = person.nim_nip ? `<div class="org-node-id">${idLabel}: ${e(person.nim_nip)}</div>` : '';
-  node.innerHTML=`<div class="org-node-card">${av}<div class="org-node-role">${e(TIER_LABELS[tier.key]||tier.label)}</div><div class="org-node-name">${e(person.name)}</div>${person.bidang?`<div class="org-node-dept">${e(person.bidang)}</div>`:''}${idValue}<div class="org-node-click-hint">lihat profil &#x2197;</div></div>`;
+  const deptValue = person.bidang ? e(person.bidang) : '&nbsp;';
+  const idValue = person.nim_nip ? `${idLabel}: ${e(person.nim_nip)}` : '&nbsp;';
+  node.innerHTML=`<div class="org-node-card">${av}<div class="org-node-role">${e(TIER_LABELS[tier.key]||tier.label)}</div><div class="org-node-name">${e(person.name)}</div><div class="org-node-dept">${deptValue}</div><div class="org-node-id">${idValue}</div><div class="org-node-click-hint">lihat profil &#x2197;</div></div>`;
   node.addEventListener('click',()=>openBio(person,tier));
   node.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' ')openBio(person,tier);});
   return node;
