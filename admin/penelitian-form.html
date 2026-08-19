@@ -122,13 +122,9 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Dosen Peneliti *</label>
-          <div class="author-picker-wrap" id="authorPicker">
-            <input class="form-input author-search" id="authorSearch" type="search" placeholder="Cari nama dosen..." autocomplete="off" aria-controls="authorResults">
-            <div class="author-results" id="authorResults"></div>
-            <div class="author-chips" id="authorChips" aria-live="polite"></div>
-          </div>
-          <span class="form-hint" id="authorHint">Pilih satu atau beberapa dosen yang berkontribusi pada penelitian ini.</span>
+          <label>Peneliti *</label>
+          <input class="form-input" id="f_author" placeholder="cth: Dr. Budi Santoso | Dr. Ani Lestari" maxlength="300">
+          <span class="form-hint" id="authorHint">Ketik nama peneliti secara manual. Pisahkan beberapa nama dengan tanda |</span>
         </div>
         <div class="form-group">
           <label>Kategori *</label>
@@ -220,9 +216,8 @@
 <script>
 // BUG-04 FIX: module-level so onclick handlers can reach these
 let editId = null;
-let authorNamesForEdit = [];
-let lecturerNames = [];
-let selectedAuthors = new Set();
+function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
+function isLegacySlug(slug, title) { return Boolean(slug && title && slug === `${slugify(title)}-${editId}`); }
 
 document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
@@ -236,10 +231,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     showAlert('Akun berhasil login tetapi belum terdaftar sebagai admin. Tambahkan user_id akun ke public.admins di Supabase.');
   }
   initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
-  const { data: lecturers, error: lecturersError } = await sb.from('staff').select('id, name').eq('type', 'dosen').order('name');
-  if (lecturersError) { showAlert('Gagal memuat daftar dosen: ' + lecturersError.message); return; }
-  lecturerNames = (lecturers || []).map(lecturer => lecturer.name).filter(Boolean);
-  renderAuthorOptions();
   const p = new URLSearchParams(window.location.search);
   if (p.get('edit')) {
     editId = parseInt(p.get('edit'));
@@ -247,8 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data, error } = await sb.from('penelitian').select('*').eq('id', editId).single();
     if (error || !data) { alert('Data tidak ditemukan.'); history.back(); return; }
     document.getElementById('f_title').value          = data.title || '';
-    authorNamesForEdit = parseAuthorNames(data.author, lecturerNames);
-    selectAuthors(authorNamesForEdit);
+    document.getElementById('f_author').value         = data.author || '';
     document.getElementById('f_category').value       = data.category || 'Sains & Teknologi';
     document.getElementById('f_year').value           = data.year || '';
     document.getElementById('f_funding').value        = data.funding || '';
@@ -261,7 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('f_seo_description').value = data.seo_description || '';
     document.getElementById('f_og_image_url').value = data.og_image_url || '';
     if (data.image_url) {
-      // BUG-12 FIX: dispatch input event on already-initialized field instead of re-calling initGDriveField
       const rawInp = document.getElementById('f_image_url_raw');
       rawInp.value = data.image_url;
       document.getElementById('f_image_url').value = data.image_url;
@@ -269,75 +258,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 })();
-
-function renderAuthorOptions() {
-  selectAuthors(authorNamesForEdit);
-  renderAuthorResults('');
-}
-
-function renderAuthorResults(query) {
-  const results = document.getElementById('authorResults');
-  const needle = query.trim().toLowerCase();
-  const matches = lecturerNames.filter(name => !selectedAuthors.has(name) && (!needle || name.toLowerCase().includes(needle)));
-  results.innerHTML = matches.length
-    ? matches.slice(0, 20).map(name => `<button type="button" class="author-result" data-author="${escAttr(name)}">${escHtml(name)}</button>`).join('')
-    : '<div class="author-empty">Dosen tidak ditemukan.</div>';
-  results.querySelectorAll('[data-author]').forEach(button => button.addEventListener('click', () => addAuthor(button.dataset.author)));
-}
-
-function selectAuthors(names) {
-  const available = new Map(lecturerNames.map(name => [name.toLowerCase(), name]));
-  selectedAuthors = new Set(names.map(name => available.get(name.toLowerCase()) || name).filter(Boolean));
-  renderAuthorChips();
-}
-
-function parseAuthorNames(value, knownNames) {
-  const raw = String(value || '').trim();
-  if (!raw) return [];
-  if (raw.includes('|')) return raw.split('|').map(name => name.trim()).filter(Boolean);
-  const lower = raw.toLowerCase();
-  const matches = knownNames
-    .filter(name => lower.includes(name.toLowerCase()))
-    .sort((a, b) => lower.indexOf(a.toLowerCase()) - lower.indexOf(b.toLowerCase()));
-  return matches.length ? matches : [raw];
-}
-
-function addAuthor(name) {
-  if (!name || selectedAuthors.has(name)) return;
-  selectedAuthors.add(name);
-  document.getElementById('authorSearch').value = '';
-  renderAuthorChips();
-  renderAuthorResults('');
-  document.getElementById('authorResults').classList.add('open');
-}
-
-function removeAuthor(name) {
-  selectedAuthors.delete(name);
-  renderAuthorChips();
-  renderAuthorResults(document.getElementById('authorSearch').value);
-}
-
-function renderAuthorChips() {
-  document.getElementById('authorChips').innerHTML = [...selectedAuthors].map(name => `<span class="author-chip">${escHtml(name)}<button type="button" data-remove-author="${escAttr(name)}" aria-label="Hapus ${escAttr(name)}">×</button></span>`).join('');
-  document.querySelectorAll('[data-remove-author]').forEach(button => button.addEventListener('click', () => removeAuthor(button.dataset.removeAuthor)));
-}
-
-function escHtml(value) { return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function escAttr(value) { return escHtml(value).replace(/'/g, '&#39;'); }
-function slugify(value) { return String(value || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90); }
-function isLegacySlug(slug, title) { return Boolean(slug && title && slug === `${slugify(title)}-${editId}`); }
-
-document.getElementById('authorSearch').addEventListener('focus', event => {
-  renderAuthorResults(event.target.value);
-  document.getElementById('authorResults').classList.add('open');
-});
-document.getElementById('authorSearch').addEventListener('input', event => {
-  renderAuthorResults(event.target.value);
-  document.getElementById('authorResults').classList.add('open');
-});
-document.addEventListener('click', event => {
-  if (!event.target.closest('#authorPicker')) document.getElementById('authorResults').classList.remove('open');
-});
 
 // ── Google Drive URL helper ───────────────────────────────
 function parseGDriveUrl(raw) {
@@ -414,7 +334,7 @@ function normalizeResearchStatus(value) {
 
 async function doSave() {
   const title           = document.getElementById('f_title').value.trim();
-  const author          = [...selectedAuthors].join(' | ');
+  const author          = document.getElementById('f_author').value.trim();
   const category        = document.getElementById('f_category').value;
   const year            = parseInt(document.getElementById('f_year').value);
   const funding         = document.getElementById('f_funding').value.trim() || null;
