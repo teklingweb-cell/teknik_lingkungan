@@ -229,6 +229,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = '/admin/login'; return; }
   document.getElementById('auth-hide')?.remove();
+  const { data: adminAccess, error: adminAccessError } = await sb.rpc('is_admin');
+  if (!adminAccessError && adminAccess !== true) {
+    showAlert('Akun ini berhasil login tetapi belum terdaftar sebagai admin Supabase. Tambahkan email akun ke public.admins.');
+  }
   initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
   const { data: lecturers, error: lecturersError } = await sb.from('staff').select('id, name').eq('type', 'dosen').order('name');
   if (lecturersError) { showAlert('Gagal memuat daftar dosen: ' + lecturersError.message); return; }
@@ -430,7 +434,11 @@ async function doSave() {
     ({ error } = await sb.from('penelitian').insert([payload]));
   }
   btn.disabled = false; btn.textContent = 'Simpan';
-  if (error) { showAlert('Gagal menyimpan: ' + error.message + (error.details ? ' ' + error.details : '')); return; }
+  if (error) {
+    const diagnostics = [error.message, error.code ? `Kode: ${error.code}` : '', error.details, error.hint].filter(Boolean).join(' | ');
+    showAlert('Gagal menyimpan: ' + diagnostics);
+    return;
+  }
   window.location.href = '/admin/penelitian?msg=' + (editId ? 'updated' : 'added');
 }
 function showAlert(msg) {
