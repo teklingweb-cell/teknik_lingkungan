@@ -223,6 +223,7 @@ let editId = null;
 let authorNamesForEdit = [];
 let lecturerNames = [];
 let selectedAuthors = new Set();
+let adminAccessGranted = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
 (async () => {
@@ -230,8 +231,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!session) { window.location.href = '/admin/login'; return; }
   document.getElementById('auth-hide')?.remove();
   const { data: adminAccess, error: adminAccessError } = await sb.rpc('is_admin');
-  if (!adminAccessError && adminAccess !== true) {
-    showAlert('Akun ini berhasil login tetapi belum terdaftar sebagai admin Supabase. Tambahkan email akun ke public.admins.');
+  adminAccessGranted = !adminAccessError && adminAccess === true;
+  if (adminAccessError) {
+    showAlert('Gagal memverifikasi akses admin: ' + adminAccessError.message);
+  } else if (!adminAccessGranted) {
+    showAlert('Akun berhasil login tetapi belum terdaftar sebagai admin. Tambahkan user_id akun ke public.admins di Supabase.');
   }
   initGDriveField('f_image_url_raw', 'f_image_url_preview', 'f_image_url_status', 'f_image_url');
   const { data: lecturers, error: lecturersError } = await sb.from('staff').select('id, name').eq('type', 'dosen').order('name');
@@ -403,6 +407,10 @@ function clearGDriveField(inputId, previewId, statusId, storedId) {
 });
 
 async function doSave() {
+  if (!adminAccessGranted) {
+    showAlert('Penelitian tidak dapat disimpan karena akun ini belum memiliki akses admin Supabase.');
+    return;
+  }
   const title           = document.getElementById('f_title').value.trim();
   const author          = [...selectedAuthors].join(' | ');
   const category        = document.getElementById('f_category').value;

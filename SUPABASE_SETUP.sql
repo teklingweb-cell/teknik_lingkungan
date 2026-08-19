@@ -66,6 +66,8 @@ create table if not exists penelitian (
 );
 
 alter table penelitian add column if not exists slug text;
+alter table penelitian add column if not exists keywords text;
+alter table penelitian add column if not exists image_url text;
 alter table penelitian add column if not exists seo_title text;
 alter table penelitian add column if not exists seo_description text;
 alter table penelitian add column if not exists og_image_url text;
