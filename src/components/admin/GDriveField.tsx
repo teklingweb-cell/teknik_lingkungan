@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { parseGDriveUrl } from '@/lib/utils';
 
 /**
@@ -22,10 +22,15 @@ export default function GDriveField({
   const direct = parseGDriveUrl(value);
   const [status, setStatus] = useState<'idle' | 'ok' | 'err'>('idle');
 
+  // Keep the latest callback in a ref: parents usually pass an inline arrow, so
+  // depending on its identity would re-run this effect on every render.
+  const onResolvedRef = useRef(onResolved);
+  onResolvedRef.current = onResolved;
+
   useEffect(() => {
-    onResolved(direct);
+    onResolvedRef.current(direct);
     setStatus('idle');
-  }, [direct, onResolved]);
+  }, [direct]);
 
   return (
     <div className="form-group gdrive-wrap">

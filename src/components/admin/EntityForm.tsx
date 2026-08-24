@@ -184,10 +184,11 @@ export default function EntityForm({
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(editId !== null);
 
-  const set = useCallback(
-    (name: string, value: string) => setValues((v) => ({ ...v, [name]: value })),
-    []
-  );
+  const set = useCallback((name: string, value: string) => {
+    // Bail out when nothing changed so repeat writes (e.g. the GDrive field
+    // re-reporting the same resolved URL) don't trigger another render.
+    setValues((v) => (v[name] === value ? v : { ...v, [name]: value }));
+  }, []);
 
   useEffect(() => {
     if (editId === null) return;
