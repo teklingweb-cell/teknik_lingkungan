@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { supabasePublic } from '@/lib/supabase/public';
 
-const SITE_URL = 'https://tl.ft.untan.ac.id';
+const SITE_URL = 'https://tekniklingkungan.com';
 
 export const revalidate = 3600;
 

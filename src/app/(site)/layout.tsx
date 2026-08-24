@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import SiteFooter from '@/components/SiteFooter';
 import ScrollReveal from '@/components/ScrollReveal';
 
-const SITE_URL = 'https://tl.ft.untan.ac.id';
+const SITE_URL = 'https://tekniklingkungan.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
