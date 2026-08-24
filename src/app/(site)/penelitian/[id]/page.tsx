@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Penelitian } from '@/lib/types';
+import { FileTextIcon } from '@/components/icons';
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -103,7 +104,7 @@ export default async function PenelitianDetailPage({
       <div className="detail-hero">
         <div className="container" style={{ position: 'relative' }}>
           <Link href="/penelitian" className="detail-back">
-            ke Daftar Penelitian
+            ← ke Daftar Penelitian
           </Link>
           <div className="detail-hero-inner">
             <div className="detail-tag-row">
@@ -176,7 +177,11 @@ export default async function PenelitianDetailPage({
 
           <div className="fade-up">
             <div className="detail-pub-card">
-              <div className="detail-pub-card-label">Publikasi &amp; Karya</div>
+              <div className="detail-pub-card-label">
+                {/* Aligned inline so detail.css stays untouched. */}
+                <FileTextIcon size={12} style={{ verticalAlign: '-2px', marginRight: 6 }} />
+                Publikasi &amp; Karya
+              </div>
               {item.publication_url ? (
                 <>
                   <div className="detail-pub-card-title">

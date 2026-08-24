@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Staff, StaffType } from '@/lib/types';
+import { MailIcon, SearchIcon } from './icons';
 
 const TABS: { key: StaffType; label: string }[] = [
   { key: 'dosen', label: 'Dosen' },
@@ -59,7 +60,9 @@ function DosenCard({ person }: { person: Staff }) {
         <span className="staff-pubs">{person.publications_count ?? 0} Publikasi</span>
         <div className="staff-actions">
           {person.email && (
-            <a href={`mailto:${person.email}`} className="staff-btn" aria-label="Email" />
+            <a href={`mailto:${person.email}`} className="staff-btn" aria-label="Email">
+              <MailIcon />
+            </a>
           )}
           {person.linkedin_url ? (
             <a
@@ -117,7 +120,9 @@ function AlumniCard({ person }: { person: Staff }) {
         <span />
         <div className="staff-actions">
           {person.email && (
-            <a href={`mailto:${person.email}`} className="staff-btn" aria-label="Email" />
+            <a href={`mailto:${person.email}`} className="staff-btn" aria-label="Email">
+              <MailIcon />
+            </a>
           )}
           {person.linkedin_url && (
             <a
@@ -241,7 +246,9 @@ export default function StafDirectory({ people }: { people: Staff[] }) {
             ))}
           </div>
           <div className="search-wrap" style={{ position: 'relative' }}>
-            <span className="search-icon" />
+            <span className="search-icon">
+              <SearchIcon />
+            </span>
             <input
               type="text"
               className="form-input search-input"

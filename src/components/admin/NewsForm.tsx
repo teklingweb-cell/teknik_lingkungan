@@ -9,6 +9,7 @@ import { todayISO } from '@/lib/utils';
 import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
+import { FileTextIcon, HomeIcon, SaveIcon } from '../icons';
 
 const CATEGORIES = ['Penelitian', 'Pencapaian', 'Acara', 'Pengumuman', 'Beasiswa'];
 
@@ -137,7 +138,18 @@ export default function NewsForm({ editId }: { editId: number | null }) {
   }
 
   const isEdit = editId !== null;
-  const submitLabel = saving ? 'Menyimpan…' : isEdit ? 'Simpan Perubahan' : '+ Tambahkan Berita';
+  // The edit label lost its icon in the original source; the create label
+  // always rendered a literal "+".
+  const submitLabel = saving ? (
+    'Menyimpan…'
+  ) : isEdit ? (
+    <>
+      <SaveIcon size={14} strokeWidth={1.75} />
+      Simpan Perubahan
+    </>
+  ) : (
+    '+ Tambahkan Berita'
+  );
 
   return (
     <AdminShell
@@ -152,6 +164,7 @@ export default function NewsForm({ editId }: { editId: number | null }) {
 
       <form onSubmit={handleSubmit}>
         <FormCard
+          icon={<FileTextIcon size={18} strokeWidth={1.75} style={{ color: 'var(--green)' }} />}
           title={isEdit ? 'Edit Berita' : 'Berita Baru'}
           footer={
             <>
@@ -275,7 +288,10 @@ export default function NewsForm({ editId }: { editId: number | null }) {
               onChange={(e) => set('show_on_home', e.target.checked)}
             />
             <div>
-              <div className="checkbox-label">Tampilkan di Beranda</div>
+              <div className="checkbox-label">
+                <HomeIcon size={14} style={{ verticalAlign: '-2px', marginRight: 6 }} />
+                Tampilkan di Beranda
+              </div>
               <div className="checkbox-sub">
                 Berita ini akan muncul di seksi berita halaman utama (maks. 3 berita terbaru yang
                 dipilih).

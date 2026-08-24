@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { submitContactMessage } from '@/app/(site)/kontak/actions';
+import { SendIcon } from './icons';
 
 /** maxLength hints; the authoritative check lives in the server action. */
 const LIMITS = {
@@ -155,7 +156,14 @@ export default function ContactForm() {
         <div className="kform-footer">
           <span className="kform-note">* Wajib diisi</span>
           <button type="submit" className="btn-primary" style={{ gap: 8 }} disabled={sending}>
-            {sending ? 'Mengirim...' : 'Kirim Pesan'}
+            {sending ? (
+              'Mengirim...'
+            ) : (
+              <>
+                <SendIcon size={15} strokeWidth={1.75} />
+                Kirim Pesan
+              </>
+            )}
           </button>
         </div>
 

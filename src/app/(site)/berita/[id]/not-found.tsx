@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FileTextIcon } from '@/components/icons';
 
 export default function NotFound() {
   return (
@@ -7,7 +8,10 @@ export default function NotFound() {
         <div className="article-hero-glow" />
       </section>
       <div className="state-wrap">
-        <div className="state-icon" />
+        {/* .state-icon reserves a 3.5rem slot and dims itself to 0.3 opacity. */}
+        <div className="state-icon">
+          <FileTextIcon size={56} strokeWidth={1.5} />
+        </div>
         <div className="state-title">Berita tidak ditemukan</div>
         <div className="state-sub" style={{ marginBottom: 24 }}>
           Artikel yang Anda cari tidak ada atau telah dihapus.
@@ -29,7 +33,7 @@ export default function NotFound() {
             fontWeight: 500,
           }}
         >
-          ke Berita
+          ← ke Berita
         </Link>
       </div>
     </>

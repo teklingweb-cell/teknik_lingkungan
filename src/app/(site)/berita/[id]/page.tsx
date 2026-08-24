@@ -75,7 +75,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ i
         <div className="article-hero-glow" />
         <div className="article-hero-inner">
           <Link href="/berita" className="article-back">
-            ke Berita
+            ← ke Berita
           </Link>
           <div className="article-meta-row">
             <span className="tag">{article.category}</span>
@@ -161,7 +161,7 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ i
               fontFamily: 'var(--font-body)',
             }}
           >
-            Berita
+            ← Berita
           </Link>
           <span>
             <span className="tag">{article.category}</span>

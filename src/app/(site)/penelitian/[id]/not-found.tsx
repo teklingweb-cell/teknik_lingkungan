@@ -7,7 +7,7 @@ export default function NotFound() {
         <h2>Penelitian tidak ditemukan</h2>
         <p>Data yang kamu cari tidak tersedia atau telah dihapus.</p>
         <Link href="/penelitian" className="btn">
-          ke Daftar Penelitian
+          ← ke Daftar Penelitian
         </Link>
       </div>
     </div>
