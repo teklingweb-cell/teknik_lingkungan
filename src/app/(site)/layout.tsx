@@ -24,7 +24,21 @@ export const metadata: Metadata = {
     title: 'Program Studi Teknik Lingkungan – Universitas Tanjungpura',
     description:
       'Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan – unggul dalam riset dan pengabdian lingkungan hidup.',
-    images: [`${SITE_URL}/banner.png`],
+    images: [
+      {
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Lambang Universitas Tanjungpura — Program Studi Teknik Lingkungan',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Program Studi Teknik Lingkungan – Universitas Tanjungpura',
+    description:
+      'Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan – unggul dalam riset dan pengabdian lingkungan hidup.',
+    images: [`${SITE_URL}/og-image.png`],
   },
 };
 
