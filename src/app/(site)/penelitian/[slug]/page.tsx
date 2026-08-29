@@ -102,7 +102,10 @@ export default async function PenelitianDetailPage({
 
   const statusLabel = item.status || 'Aktif';
   const statusClass = statusClassOf(item.status);
-  const shortTitle = item.title.length > 50 ? `${item.title.substring(0, 50)}…` : item.title;
+  // `?? ''` for the same reason as slugify's guard: the schema says NOT NULL,
+  // but a row that slipped through must not take the page down.
+  const fullTitle = item.title ?? '';
+  const shortTitle = fullTitle.length > 50 ? `${fullTitle.substring(0, 50)}…` : fullTitle;
   const keywords = deriveKeywords(item);
   const showKeywords = keywords.length > 1;
 

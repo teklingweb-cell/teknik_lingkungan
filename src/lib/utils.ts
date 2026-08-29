@@ -90,7 +90,15 @@ export function todayISO(): string {
  * result is limited to 80 characters on a word boundary — long enough to carry
  * the keywords, short enough to stay readable in a search result.
  */
-export function slugify(text: string): string {
+export function slugify(text: string | null | undefined): string {
+  // Guarded because the data does not always match the schema: `news.title` is
+  // declared NOT NULL, yet a row with a null title reached production and threw
+  // `Cannot read properties of null (reading 'normalize')` here. That crash ran
+  // through every page that builds a slug index — the berita list, the home
+  // page, each article and the sitemap — so regeneration failed permanently and
+  // the whole site froze on its last good copy. One bad row must not do that.
+  if (!text) return '';
+
   const base = text
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -114,7 +122,7 @@ export function slugify(text: string): string {
  * punctuation or emoji would otherwise produce an empty segment, and
  * `/berita/` is the listing page, not the article.
  */
-export function slugOf(row: { id: number; slug?: string | null; title: string }): string {
+export function slugOf(row: { id: number; slug?: string | null; title?: string | null }): string {
   const stored = row.slug?.trim();
   if (stored) return stored;
   return slugify(row.title) || String(row.id);

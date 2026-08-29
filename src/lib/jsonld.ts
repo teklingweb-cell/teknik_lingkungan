@@ -89,7 +89,7 @@ export function breadcrumbJsonLd(crumbs: Crumb[]): Json {
 }
 
 export function articleJsonLd(input: {
-  headline: string;
+  headline?: string | null;
   description?: string | null;
   path: string;
   image?: string | null;
@@ -100,7 +100,9 @@ export function articleJsonLd(input: {
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
-    headline: input.headline.slice(0, 110),
+    // Guarded for the same reason as slugify: a row with no title must not
+    // take the page down.
+    headline: (input.headline || 'Tanpa judul').slice(0, 110),
     description: input.description ?? undefined,
     image: [absoluteUrl(input.image || SITE.ogImage)],
     datePublished: input.datePublished ?? undefined,
@@ -116,7 +118,7 @@ export function articleJsonLd(input: {
 }
 
 export function scholarlyArticleJsonLd(input: {
-  headline: string;
+  headline?: string | null;
   description?: string | null;
   path: string;
   year?: number | string | null;
@@ -126,7 +128,7 @@ export function scholarlyArticleJsonLd(input: {
   return {
     '@context': 'https://schema.org',
     '@type': 'ScholarlyArticle',
-    headline: input.headline.slice(0, 110),
+    headline: (input.headline || 'Tanpa judul').slice(0, 110),
     description: input.description ?? undefined,
     inLanguage: 'id-ID',
     datePublished: input.year ? String(input.year) : undefined,

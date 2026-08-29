@@ -38,7 +38,7 @@ export async function generateMetadata({
     // excerpt still gets a real description instead of none at all.
     description:
       article.excerpt?.trim() ||
-      `${article.title} — berita ${article.category ?? 'kegiatan'} Program Studi Teknik Lingkungan Universitas Tanjungpura.`,
+      `${article.title ?? 'Berita'} — berita ${article.category ?? 'kegiatan'} Program Studi Teknik Lingkungan Universitas Tanjungpura.`,
     // Always the slug URL, even when the visitor arrived on the old id one,
     // so Google is told which single address is the real page.
     path: `/berita/${found.slug}`,
