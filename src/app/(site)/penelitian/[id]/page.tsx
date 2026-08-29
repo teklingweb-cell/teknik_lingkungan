@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Penelitian } from '@/lib/types';
 import { FileTextIcon } from '@/components/icons';
+import { pageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import { scholarlyArticleJsonLd, breadcrumbJsonLd } from '@/lib/jsonld';
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -34,11 +37,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const item = await getPenelitian(id);
-  if (!item) return { title: 'Penelitian tidak ditemukan' };
-  return {
+
+  // Answer a real 404 for an unknown id rather than a 200 page that merely
+  // says "not found" — the same reason as in berita/[id].
+  if (!item) notFound();
+
+  return pageMetadata({
     title: item.title,
-    description: item.abstract ?? `Penelitian oleh ${item.author}, ${item.year}.`,
-  };
+    description:
+      item.abstract?.trim() ||
+      `Penelitian ${item.category} oleh ${item.author} (${item.year}) — Program Studi Teknik Lingkungan Universitas Tanjungpura.`,
+    path: `/penelitian/${item.id}`,
+    // Penelitian rows carry no cover image, so these share the site card.
+    type: 'article',
+    authors: [item.author],
+    section: item.category,
+  });
 }
 
 /** 'Aktif' | 'Selesai' | 'Sedang berjalan' -> the CSS modifier class. */
@@ -101,6 +115,22 @@ export default async function PenelitianDetailPage({
 
   return (
     <>
+      <JsonLd
+        data={[
+          scholarlyArticleJsonLd({
+            headline: item.title,
+            description: item.abstract,
+            path: `/penelitian/${item.id}`,
+            year: item.year,
+            author: item.author,
+            keywords,
+          }),
+          breadcrumbJsonLd([
+            { name: 'Penelitian', path: '/penelitian' },
+            { name: item.title, path: `/penelitian/${item.id}` },
+          ]),
+        ]}
+      />
       <div className="detail-hero">
         <div className="container" style={{ position: 'relative' }}>
           <Link href="/penelitian" className="detail-back">

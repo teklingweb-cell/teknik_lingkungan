@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Staff } from '@/lib/types';
 import PageHero from '@/components/PageHero';
@@ -6,11 +7,12 @@ import StafDirectory from '@/components/StafDirectory';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Staf, Dosen & Alumni',
   description:
-    'Mengenal individu-individu luar biasa yang membentuk komunitas akademik institusi kami.',
-};
+    'Direktori dosen, tenaga kependidikan, dan alumni Program Studi Teknik Lingkungan Untan beserta bidang keahlian masing-masing.',
+  path: '/staf',
+});
 
 export default async function StafPage() {
   const { data } = await supabasePublic

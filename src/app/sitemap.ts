@@ -1,51 +1,83 @@
 import type { MetadataRoute } from 'next';
 import { supabasePublic } from '@/lib/supabase/public';
-
-const SITE_URL = 'https://tekniklingkungan.com';
+import { SITE, absoluteUrl } from '@/lib/seo';
 
 export const revalidate = 3600;
 
-const STATIC_ROUTES: { path: string; priority: number }[] = [
-  { path: '/', priority: 1.0 },
-  { path: '/profile', priority: 0.8 },
-  { path: '/sejarah', priority: 0.6 },
-  { path: '/visi-misi', priority: 0.6 },
-  { path: '/struktur', priority: 0.6 },
-  { path: '/fasilitas', priority: 0.6 },
-  { path: '/penelitian', priority: 0.8 },
-  { path: '/pencapaian', priority: 0.7 },
-  { path: '/staf', priority: 0.7 },
-  { path: '/mitra', priority: 0.7 },
-  { path: '/berita', priority: 0.8 },
-  { path: '/kontak', priority: 0.6 },
+type StaticRoute = {
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
+};
+
+/**
+ * changeFrequency is a hint, not a promise, so it is set from how often each
+ * page's content genuinely moves: the berita index gains rows weekly, while
+ * sejarah and visi-misi are effectively fixed.
+ */
+const STATIC_ROUTES: StaticRoute[] = [
+  { path: '/', priority: 1.0, changeFrequency: 'weekly' },
+  { path: '/profile', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/berita', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/penelitian', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/staf', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/pencapaian', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/fasilitas', priority: 0.7, changeFrequency: 'yearly' },
+  { path: '/struktur', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/mitra', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/visi-misi', priority: 0.6, changeFrequency: 'yearly' },
+  { path: '/sejarah', priority: 0.6, changeFrequency: 'yearly' },
+  { path: '/kontak', priority: 0.6, changeFrequency: 'yearly' },
 ];
 
 /**
- * Generated rather than hand-maintained, so individual berita and penelitian
- * pages are listed too — the old static sitemap.xml only covered the twelve
- * top-level pages, leaving every article invisible to crawlers.
+ * Generated rather than hand-maintained, so every berita and penelitian page is
+ * listed — the old static sitemap.xml only covered the twelve top-level pages,
+ * leaving every article invisible to crawlers.
+ *
+ * The limits are deliberate: a sitemap may hold 50,000 URLs, so 1,000 rows each
+ * leaves plenty of headroom while keeping one Supabase round trip per table.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
   const [news, penelitian] = await Promise.all([
-    supabasePublic.from('news').select('id, date').limit(500),
-    supabasePublic.from('penelitian').select('id').limit(500),
+    supabasePublic
+      .from('news')
+      .select('id, date, created_at')
+      .order('date', { ascending: false })
+      .limit(1000),
+    supabasePublic
+      .from('penelitian')
+      .select('id, created_at')
+      .order('id', { ascending: false })
+      .limit(1000),
   ]);
 
   const entries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
-    url: `${SITE_URL}${r.path}`,
+    url: absoluteUrl(r.path),
+    lastModified: now,
+    changeFrequency: r.changeFrequency,
     priority: r.priority,
   }));
 
   for (const row of news.data ?? []) {
+    const stamp = row.date ?? row.created_at;
     entries.push({
-      url: `${SITE_URL}/berita/${row.id}`,
-      lastModified: row.date ? new Date(row.date) : undefined,
-      priority: 0.6,
+      url: `${SITE.url}/berita/${row.id}`,
+      lastModified: stamp ? new Date(stamp) : now,
+      changeFrequency: 'yearly',
+      priority: 0.7,
     });
   }
 
   for (const row of penelitian.data ?? []) {
-    entries.push({ url: `${SITE_URL}/penelitian/${row.id}`, priority: 0.6 });
+    entries.push({
+      url: `${SITE.url}/penelitian/${row.id}`,
+      lastModified: row.created_at ? new Date(row.created_at) : now,
+      changeFrequency: 'yearly',
+      priority: 0.7,
+    });
   }
 
   return entries;

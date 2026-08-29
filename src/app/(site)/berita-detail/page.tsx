@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 
 /**
  * Compatibility shim for the old query-string URL (berita-detail.html?id=12).
@@ -11,5 +11,7 @@ export default async function BeritaDetailRedirect({
   searchParams: Promise<{ id?: string }>;
 }) {
   const { id } = await searchParams;
-  redirect(id ? `/berita/${id}` : '/berita');
+  // 308, not 307: these URLs are gone for good, so the old ones should
+  // drop out of the index and pass their ranking to the clean route.
+  permanentRedirect(id ? `/berita/${id}` : '/berita');
 }

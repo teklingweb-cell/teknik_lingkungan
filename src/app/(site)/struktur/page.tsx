@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import './struktur.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Staff } from '@/lib/types';
@@ -7,11 +8,12 @@ import OrgChart from '@/components/OrgChart';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Struktur Organisasi',
   description:
-    'Kepemimpinan dan susunan organisasi institusi kami yang berdedikasi pada kemajuan pendidikan.',
-};
+    'Bagan organisasi Program Studi Teknik Lingkungan Untan: ketua jurusan, koordinator program studi, dosen, dan staf administrasi.',
+  path: '/struktur',
+});
 
 const LEGEND = [
   { color: '#1a2e1e', label: 'Ketua Jurusan' },
@@ -21,10 +23,13 @@ const LEGEND = [
 ];
 
 export default async function StrukturPage() {
+  // The chart is the prodi's working structure, so only dosen and staf are
+  // eligible — an alumnus carrying a stale org_level must not show up here.
   const { data } = await supabasePublic
     .from('staff')
     .select('*')
     .not('org_level', 'is', null)
+    .in('type', ['dosen', 'staf'])
     .order('org_level')
     .order('name')
     .limit(100);

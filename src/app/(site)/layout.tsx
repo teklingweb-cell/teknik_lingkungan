@@ -3,43 +3,76 @@ import '../globals.css';
 import Navbar from '@/components/Navbar';
 import SiteFooter from '@/components/SiteFooter';
 import ScrollReveal from '@/components/ScrollReveal';
-
-const SITE_URL = 'https://tekniklingkungan.com';
+import JsonLd from '@/components/JsonLd';
+import { SITE } from '@/lib/seo';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/jsonld';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(SITE.url),
   title: {
-    default: 'Program Studi Teknik Lingkungan – Menjaga Bumi, Membangun Masa Depan',
-    template: '%s – Prodi Teknik Lingkungan Untan',
+    default: SITE.defaultTitle,
+    template: SITE.titleTemplate,
   },
-  description:
-    'Program Studi Teknik Lingkungan Universitas Tanjungpura – Menjaga Bumi, Membangun Masa Depan. Informasi akademik, penelitian, fasilitas, dan komunitas.',
+  description: SITE.description,
+  applicationName: SITE.name,
+  // The abbreviations and full names people type. Not a ranking factor on its
+  // own, but it keeps the intended vocabulary in one reviewable place.
+  keywords: [
+    'teknik lingkungan',
+    'tekling',
+    'tekling untan',
+    'teknik lingkungan untan',
+    'teknik lingkungan universitas tanjungpura',
+    'prodi teknik lingkungan pontianak',
+    'jurusan teknik lingkungan kalimantan barat',
+    'fakultas teknik untan',
+  ],
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  alternates: { canonical: SITE.url },
   icons: {
     icon: '/logo-untan.png',
     apple: '/logo-untan.png',
   },
   openGraph: {
     type: 'website',
-    url: SITE_URL,
-    title: 'Program Studi Teknik Lingkungan – Universitas Tanjungpura',
-    description:
-      'Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan – unggul dalam riset dan pengabdian lingkungan hidup.',
+    url: SITE.url,
+    siteName: SITE.name,
+    locale: SITE.locale,
+    title: SITE.defaultTitle,
+    description: SITE.description,
     images: [
       {
-        url: `${SITE_URL}/og-image.png`,
+        url: SITE.ogImage,
         width: 1200,
         height: 630,
-        alt: 'Lambang Universitas Tanjungpura — Program Studi Teknik Lingkungan',
+        alt: SITE.ogImageAlt,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Program Studi Teknik Lingkungan – Universitas Tanjungpura',
-    description:
-      'Menjaga Bumi, Membangun Masa Depan. Prodi Teknik Lingkungan Untan – unggul dalam riset dan pengabdian lingkungan hidup.',
-    images: [`${SITE_URL}/og-image.png`],
+    title: SITE.defaultTitle,
+    description: SITE.description,
+    images: [SITE.ogImage],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      // Lets Google use full-size thumbnails and untruncated snippets, which
+      // is what makes a berita result show its cover image.
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  ...(SITE.googleSiteVerification
+    ? { verification: { google: SITE.googleSiteVerification } }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -67,6 +100,9 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         </noscript>
       </head>
       <body>
+        {/* Identifies the prodi as an entity, with its abbreviations, so a
+            search for "tekling untan" can resolve to this site. */}
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <Navbar />
         {children}
         <SiteFooter />

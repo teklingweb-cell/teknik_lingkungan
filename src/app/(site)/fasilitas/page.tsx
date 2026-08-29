@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: "Fasilitas",
-  description: "Laboratorium dan fasilitas penunjang Program Studi Teknik Lingkungan Universitas Tanjungpura.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Fasilitas Laboratorium',
+  description:
+    'Laboratorium dan fasilitas penunjang Prodi Teknik Lingkungan Untan — kualitas air, kualitas udara, dan limbah padat — untuk praktikum dan penelitian mahasiswa.',
+  path: '/fasilitas',
+});
 
 export default function FasilitasPage() {
   return (

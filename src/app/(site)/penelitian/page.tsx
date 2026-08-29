@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Penelitian } from '@/lib/types';
 import PageHero from '@/components/PageHero';
@@ -6,11 +7,12 @@ import PenelitianList from '@/components/PenelitianList';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Penelitian & Pengabdian',
   description:
-    'Mendorong batas pengetahuan melalui riset interdisipliner dan berkontribusi nyata bagi masyarakat luas.',
-};
+    'Daftar penelitian dan pengabdian masyarakat dosen Prodi Teknik Lingkungan Untan di bidang air, udara, persampahan, dan manajemen lingkungan.',
+  path: '/penelitian',
+});
 
 /**
  * Sum the `funding` free-text column ("Rp 450 Juta", "Rp 1,2 Miliar") into a

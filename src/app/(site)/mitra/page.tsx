@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import './mitra.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Mitra } from '@/lib/types';
@@ -7,11 +8,12 @@ import MitraList from '@/components/MitraList';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Mitra Institusi',
   description:
-    'Jaringan mitra strategis yang memperkuat ekosistem riset, pendidikan, dan pengembangan SDM kami.',
-};
+    'Mitra industri, pemerintah, dan institusi yang bekerja sama dengan Program Studi Teknik Lingkungan Universitas Tanjungpura.',
+  path: '/mitra',
+});
 
 const statValue: React.CSSProperties = {
   fontFamily: 'var(--font-display)',

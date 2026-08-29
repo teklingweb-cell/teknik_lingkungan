@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import './kontak.css';
 import PageHero from '@/components/PageHero';
 import ContactForm from '@/components/ContactForm';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Kontak & Informasi',
   description:
-    'Kami siap membantu Anda. Temukan informasi kontak lengkap atau kirimkan pesan langsung kepada kami.',
-};
+    'Alamat, telepon, email, dan formulir kontak Program Studi Teknik Lingkungan Untan di kampus Universitas Tanjungpura, Pontianak.',
+  path: '/kontak',
+});
 
 const MAP_COORDS = '-0.056205852153042184,109.3471306253054';
 

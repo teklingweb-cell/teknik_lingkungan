@@ -213,9 +213,11 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
     await load();
   }
 
-  // Level lama yang sudah dihapus (mis. "dekan") ikut masuk ke daftar ini
-  // supaya orangnya tidak hilang dari admin.
-  const unassigned = staff.filter((s) => !s.org_level || !TIER_KEYS.has(s.org_level));
+  // Alumni tidak boleh masuk bagan, jadi mereka tidak muncul di daftar yang
+  // bisa ditugaskan. Level lama yang sudah dihapus (mis. "dekan") tetap masuk
+  // ke daftar ini supaya orangnya tidak hilang dari admin.
+  const assignable = staff.filter((s) => s.type !== 'alumni');
+  const unassigned = assignable.filter((s) => !s.org_level || !TIER_KEYS.has(s.org_level));
 
   return (
     <AdminShell
@@ -245,6 +247,8 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
           Halaman ini mengelola <strong>tampilan bagan organisasi</strong> di situs publik. Atur
           posisi hierarki setiap anggota, atau klik <strong>Tambah Anggota</strong> untuk
           mendaftarkan orang baru. Anggota tanpa level hierarki tidak akan muncul di bagan.
+          Hanya <strong>dosen</strong> dan <strong>staf</strong> yang bisa ditempatkan — alumni
+          tidak ditampilkan di bagan organisasi.
         </div>
       </div>
 

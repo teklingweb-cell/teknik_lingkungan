@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { News } from '@/lib/types';
 import PageHero from '@/components/PageHero';
@@ -6,11 +7,12 @@ import BeritaList from '@/components/BeritaList';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Berita & Acara',
   description:
-    'Informasi terbaru seputar kegiatan, penelitian, dan pencapaian Program Studi Teknik Lingkungan Universitas Tanjungpura.',
-};
+    'Berita, kegiatan, dan pengumuman terbaru dari Program Studi Teknik Lingkungan Universitas Tanjungpura.',
+  path: '/berita',
+});
 
 export default async function BeritaPage() {
   // The old page fell back to a local data/news.json when Supabase was empty.

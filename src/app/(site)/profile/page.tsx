@@ -1,10 +1,48 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import Link from 'next/link';
+import Carousel from '@/components/Carousel';
 
-export const metadata: Metadata = {
-  title: "Profil Prodi",
-  description: "Profil Program Studi Teknik Lingkungan Universitas Tanjungpura.",
-};
+/** Capaian Pembelajaran Lulusan — one card each, shown as a carousel. */
+const CPL = [
+  {
+    code: 'CPL 1',
+    title: 'Dasar Keilmuan',
+    text: 'Menerapkan pengetahuan matematika, fisika, kimia, biologi, dan teknologi informasi untuk memahami prinsip keteknikan lingkungan.',
+  },
+  {
+    code: 'CPL 2',
+    title: 'Perancangan Rekayasa',
+    text: 'Mendesain komponen, sistem, dan proses rekayasa lingkungan (air minum, air limbah, persampahan, drainase) dengan mempertimbangkan batasan realistis dan kearifan lokal.',
+  },
+  {
+    code: 'CPL 3',
+    title: 'Eksperimen & Analisis Data',
+    text: 'Mendesain dan melaksanakan eksperimen laboratorium maupun lapangan, menganalisis dan mengartikan data.',
+  },
+  {
+    code: 'CPL 4',
+    title: 'Pemecahan Masalah',
+    text: 'Mengidentifikasi, merumuskan, dan menyelesaikan permasalahan lingkungan kompleks — air, udara, dan tanah.',
+  },
+  {
+    code: 'CPL 5',
+    title: 'Metode & Teknologi',
+    text: 'Memilih sumber daya dan menerapkan metode rekayasa berbasis teknologi informasi dan komputasi.',
+  },
+  {
+    code: 'CPL 6–10',
+    title: 'Sikap & Profesionalisme',
+    text: 'Komunikasi efektif, kepemimpinan tim lintas disiplin, etika profesional, tanggung jawab sosial, dan komitmen pembelajaran sepanjang hayat.',
+  },
+];
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Profil Prodi',
+  description:
+    'Profil Program Studi Teknik Lingkungan (Tekling) Universitas Tanjungpura: bidang kajian unggulan, capaian pembelajaran lulusan, dan kehidupan kampus.',
+  path: '/profile',
+});
 
 export default function ProfilePage() {
   return (
@@ -130,16 +168,22 @@ export default function ProfilePage() {
           </div>
 
           {/* CPL STRIP */}
-          <div className="fade-up" style={{ background: 'var(--navy)', borderRadius: '20px', padding: '40px' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', color: 'var(--gold-light)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '16px' }}>Capaian Pembelajaran Lulusan (CPL)</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 1</span>Menerapkan pengetahuan matematika, fisika, kimia, biologi, dan teknologi informasi untuk memahami prinsip keteknikan lingkungan.</div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 2</span>Mendesain komponen, sistem, dan proses rekayasa lingkungan (air minum, air limbah, persampahan, drainase) dengan mempertimbangkan batasan realistis dan kearifan lokal.</div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 3</span>Mendesain dan melaksanakan eksperimen laboratorium maupun lapangan, menganalisis dan mengartikan data.</div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 4</span>Mengidentifikasi, merumuskan, dan menyelesaikan permasalahan lingkungan kompleks — air, udara, dan tanah.</div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 5</span>Memilih sumber daya dan menerapkan metode rekayasa berbasis teknologi informasi dan komputasi.</div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', fontSize: '0.8rem', color: 'rgba(242,245,239,0.65)', fontFamily: 'var(--font-body)', lineHeight: '1.6' }}><span style={{ color: 'var(--gold-light)', fontSize: '0.7rem', flexShrink: '0', marginTop: '2px' }}>CPL 6–10</span>Komunikasi efektif, kepemimpinan tim lintas disiplin, etika profesional, tanggung jawab sosial, dan komitmen pembelajaran sepanjang hayat.</div>
-            </div>
+          <div className="fade-up cpl-strip">
+            <div className="cpl-strip-label">Capaian Pembelajaran Lulusan (CPL)</div>
+            <Carousel
+              label="Capaian Pembelajaran Lulusan"
+              perView={3}
+              interval={5000}
+              className="carousel-on-dark"
+            >
+              {CPL.map((c) => (
+                <article key={c.code} className="cpl-card">
+                  <span className="cpl-card-code">{c.code}</span>
+                  <h3 className="cpl-card-title">{c.title}</h3>
+                  <p className="cpl-card-text">{c.text}</p>
+                </article>
+              ))}
+            </Carousel>
           </div>
         </div>
       </section>

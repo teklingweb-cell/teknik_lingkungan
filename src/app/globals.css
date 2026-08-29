@@ -96,8 +96,18 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   transition: filter 0.3s;
 }
 .navbar.scrolled .nav-logo-img { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.18)); }
+/* The wordmark used to disappear below 640px, leaving a bare crest and a
+   hamburger. It stays from 360px up (so a 375px iPhone keeps it), just
+   smaller. */
 .nav-logo-text { display: none; }
-@media(min-width:640px){ .nav-logo-text { display: block; } }
+@media(min-width:360px){ .nav-logo-text { display: block; } }
+@media(max-width:639px){
+  .nav-logo-name { font-size: 0.82rem; }
+  .nav-logo-sub  { font-size: 0.52rem; letter-spacing: 0.12em; }
+  .nav-logo { gap: 9px; }
+  .nav-inner { padding: 0 1.1rem; height: 64px; }
+  .nav-logo-img { height: 38px; width: 38px; }
+}
 .nav-logo-name {
   font-family: var(--font-display);
   font-weight: 600;
@@ -223,12 +233,20 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
 .hamburger {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
-  padding: 8px;
+  width: 40px; height: 40px;
+  padding: 0;
   cursor: pointer;
-  background: none;
-  border: none;
+  border-radius: 10px;
+  background: rgba(242,245,239,0.1);
+  border: 1px solid rgba(242,245,239,0.18);
+  transition: background 0.25s, border-color 0.25s;
 }
+.hamburger:hover { background: rgba(242,245,239,0.18); }
+.navbar.scrolled .hamburger { background: rgba(26,46,30,0.06); border-color: rgba(26,46,30,0.12); }
+.navbar.scrolled .hamburger:hover { background: rgba(26,46,30,0.12); }
 @media(min-width:1024px){ .hamburger { display: none; } }
 .hamburger span {
   display: block;
@@ -238,9 +256,9 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   transition: all 0.3s;
 }
 .navbar.scrolled .hamburger span { background: var(--navy); }
-.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* mobile drawer */
 .mobile-overlay {
@@ -258,13 +276,57 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   position: absolute;
   top: 0; right: 0;
   height: 100%;
-  width: 280px;
+  width: min(86vw, 320px);
   background: var(--cream);
   box-shadow: -8px 0 40px rgba(26,46,30,0.2);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   overflow-y: auto;
-  padding: 80px 24px 24px;
+  /* Clears the fixed navbar, which sits above the drawer and keeps the close
+     button reachable. */
+  padding: 64px 0 0;
+  display: flex;
+  flex-direction: column;
+}
+@media(min-width:640px){ .mobile-drawer { padding-top: 72px; } }
+.mobile-drawer-head {
+  padding: 18px 20px 6px;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(26,46,30,0.35);
+}
+.mobile-drawer-nav { flex: 1; padding: 4px 18px 16px; }
+.mobile-drawer-foot {
+  padding: 18px;
+  border-top: 1px solid rgba(26,46,30,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.mobile-drawer-cta {
+  display: block;
+  text-align: center;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: var(--cream) !important;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 0 !important;
+}
+.mobile-drawer-cta:hover { background: var(--green, #4e8c5a) !important; }
+.mobile-drawer-mail {
+  text-align: center;
+  font-size: 0.75rem !important;
+  color: rgba(26,46,30,0.55) !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
 }
 .mobile-overlay.open .mobile-drawer { transform: translateX(0); }
 .mobile-drawer a {
@@ -348,9 +410,14 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   border: 1px solid rgba(122,171,110,0.3);
   border-radius: 999px;
   margin-bottom: 32px;
-  font-size: 0.7rem;
+  /* Must stay on a single line: the accreditation line reads as a stamp, and
+     wrapping it turns the pill into a two-line block. The clamp shrinks the
+     type instead of letting the text wrap on a narrow phone. */
+  white-space: nowrap;
+  max-width: 100%;
+  font-size: clamp(0.5rem, 2.35vw, 0.7rem);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--moss);
   font-family: var(--font-body);
   font-weight: 500;
@@ -526,10 +593,9 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   border-radius: 16px;
   border: 1px solid rgba(26,46,30,0.08);
   transition: all 0.3s ease;
-  /* Column layout so every card in a grid row is the same height and the
-     "Selengkapnya" link always sits on the same baseline. */
-  display: flex;
-  flex-direction: column;
+  /* Fill the grid row so neighbouring cards match in height. Direction is
+     deliberately not set here: some cards lay their icon out beside the text
+     (an inline `display:flex` row) and forcing a column would stack them. */
   height: 100%;
 }
 .card:hover {
@@ -541,8 +607,6 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   border: 1px solid rgba(242,245,239,0.1);
   border-radius: 16px;
   transition: background 0.2s;
-  display: flex;
-  flex-direction: column;
   height: 100%;
 }
 .card-dark:hover { background: rgba(242,245,239,0.1); }
@@ -573,8 +637,12 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   color: rgba(45,58,46,0.6);
   line-height: 1.6;
   font-family: var(--font-body);
+  /* Only bites inside a column card (see .card-fill); inert elsewhere. */
   flex: 1;
 }
+/* Column card: equal height in a grid, with the description taking up the
+   slack so every "Selengkapnya" link lands on the same baseline. */
+.card-fill { display: flex; flex-direction: column; }
 .card-link {
   display: flex;
   align-items: center;
@@ -693,19 +761,25 @@ footer { background: var(--navy); color: rgba(242,245,239,0.8); }
 .footer-brand p { font-size: 0.85rem; color: rgba(242,245,239,0.6); line-height: 1.6; font-family: var(--font-body); margin-bottom: 16px; }
 .footer-socials { display: flex; gap: 10px; }
 .footer-social {
-  width: 32px; height: 32px;
-  border-radius: 8px;
+  width: 36px; height: 36px;
+  border-radius: 10px;
   background: rgba(242,245,239,0.1);
+  border: 1px solid rgba(242,245,239,0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
-  font-family: var(--font-body);
-  color: rgba(242,245,239,0.6);
+  color: rgba(242,245,239,0.72);
   text-decoration: none;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
-.footer-social:hover { background: rgba(78,140,90,0.3); }
+.footer-social:hover { background: rgba(78,140,90,0.3); color: var(--cream); transform: translateY(-2px); }
+.footer-social svg { display: block; }
+/* Each mark takes its own brand colour on hover, so the row reads as real
+   platform links rather than four identical grey squares. */
+.footer-social.is-facebook:hover  { background: #1877f2; color: #fff; }
+.footer-social.is-instagram:hover { background: linear-gradient(45deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888); color: #fff; }
+.footer-social.is-youtube:hover   { background: #ff0000; color: #fff; }
+.footer-social.is-tiktok:hover    { background: #010101; color: #fff; }
 .footer-heading {
   font-size: 0.75rem;
   font-weight: 600;
@@ -1690,7 +1764,7 @@ textarea.form-input { resize: none; }
   .hero-subtitle { font-size: 0.9rem; }
   .hero-logo-badge { padding: 8px 14px 8px 8px; gap: 10px; }
   .hero-untan-logo { width: 36px; height: 36px; }
-  .hero-badge { font-size: 0.6rem; letter-spacing: 0.12em; padding: 5px 12px; margin-bottom: 20px; }
+  .hero-badge { letter-spacing: 0.08em; padding: 5px 11px; gap: 6px; margin-bottom: 20px; }
 }
 
 /* Tablet */
@@ -1716,4 +1790,196 @@ textarea.form-input { resize: none; }
 .powered-link:focus-visible {
   color: rgba(242, 245, 239, 0.85);
   border-bottom-color: rgba(242, 245, 239, 0.6);
+}
+
+/* ─── CAROUSEL ─────────────────────────────────────────────────────────────
+   Native scroll + scroll-snap, so touch swiping and momentum come from the
+   browser. `--per-lg` is set inline by <Carousel perView>; the phone and
+   tablet counts are fixed here so the JS never needs breakpoints. */
+.carousel { position: relative; }
+.carousel-track {
+  --gap: 20px;
+  --per: 1;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* proximity, not mandatory: mandatory keeps hold of the element it last
+     snapped to and yanks the track back after a programmatic jump. proximity
+     still tidies up a free swipe without fighting the paging. */
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Vertical room for the cards' hover lift and shadow. Kept off the inline
+     axis so scrollLeft 0 is exactly the first card and the paging maths stay
+     whole. */
+  padding: 4px 0 12px;
+  margin: -4px 0 -12px;
+  overscroll-behavior-x: contain;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+/* Snapping is suspended for the duration of any programmatic scroll, so the
+   container's remembered snap target cannot pull the track back to where the
+   move started. Free-form touch swiping still snaps. */
+.carousel-track.is-scrolling { scroll-snap-type: none; }
+.carousel-item {
+  flex: 0 0 calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+  scroll-snap-align: start;
+  display: flex;
+}
+.carousel-item > * { width: 100%; }
+@media (min-width: 640px)  { .carousel-track { --per: 2; } }
+@media (min-width: 1024px) { .carousel-track { --per: var(--per-lg, 3); } }
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.carousel-arrow {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(26,46,30,0.15);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.carousel-arrow:hover { background: var(--navy); border-color: var(--navy); color: var(--cream); }
+.carousel-dots { display: flex; align-items: center; gap: 8px; }
+.carousel-dot {
+  width: 8px; height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(26,46,30,0.2);
+  cursor: pointer;
+  transition: width 0.25s, background 0.25s;
+}
+.carousel-dot.active { width: 24px; background: var(--green, #4e8c5a); }
+
+/* On a dark section the controls invert. */
+.carousel-on-dark .carousel-arrow {
+  background: rgba(242,245,239,0.08);
+  border-color: rgba(242,245,239,0.2);
+  color: var(--cream);
+}
+.carousel-on-dark .carousel-arrow:hover { background: var(--cream); color: var(--navy); }
+.carousel-on-dark .carousel-dot { background: rgba(242,245,239,0.25); }
+.carousel-on-dark .carousel-dot.active { background: var(--gold-light); }
+
+/* ─── CPL CARDS ────────────────────────────────────────────────────────────
+   Was a two-column grid of bare paragraphs on a navy panel: on a phone the
+   two columns squeezed each line to two or three words. One card each, in a
+   carousel, keeps every point readable at any width. */
+.cpl-strip {
+  background: var(--navy);
+  border-radius: 20px;
+  padding: 40px;
+}
+.cpl-strip-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 24px;
+}
+.cpl-card {
+  background: rgba(242,245,239,0.05);
+  border: 1px solid rgba(242,245,239,0.1);
+  border-radius: 14px;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: background 0.25s, border-color 0.25s;
+}
+.cpl-card:hover { background: rgba(242,245,239,0.09); border-color: rgba(122,171,110,0.35); }
+.cpl-card-code {
+  align-self: flex-start;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  background: rgba(212,175,105,0.12);
+  border-radius: 999px;
+  padding: 4px 11px;
+  margin-bottom: 14px;
+}
+.cpl-card-title {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+.cpl-card-text {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: rgba(242,245,239,0.65);
+  flex: 1;
+}
+@media (max-width: 640px) {
+  .cpl-strip { padding: 28px 20px; border-radius: 16px; }
+  .cpl-card { padding: 20px 18px; }
+}
+
+/* ─── BERITA LISTING ───────────────────────────────────────────────────────
+   Desktop: the featured card earns its second column earlier, and the cards
+   below get a taller excerpt so a 3-up row doesn't read as three stubs.
+   Mobile: the six category chips wrapped onto three rows and pushed the first
+   article below the fold — they now scroll sideways in one row instead. */
+.berita-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.berita-grid { align-items: stretch; }
+.news-card { display: flex; }
+.news-card > article { width: 100%; }
+
+@media (min-width: 900px) {
+  .featured-card { grid-template-columns: 1fr 1fr; }
+  .featured-thumb { height: auto; min-height: 300px; }
+}
+@media (min-width: 1024px) {
+  .news-excerpt { -webkit-line-clamp: 3; }
+  .news-thumb { height: 200px; }
+}
+
+@media (max-width: 767px) {
+  .berita-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    /* Bleed out to the section's own 16px gutter so the strip runs edge to
+       edge and reads as scrollable. */
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 2px 16px 6px;
+    margin-bottom: 28px;
+  }
+  .berita-filters::-webkit-scrollbar { display: none; }
+  .berita-filters .filter-btn { flex: 0 0 auto; scroll-snap-align: start; }
+
+  .featured-card { margin-bottom: 32px; }
+  .featured-thumb { height: 190px; }
+  .featured-title { font-size: 1.25rem; -webkit-line-clamp: 3; }
+  .featured-excerpt { font-size: 0.83rem; }
+  .news-thumb { height: 168px; }
+  .news-title { font-size: 1rem; }
+  .news-excerpt { -webkit-line-clamp: 3; }
 }

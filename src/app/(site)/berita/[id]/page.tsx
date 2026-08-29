@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { News } from '@/lib/types';
 import { toGDriveImg, formatDateShort } from '@/lib/utils';
+import { pageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import { articleJsonLd, breadcrumbJsonLd } from '@/lib/jsonld';
 
 export const revalidate = 60;
 
@@ -36,20 +39,28 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const article = await getArticle(id);
-  if (!article) return { title: 'Berita tidak ditemukan' };
 
-  const cover = toGDriveImg(article.image_url, 1200);
+  // An unknown id must answer 404, not a 200 page that says "not found" —
+  // Google records the latter as a soft 404 and keeps the URL in the index.
+  if (!article) notFound();
 
-  return {
+  return pageMetadata({
     title: article.title,
-    description: article.excerpt ?? undefined,
-    openGraph: {
-      title: article.title,
-      description: article.excerpt ?? undefined,
-      type: 'article',
-      images: cover ? [cover] : undefined,
-    },
-  };
+    // Falls back to a sentence built from the row, so a berita without an
+    // excerpt still gets a real description instead of none at all.
+    description:
+      article.excerpt?.trim() ||
+      `${article.title} — berita ${article.category ?? 'kegiatan'} Program Studi Teknik Lingkungan Universitas Tanjungpura.`,
+    path: `/berita/${article.id}`,
+    // No cover? Fall back to the site card inside pageMetadata, so the link
+    // still previews as the prodi rather than as a bare URL.
+    image: toGDriveImg(article.image_url, 1200),
+    imageAlt: article.title,
+    type: 'article',
+    publishedTime: article.date ?? undefined,
+    authors: article.author ? [article.author] : undefined,
+    section: article.category ?? undefined,
+  });
 }
 
 /** "Budi Santoso" -> "BS", used for the author avatar. */
@@ -71,6 +82,23 @@ export default async function BeritaDetailPage({ params }: { params: Promise<{ i
 
   return (
     <>
+      <JsonLd
+        data={[
+          articleJsonLd({
+            headline: article.title,
+            description: article.excerpt,
+            path: `/berita/${article.id}`,
+            image: cover,
+            datePublished: article.date,
+            author: article.author,
+            section: article.category,
+          }),
+          breadcrumbJsonLd([
+            { name: 'Berita', path: '/berita' },
+            { name: article.title, path: `/berita/${article.id}` },
+          ]),
+        ]}
+      />
       <section className="article-hero">
         <div className="article-hero-glow" />
         <div className="article-hero-inner">

@@ -147,11 +147,13 @@ export default function BeritaList({ news }: { news: News[] }) {
 
   return (
     <>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }} className="fade-up">
+      <div className="berita-filters fade-up" role="group" aria-label="Saring berita per kategori">
         {FILTERS.map((f) => (
           <button
             key={f}
+            type="button"
             className={`filter-btn${filter === f ? ' active' : ''}`}
+            aria-pressed={filter === f}
             onClick={() => setFilter(f)}
           >
             {f === 'all' ? 'Semua' : f}
@@ -161,16 +163,15 @@ export default function BeritaList({ news }: { news: News[] }) {
 
       <div>{showFeatured && featured && <FeaturedCard item={featured} />}</div>
 
-      <div className="grid-3">
+      <div className="grid-3 berita-grid">
         {filtered.map((item) => (
-          <div key={item.id} className="research-card-wrap" style={{ display: 'flex' }}>
-            <NewsCard
-              item={item}
-              className="fade-up"
-              style={{ width: '100%' }}
-              fallbackLabel={item.id}
-            />
-          </div>
+          <NewsCard
+            key={item.id}
+            item={item}
+            className="fade-up"
+            style={{ width: '100%' }}
+            fallbackLabel={item.id}
+          />
         ))}
       </div>
 

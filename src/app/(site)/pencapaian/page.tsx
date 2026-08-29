@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import './pencapaian.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Pencapaian } from '@/lib/types';
@@ -7,11 +8,12 @@ import PencapaianList from '@/components/PencapaianList';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Pencapaian Institusi',
   description:
-    'Rekam jejak pencapaian dan penghargaan yang mencerminkan komitmen kami terhadap keunggulan.',
-};
+    'Rekam jejak prestasi, penghargaan, dan akreditasi Program Studi Teknik Lingkungan Universitas Tanjungpura.',
+  path: '/pencapaian',
+});
 
 const statValue: React.CSSProperties = {
   fontFamily: 'var(--font-display)',

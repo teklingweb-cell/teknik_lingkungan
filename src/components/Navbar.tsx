@@ -90,24 +90,48 @@ export default function Navbar() {
         }}
       >
         <div className="mobile-drawer">
-          {NAV_ITEMS.map((item) =>
-            item.children ? (
-              <div key={item.label}>
-                <div className="mobile-group-title">{item.label}</div>
-                <div className="mobile-sub">
-                  {item.children.map((child) => (
-                    <Link key={child.href} href={child.href}>
-                      {child.label}
-                    </Link>
-                  ))}
+          {/* The navbar stays fixed above the drawer and already carries the
+              crest and wordmark, so this is a plain section label rather than
+              a second identity block. */}
+          <div className="mobile-drawer-head">Menu</div>
+
+          <nav className="mobile-drawer-nav">
+            {NAV_ITEMS.map((item) =>
+              item.children ? (
+                <div key={item.label}>
+                  <div className="mobile-group-title">{item.label}</div>
+                  <div className="mobile-sub">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className={pathname === child.href ? 'active' : undefined}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <Link key={item.href} href={item.href}>
-                {item.label}
-              </Link>
-            )
-          )}
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={pathname === item.href ? 'active' : undefined}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
+          </nav>
+
+          <div className="mobile-drawer-foot">
+            <Link href="/kontak" className="mobile-drawer-cta">
+              Hubungi Kami
+            </Link>
+            <a href="mailto:tl.ft@untan.ac.id" className="mobile-drawer-mail">
+              tl.ft@untan.ac.id
+            </a>
+          </div>
         </div>
       </div>
     </>

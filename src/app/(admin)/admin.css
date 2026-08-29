@@ -76,11 +76,14 @@ body { font-family: 'Inter', Arial, sans-serif; background: var(--cream); color:
 .card-count { font-size: 0.75rem; color: var(--muted); background: var(--cream); padding: 2px 10px; border-radius: 999px; }
 .card-header { flex-wrap: wrap; gap: 10px; }
 .search-box { position: relative; display: flex; align-items: center; margin-left: auto; }
-.search-box > svg { position: absolute; left: 10px; color: var(--muted); pointer-events: none; }
-.search-input { width: 250px; padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', Arial, sans-serif; font-size: 0.78rem; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; }
-.search-input:focus { border-color: var(--green); }
-.search-input::placeholder { color: var(--muted); }
-.search-input::-webkit-search-cancel-button { cursor: pointer; }
+.search-box > svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+/* Scoped to .search-box so it outranks the `input[type=search]` baseline
+   above — otherwise that rule's symmetric padding wins on specificity and the
+   magnifier icon sits on top of the placeholder text. */
+.search-box .search-input { width: 250px; height: 36px; padding: 0 12px 0 34px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', Arial, sans-serif; font-size: 0.78rem; line-height: 36px; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; }
+.search-box .search-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(78,140,90,0.12); }
+.search-box .search-input::placeholder { color: var(--muted); }
+.search-box .search-input::-webkit-search-cancel-button { cursor: pointer; }
 table { width: 100%; border-collapse: collapse; }
 th { padding: 10px 16px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--border); text-align: left; background: #fafafa; white-space: nowrap; }
 td { padding: 13px 16px; font-size: 0.83rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -182,7 +185,7 @@ textarea { resize: vertical; min-height: 90px; }
 .filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
 .filter-chip{padding:5px 14px;border-radius:999px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all 0.2s;}
 .filter-chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-.search-box>svg{position:absolute;left:10px;color:var(--muted);pointer-events:none;}
+.search-box>svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
 /* BUG-006 FIX: prevent table border from bleeding outside rounded card */
     #tableWrap > div { overflow: hidden; }
 .avatar-circle{width:36px;height:36px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:#fff;flex-shrink:0;}
@@ -294,5 +297,5 @@ textarea { resize: vertical; min-height: 90px; }
   .field-row { grid-template-columns: 1fr; }
   .form-row{grid-template-columns:1fr;}
   .search-box{width:100%;margin-left:0;}
-  .search-input{width:100%;}
+  .search-box .search-input{width:100%;}
 }

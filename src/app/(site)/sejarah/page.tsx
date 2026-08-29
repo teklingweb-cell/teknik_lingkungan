@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: "Sejarah Prodi",
-  description: "Perjalanan Program Studi Teknik Lingkungan — dari gagasan awal hingga menjadi prodi unggulan berwawasan keberlanjutan.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Sejarah Prodi',
+  description:
+    'Perjalanan Program Studi Teknik Lingkungan Untan — dari gagasan awal hingga menjadi prodi berakreditasi Unggul yang berwawasan keberlanjutan.',
+  path: '/sejarah',
+});
 
 export default function SejarahPage() {
   return (

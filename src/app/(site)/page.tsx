@@ -3,6 +3,7 @@ import './home.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { News } from '@/lib/types';
 import NewsCard from '@/components/NewsCard';
+import Carousel from '@/components/Carousel';
 
 // Next static-analyses this export, so it has to be a literal.
 export const revalidate = 60;
@@ -222,12 +223,13 @@ export default async function HomePage() {
             <h2 className="section-title">Fokus Kajian Kami</h2>
             <div className="gold-divider" />
           </div>
-          <div className="grid-4" style={{ marginTop: 40 }}>
-            {FOKUS.map((f) => (
+          <div style={{ marginTop: 40 }}>
+            <Carousel label="Bidang unggulan Prodi Teknik Lingkungan" perView={3} interval={4500}>
+              {FOKUS.map((f) => (
               <Link
                 key={f.title}
                 href={f.href}
-                className="card"
+                className="card card-fill"
                 style={{ padding: 24, textDecoration: 'none' }}
               >
                 <div className="card-icon">
@@ -249,7 +251,8 @@ export default async function HomePage() {
                 <div className="card-desc">{f.desc}</div>
                 <div className="card-link">Selengkapnya →</div>
               </Link>
-            ))}
+              ))}
+            </Carousel>
           </div>
         </div>
       </section>

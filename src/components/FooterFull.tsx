@@ -1,6 +1,7 @@
 import './footer.css';
 import Link from 'next/link';
 import FooterYear from './FooterYear';
+import { FacebookIcon, InstagramIcon, YoutubeIcon, TiktokIcon } from './BrandIcons';
 
 const NAVIGASI = [
   { href: '/', label: 'Beranda' },
@@ -15,6 +16,17 @@ const LAYANAN = [
   { href: '/mitra', label: 'Mitra Industri' },
   { href: '/pencapaian', label: 'Pencapaian' },
   { href: '/berita', label: 'Berita & Kegiatan' },
+];
+
+/**
+ * Placeholder hrefs: swap each `#` for the prodi's real profile URL. The mark,
+ * hover colour and accessible name are already wired per platform.
+ */
+const SOCIALS = [
+  { label: 'Facebook', brand: 'is-facebook', href: '#', icon: <FacebookIcon /> },
+  { label: 'Instagram', brand: 'is-instagram', href: '#', icon: <InstagramIcon /> },
+  { label: 'YouTube', brand: 'is-youtube', href: '#', icon: <YoutubeIcon /> },
+  { label: 'TikTok', brand: 'is-tiktok', href: '#', icon: <TiktokIcon /> },
 ];
 
 export default function FooterFull() {
@@ -79,10 +91,19 @@ export default function FooterFull() {
               berdedikasi, dan berdampak nyata.
             </p>
             <div className="footer-socials" style={{ marginTop: 16 }}>
-              <a href="#" className="footer-social">F</a>
-              <a href="#" className="footer-social">I</a>
-              <a href="#" className="footer-social">Y</a>
-              <a href="#" className="footer-social">T</a>
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className={`footer-social ${s.brand}`}
+                  aria-label={s.label}
+                  title={s.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {s.icon}
+                </a>
+              ))}
             </div>
           </div>
 

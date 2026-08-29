@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/seo';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: "Visi & Misi",
-  description: "Visi, misi, dan tujuan Program Studi Teknik Lingkungan Universitas Tanjungpura.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Visi & Misi',
+  description:
+    'Visi, misi, dan tujuan Program Studi Teknik Lingkungan Universitas Tanjungpura, beserta visi-misi Untan dan Fakultas Teknik yang menaunginya.',
+  path: '/visi-misi',
+});
 
 export default function VisiMisiPage() {
   return (
