@@ -7,6 +7,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
+import { uniqueSlug } from './uniqueSlug';
 
 export type Values = Record<string, string>;
 
@@ -67,6 +68,12 @@ export type EntityFormProps = {
    * Used for the staff NIM/NIP uniqueness check.
    */
   beforeSave?: (values: Values, editId: number | null) => Promise<string | null>;
+  /**
+   * Field whose value becomes the row's URL slug. When set, a unique slug is
+   * generated and merged into the payload on every save, so the public route
+   * can address the row by name instead of by id.
+   */
+  slugFrom?: { field: string; table: 'news' | 'penelitian'; fallback?: string };
 };
 
 function Field({
@@ -175,6 +182,7 @@ export default function EntityForm({
   toPayload,
   validate,
   beforeSave,
+  slugFrom,
 }: EntityFormProps) {
   const router = useRouter();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
@@ -236,6 +244,16 @@ export default function EntityForm({
     }
 
     const payload = toPayload(values);
+
+    if (slugFrom) {
+      payload.slug = await uniqueSlug(
+        supabase,
+        slugFrom.table,
+        values[slugFrom.field] ?? '',
+        editId,
+        slugFrom.fallback
+      );
+    }
     const { error } =
       editId !== null
         ? await supabase.from(table).update(payload).eq('id', editId)

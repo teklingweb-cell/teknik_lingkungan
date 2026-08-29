@@ -11,6 +11,8 @@ export type News = {
   show_on_home: boolean | null;
   image_url: string | null;
   link_url: string | null;
+  /** URL segment. Optional: rows created before slugs derive one from title. */
+  slug?: string | null;
   created_at: string | null;
 };
 
@@ -45,6 +47,8 @@ export type Penelitian = {
   abstract: string | null;
   /** Comma-separated. Not in the documented schema; read defensively. */
   keywords?: string | null;
+  /** URL segment. Optional: rows created before slugs derive one from title. */
+  slug?: string | null;
   created_at: string | null;
 };
 

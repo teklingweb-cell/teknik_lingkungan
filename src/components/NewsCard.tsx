@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { News } from '@/lib/types';
-import { toGDriveImg, formatDate } from '@/lib/utils';
+import { toGDriveImg, formatDate, slugOf } from '@/lib/utils';
 
 /**
  * The news card used on the home page and the berita listing.
@@ -21,7 +21,7 @@ export default function NewsCard({
   const imgSrc = toGDriveImg(item.image_url);
 
   return (
-    <Link href={`/berita/${item.id}`} className={`news-card ${className}`.trim()} style={style}>
+    <Link href={`/berita/${slugOf(item)}`} className={`news-card ${className}`.trim()} style={style}>
       <article>
         <div className="news-thumb">
           {imgSrc ? (

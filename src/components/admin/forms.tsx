@@ -180,6 +180,7 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
   return (
     <EntityForm
       table="penelitian"
+      slugFrom={{ field: 'title', table: 'penelitian', fallback: 'penelitian' }}
       titles={{ create: 'Tambah Penelitian', edit: 'Edit Penelitian' }}
       cardTitles={{ create: 'Penelitian Baru', edit: 'Edit Penelitian' }}
       backHref="/admin/penelitian"

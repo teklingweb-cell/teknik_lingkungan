@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { supabasePublic } from '@/lib/supabase/public';
 import { SITE, absoluteUrl } from '@/lib/seo';
+import { slugOf } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -44,12 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [news, penelitian] = await Promise.all([
     supabasePublic
       .from('news')
-      .select('id, date, created_at')
+      .select('id, title, slug, date, created_at')
       .order('date', { ascending: false })
       .limit(1000),
     supabasePublic
       .from('penelitian')
-      .select('id, created_at')
+      .select('id, title, slug, created_at')
       .order('id', { ascending: false })
       .limit(1000),
   ]);
@@ -64,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const row of news.data ?? []) {
     const stamp = row.date ?? row.created_at;
     entries.push({
-      url: `${SITE.url}/berita/${row.id}`,
+      url: `${SITE.url}/berita/${slugOf(row)}`,
       lastModified: stamp ? new Date(stamp) : now,
       changeFrequency: 'yearly',
       priority: 0.7,
@@ -73,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const row of penelitian.data ?? []) {
     entries.push({
-      url: `${SITE.url}/penelitian/${row.id}`,
+      url: `${SITE.url}/penelitian/${slugOf(row)}`,
       lastModified: row.created_at ? new Date(row.created_at) : now,
       changeFrequency: 'yearly',
       priority: 0.7,

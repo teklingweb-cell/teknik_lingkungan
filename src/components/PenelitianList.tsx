@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { Penelitian } from '@/lib/types';
+import { slugOf } from '@/lib/utils';
 
 const CATEGORIES = [
   'all',
@@ -33,7 +34,7 @@ function ResearchCard({ item }: { item: Penelitian }) {
 
   return (
     <div className="research-card-wrap">
-      <Link href={`/penelitian/${item.id}`} className="research-card fade-up">
+      <Link href={`/penelitian/${slugOf(item)}`} className="research-card fade-up">
         <div className="research-card-accent" style={{ background: color }} />
         <div className="research-card-body">
           <div className="research-card-meta">

@@ -1,4 +1,6 @@
 import { permanentRedirect } from 'next/navigation';
+import type { News } from '@/lib/types';
+import { resolveNews } from '@/lib/content';
 
 /**
  * Compatibility shim for the old query-string URL (berita-detail.html?id=12).
@@ -11,7 +13,11 @@ export default async function BeritaDetailRedirect({
   searchParams: Promise<{ id?: string }>;
 }) {
   const { id } = await searchParams;
-  // 308, not 307: these URLs are gone for good, so the old ones should
-  // drop out of the index and pass their ranking to the clean route.
-  permanentRedirect(id ? `/berita/${id}` : '/berita');
+  if (!id) permanentRedirect('/berita');
+
+  // Straight to the slug rather than to /berita/<id>, which would only
+  // redirect a second time. 308, not 307: these URLs are gone for good, so
+  // they should drop out of the index and pass their ranking across.
+  const found = await resolveNews<News>(id);
+  permanentRedirect(found ? `/berita/${found.slug}` : '/berita');
 }

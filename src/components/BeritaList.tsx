@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import type { News } from '@/lib/types';
-import { toGDriveImg, formatDateShort } from '@/lib/utils';
+import { toGDriveImg, formatDateShort, slugOf } from '@/lib/utils';
 import NewsCard from './NewsCard';
 
 const FILTERS = ['all', 'Penelitian', 'Pencapaian', 'Acara', 'Pengumuman', 'Beasiswa'] as const;
@@ -18,7 +18,7 @@ function FeaturedCard({ item }: { item: News }) {
   const imgSrc = toGDriveImg(item.image_url);
 
   return (
-    <Link href={`/berita/${item.id}`} className="featured-card fade-up" style={{ textDecoration: 'none' }}>
+    <Link href={`/berita/${slugOf(item)}`} className="featured-card fade-up" style={{ textDecoration: 'none' }}>
       <div className="featured-thumb" style={{ position: 'relative', overflow: 'hidden' }}>
         {imgSrc ? (
           /* eslint-disable-next-line @next/next/no-img-element */

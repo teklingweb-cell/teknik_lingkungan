@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { News } from '@/lib/types';
 import { todayISO } from '@/lib/utils';
+import { uniqueSlug } from './uniqueSlug';
 import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
@@ -105,8 +106,16 @@ export default function NewsForm({ editId }: { editId: number | null }) {
     setErrors([]);
     setSaving(true);
 
+    // The public URL is /berita/<slug>. It is stored rather than derived at
+    // read time so that renaming an article later does not silently break the
+    // link people already shared, and so two articles cannot collide on one
+    // address — a taken slug gets -2, -3 and so on.
+    const title = values.title.trim();
+    const slug = await uniqueSlug(supabase, 'news', title, editId, 'berita');
+
     const payload = {
-      title: values.title.trim(),
+      slug,
+      title,
       excerpt: values.excerpt.trim(),
       category: values.category,
       date: values.date,
