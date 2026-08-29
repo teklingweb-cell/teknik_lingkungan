@@ -20,7 +20,43 @@ import { slugOf } from './utils';
  * scan of every row.
  */
 
-type IndexRow = { id: number; title: string | null; slug?: string | null };
+export type IndexRow = { id: number; title: string | null; slug?: string | null };
+
+/**
+ * The id/title/slug of every row, for matching slugs derived from titles.
+ *
+ * Naming `slug` in the select is the cheap way to do this, but it makes the
+ * query fail outright if the column is not there — and `news.slug` and
+ * `penelitian.slug` are optional add-ons, not part of the base schema. When
+ * that happened in production the index came back empty and *every* detail
+ * page answered 404 while the listings, which select `*`, carried on working.
+ * So: try the narrow select, and fall back to `*`, which returns whatever
+ * columns the table actually has.
+ */
+export async function loadIndex(table: 'news' | 'penelitian'): Promise<IndexRow[]> {
+  const narrow = await supabasePublic
+    .from(table)
+    .select('id, title, slug')
+    .order('id', { ascending: true })
+    .limit(1000);
+
+  if (!narrow.error) return (narrow.data ?? []) as IndexRow[];
+
+  // Logged, not swallowed: this fallback exists for a schema that lacks the
+  // column, and if it ever fires for another reason we want to know which.
+  console.warn(`[content] narrow select on ${table} failed: ${narrow.error.message}`);
+
+  const wide = await supabasePublic
+    .from(table)
+    .select('*')
+    .order('id', { ascending: true })
+    .limit(1000);
+
+  if (wide.error) {
+    console.warn(`[content] wide select on ${table} failed too: ${wide.error.message}`);
+  }
+  return (wide.data ?? []) as IndexRow[];
+}
 
 export type Resolved<T> = {
   row: T;
@@ -36,13 +72,7 @@ async function ownsSlug(
   slug: string,
   id: number
 ): Promise<boolean> {
-  const { data } = await supabasePublic
-    .from(table)
-    .select('id, title, slug')
-    .order('id', { ascending: true })
-    .limit(1000);
-
-  for (const r of (data ?? []) as IndexRow[]) {
+  for (const r of await loadIndex(table)) {
     if (slugOf(r) === slug) return r.id === id;
   }
   return false;
@@ -52,7 +82,9 @@ async function resolve<T extends { id: number }>(
   table: 'news' | 'penelitian',
   segment: string
 ): Promise<Resolved<T> | null> {
-  // 1 — a stored slug. Unique, because the admin assigns it that way.
+  // 1 — a stored slug. Unique, because the admin assigns it that way. If the
+  // column does not exist the query errors, `data` is null, and the lookup
+  // falls through to the derived-slug path below — which is the right answer.
   const stored = await supabasePublic.from(table).select('*').eq('slug', segment).maybeSingle();
   if (stored.data) {
     return { row: stored.data as T, slug: segment, shouldRedirect: false };
@@ -90,14 +122,10 @@ async function resolve<T extends { id: number }>(
 
   // 3 — a slug derived from a title. Needs the table, since it exists only as
   // a computed value.
-  const { data } = await supabasePublic
-    .from(table)
-    .select('id, title, slug')
-    .order('id', { ascending: true })
-    .limit(1000);
+  const index = await loadIndex(table);
 
   let match: IndexRow | null = null;
-  for (const r of (data ?? []) as IndexRow[]) {
+  for (const r of index) {
     // First row wins a contested slug, so the mapping stays stable as rows
     // are added.
     if (slugOf(r) === segment) {
@@ -105,10 +133,23 @@ async function resolve<T extends { id: number }>(
       break;
     }
   }
-  if (!match) return null;
+  if (!match) {
+    // A 404 is silent by nature, so say why here: without this, "the page is
+    // not found but the row exists" is impossible to tell apart from "the
+    // query came back empty" once the site is deployed. Visible in the Vercel
+    // runtime logs, never to the visitor.
+    console.warn(
+      `[content] no ${table} matches "${segment}" — index had ${index.length} row(s)` +
+        (index.length ? `, first: "${slugOf(index[0])}"` : '')
+    );
+    return null;
+  }
 
   const full = await supabasePublic.from(table).select('*').eq('id', match.id).maybeSingle();
-  if (!full.data) return null;
+  if (!full.data) {
+    console.warn(`[content] ${table} id ${match.id} matched "${segment}" but the row would not load`);
+    return null;
+  }
 
   return { row: full.data as T, slug: segment, shouldRedirect: false };
 }

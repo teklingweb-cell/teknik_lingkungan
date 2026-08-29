@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { supabasePublic } from '@/lib/supabase/public';
 import { SITE, absoluteUrl } from '@/lib/seo';
 import { slugOf } from '@/lib/utils';
+import { loadIndex } from '@/lib/content';
 
 // The pages render per request; the sitemap does not need to. Ten minutes
 // bounds how long it can list a berita that was renamed straight in the
@@ -45,17 +46,11 @@ const STATIC_ROUTES: StaticRoute[] = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  // Via loadIndex so a missing `slug` column degrades to `select('*')` instead
+  // of emptying the sitemap — the same failure that took the detail pages down.
   const [news, penelitian] = await Promise.all([
-    supabasePublic
-      .from('news')
-      .select('id, title, slug, date, created_at')
-      .order('date', { ascending: false })
-      .limit(1000),
-    supabasePublic
-      .from('penelitian')
-      .select('id, title, slug, created_at')
-      .order('id', { ascending: false })
-      .limit(1000),
+    loadIndex('news'),
+    loadIndex('penelitian'),
   ]);
 
   const entries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
@@ -65,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: r.priority,
   }));
 
-  for (const row of news.data ?? []) {
+  for (const row of news as (typeof news[number] & { date?: string | null; created_at?: string | null })[]) {
     const stamp = row.date ?? row.created_at;
     entries.push({
       url: `${SITE.url}/berita/${slugOf(row)}`,
@@ -75,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  for (const row of penelitian.data ?? []) {
+  for (const row of penelitian as (typeof penelitian[number] & { created_at?: string | null })[]) {
     entries.push({
       url: `${SITE.url}/penelitian/${slugOf(row)}`,
       lastModified: row.created_at ? new Date(row.created_at) : now,
