@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
 import { uniqueSlug } from './uniqueSlug';
+import { slugOf } from '@/lib/utils';
+import { revalidatePublic, type RevalidateEntity } from './revalidate';
 
 export type Values = Record<string, string>;
 
@@ -48,7 +50,7 @@ export type FieldDef =
   | { kind: 'row'; fields: FieldDef[] };
 
 export type EntityFormProps = {
-  table: string;
+  table: RevalidateEntity;
   /** Topbar heading, e.g. "Tambah Penelitian". */
   titles: { create: string; edit: string };
   /** Heading inside the form card. */
@@ -192,6 +194,9 @@ export default function EntityForm({
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(editId !== null);
 
+  /** Slug the row had when the form opened, so a rename can purge it too. */
+  const previousSlug = useRef<string>('');
+
   const set = useCallback((name: string, value: string) => {
     // Bail out when nothing changed so repeat writes (e.g. the GDrive field
     // re-reporting the same resolved URL) don't trigger another render.
@@ -210,7 +215,15 @@ export default function EntityForm({
         router.replace(backHref);
         return;
       }
-      setValues(fromRow(data as Record<string, unknown>));
+      const row = data as Record<string, unknown>;
+      if (slugFrom && typeof row.title === 'string') {
+        previousSlug.current = slugOf({
+          id: Number(row.id),
+          title: row.title,
+          slug: typeof row.slug === 'string' ? row.slug : null,
+        });
+      }
+      setValues(fromRow(row));
       setLoading(false);
     })();
 
@@ -264,6 +277,21 @@ export default function EntityForm({
       setErrors(['Gagal menyimpan: ' + error.message]);
       return;
     }
+
+    // Drop the cached public pages so the change is live immediately rather
+    // than after the 60-second ISR window. When the row has a detail page, its
+    // own address is named too — both the new slug and, on a rename, the one
+    // it used to answer on.
+    const detail: string[] = [];
+    if (slugFrom && typeof payload.slug === 'string') {
+      detail.push(`/${slugFrom.table === 'news' ? 'berita' : 'penelitian'}/${payload.slug}`);
+      if (previousSlug.current && previousSlug.current !== payload.slug) {
+        detail.push(
+          `/${slugFrom.table === 'news' ? 'berita' : 'penelitian'}/${previousSlug.current}`
+        );
+      }
+    }
+    await revalidatePublic(table, detail);
 
     router.push(`${backHref}?msg=${editId !== null ? 'updated' : 'added'}`);
     router.refresh();

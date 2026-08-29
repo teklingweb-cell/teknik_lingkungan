@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { News } from '@/lib/types';
-import { todayISO } from '@/lib/utils';
+import { todayISO, slugOf } from '@/lib/utils';
 import { uniqueSlug } from './uniqueSlug';
+import { revalidatePublic } from './revalidate';
 import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
@@ -52,6 +53,9 @@ export default function NewsForm({ editId }: { editId: number | null }) {
 
   const handleResolved = useCallback((direct: string | null) => setImageUrl(direct), []);
 
+  /** Slug the row had when the form opened; empty for a new article. */
+  const previousSlug = useRef<string>('');
+
   useEffect(() => {
     if (editId === null) return;
 
@@ -66,6 +70,9 @@ export default function NewsForm({ editId }: { editId: number | null }) {
       }
 
       const row = data as News;
+      // Remembered so a rename can purge the address the article used to live
+      // at, not only the new one.
+      previousSlug.current = slugOf(row);
       setValues({
         title: row.title ?? '',
         excerpt: row.excerpt ?? '',
@@ -141,6 +148,15 @@ export default function NewsForm({ editId }: { editId: number | null }) {
       setErrors(['Gagal menyimpan: ' + error.message]);
       return;
     }
+
+    // Drop the cached public pages so the change is live immediately rather
+    // than after the 60-second ISR window.
+    await revalidatePublic(
+      'news',
+      [`/berita/${slug}`, previousSlug.current && `/berita/${previousSlug.current}`].filter(
+        Boolean
+      ) as string[]
+    );
 
     router.push(`/admin?msg=${editId !== null ? 'updated' : 'added'}`);
     router.refresh();

@@ -10,6 +10,8 @@ import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import SearchBox from './SearchBox';
 import { AlertBox, useAlert } from './useAlert';
+import { revalidatePublic } from './revalidate';
+import { slugOf } from '@/lib/utils';
 
 const CAT_COLORS: Record<string, string> = {
   Penelitian: '#2563eb',
@@ -104,11 +106,13 @@ export default function NewsAdmin({ flash }: { flash?: string }) {
       }
     }
 
+    await revalidatePublic('news');
     await load();
   }
 
   async function handleDelete() {
     if (!deleteTarget) return;
+    const deleted = deleteTarget;
     setDeleting(true);
 
     // .select() makes Supabase return the deleted rows. Without it an RLS
@@ -133,6 +137,9 @@ export default function NewsAdmin({ flash }: { flash?: string }) {
     }
 
     show('success', '✓ Berita berhasil dihapus.');
+    // Name the deleted article's own page too, so it stops answering 200 on
+    // the very next request rather than one request later.
+    await revalidatePublic('news', [`/berita/${slugOf(deleted)}`]);
     await load();
   }
 

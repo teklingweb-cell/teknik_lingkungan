@@ -8,6 +8,8 @@ import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
 import SearchBox from './SearchBox';
 import { AlertBox, useAlert } from './useAlert';
+import { revalidatePublic, type RevalidateEntity } from './revalidate';
+import { slugOf } from '@/lib/utils';
 
 export type Column<T> = {
   header: React.ReactNode;
@@ -22,8 +24,9 @@ export type Filter = { value: string; label: string };
 type Row = { id: number | string };
 
 export type AdminListProps<T extends Row> = {
-  /** Supabase table name. */
-  table: string;
+  /** Supabase table name. Narrowed so the cache purge below cannot be
+      handed a table with no public pages. */
+  table: RevalidateEntity;
   /** Topbar heading. */
   title: string;
   /** Heading inside the card. */
@@ -120,6 +123,7 @@ export default function AdminList<T extends Row>({
 
   async function handleDelete() {
     if (!deleteTarget) return;
+    const deleted = deleteTarget;
     setDeleting(true);
 
     // .select() makes Supabase return the deleted rows. Without it an RLS
@@ -144,6 +148,14 @@ export default function AdminList<T extends Row>({
     }
 
     show('success', '✓ Berhasil dihapus.');
+    // Drop the cached public pages so the row disappears from the site now,
+    // not up to a minute later. Penelitian also has a detail page, named here
+    // so it stops resolving immediately.
+    const detail =
+      table === 'penelitian' && 'title' in deleted
+        ? [`/penelitian/${slugOf(deleted as { id: number; title: string; slug?: string | null })}`]
+        : [];
+    await revalidatePublic(table, detail);
     await load();
   }
 

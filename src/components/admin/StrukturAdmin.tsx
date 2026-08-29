@@ -8,6 +8,7 @@ import AdminShell from './AdminShell';
 import DeleteModal from './DeleteModal';
 import { Badge } from './AdminList';
 import { AlertBox, useAlert } from './useAlert';
+import { revalidatePublic } from './revalidate';
 
 const TIERS = [
   { key: 'rektor', label: 'Ketua Jurusan', color: '#1a2e1e' },
@@ -210,6 +211,7 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
       return;
     }
     show('success', successMessage);
+    await revalidatePublic('staff');
     await load();
   }
 
