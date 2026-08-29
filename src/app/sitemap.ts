@@ -3,7 +3,10 @@ import { supabasePublic } from '@/lib/supabase/public';
 import { SITE, absoluteUrl } from '@/lib/seo';
 import { slugOf } from '@/lib/utils';
 
-export const revalidate = 3600;
+// The pages render per request; the sitemap does not need to. Ten minutes
+// bounds how long it can list a berita that was renamed straight in the
+// Supabase dashboard, while an edit made through the admin purges it at once.
+export const revalidate = 600;
 
 type StaticRoute = {
   path: string;

@@ -3,17 +3,16 @@ import { revalidatePath } from 'next/cache';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 /**
- * Clears the cached public pages for one content type, on demand.
+ * Clears cached routes for one content type, on demand.
  *
- * Every public page is ISR with `revalidate = 60`, which means an admin edit
- * took up to a minute to appear — and because Next serves stale-while-
- * revalidating, the first visitor after that minute still received the old
- * page and only the second saw the change. Deleting a berita was worse: the
- * detail page stayed served from cache long after the row was gone.
+ * The pages themselves now render per request, so they need no purging — this
+ * exists for the routes that are still cached, chiefly `/sitemap.xml`, which is
+ * regenerated hourly and would otherwise list a berita that had just been
+ * renamed or deleted. The admin calls it after every successful write.
  *
- * The admin calls this immediately after a successful write, so the public
- * site reflects the change on the very next request. The 60-second timer stays
- * as a safety net for anything edited straight in the Supabase dashboard.
+ * The page paths below are kept deliberately: purging a route that is already
+ * dynamic costs nothing, and it means the site stays correct if any of these
+ * pages is ever put back on a cache.
  */
 
 /** Which public routes each table feeds. */

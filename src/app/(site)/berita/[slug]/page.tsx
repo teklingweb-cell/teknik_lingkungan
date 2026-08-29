@@ -3,20 +3,15 @@ import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { News } from '@/lib/types';
 import { toGDriveImg, formatDateShort } from '@/lib/utils';
-import { resolveNews, allSlugs } from '@/lib/content';
+import { resolveNews } from '@/lib/content';
 import { pageMetadata } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import { articleJsonLd, breadcrumbJsonLd } from '@/lib/jsonld';
 
-export const revalidate = 60;
+// Read fresh on every request — see the note in (site)/page.tsx.
+export const dynamic = 'force-dynamic';
 
-// Slugs published after the build render on first request, then cache.
-export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  const slugs = await allSlugs('news');
-  return slugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

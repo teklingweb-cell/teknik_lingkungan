@@ -2,19 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { Penelitian } from '@/lib/types';
-import { resolvePenelitian, allSlugs } from '@/lib/content';
+import { resolvePenelitian } from '@/lib/content';
 import { FileTextIcon } from '@/components/icons';
 import { pageMetadata } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import { scholarlyArticleJsonLd, breadcrumbJsonLd } from '@/lib/jsonld';
 
-export const revalidate = 60;
-export const dynamicParams = true;
+// Read fresh on every request — see the note in (site)/page.tsx.
+export const dynamic = 'force-dynamic';
 
-export async function generateStaticParams() {
-  const slugs = await allSlugs('penelitian');
-  return slugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

@@ -5,7 +5,8 @@ import type { Penelitian } from '@/lib/types';
 import PageHero from '@/components/PageHero';
 import PenelitianList from '@/components/PenelitianList';
 
-export const revalidate = 60;
+// Read fresh on every request — see the note in (site)/page.tsx.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = pageMetadata({
   title: 'Penelitian & Pengabdian',

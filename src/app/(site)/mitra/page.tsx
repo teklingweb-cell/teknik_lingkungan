@@ -6,7 +6,8 @@ import type { Mitra } from '@/lib/types';
 import PageHero from '@/components/PageHero';
 import MitraList from '@/components/MitraList';
 
-export const revalidate = 60;
+// Read fresh on every request — see the note in (site)/page.tsx.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = pageMetadata({
   title: 'Mitra Institusi',

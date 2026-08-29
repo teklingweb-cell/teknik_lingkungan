@@ -5,8 +5,20 @@ import type { News } from '@/lib/types';
 import NewsCard from '@/components/NewsCard';
 import Carousel from '@/components/Carousel';
 
-// Next static-analyses this export, so it has to be a literal.
-export const revalidate = 60;
+/**
+ * Read fresh on every request.
+ *
+ * These pages used ISR with `revalidate = 60`, so an edit reached the public
+ * site up to a minute later — and only on the request *after* the one that
+ * triggered the refresh. Worse, when a regeneration failed the stale copy was
+ * served indefinitely, which is what left the site frozen until a redeploy.
+ * Rendering per request removes that whole class of problem: whatever is in
+ * Supabase is what the visitor sees, whether it was changed through the admin
+ * or straight from the Supabase dashboard.
+ *
+ * The cost is one database round trip per page view instead of one per minute.
+ */
+export const dynamic = 'force-dynamic';
 
 /**
  * Three items for the home strip: rows explicitly flagged show_on_home, and if
