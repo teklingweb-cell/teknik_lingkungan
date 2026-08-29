@@ -325,3 +325,52 @@
       margin-bottom: 24px;
     }
   
+    /* ── Kontributor sebagai kapsul ──────────────────────────────────────
+       Nama-nama dulu dicetak sebagai satu string; begitu lebih dari dua orang
+       barisnya membungkus dan tidak terbaca lagi sebagai daftar. Satu kapsul
+       per orang membuat batas antar nama jelas pada lebar berapa pun. */
+    .sidebar-row.stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .person-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .person-chip {
+      display: inline-block;
+      max-width: 100%;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(26,46,30,0.05);
+      border: 1px solid rgba(26,46,30,0.08);
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      line-height: 1.4;
+      color: #2d3a2e;
+      overflow-wrap: anywhere;
+    }
+    .person-chip.lead {
+      background: rgba(78,140,90,0.12);
+      border-color: rgba(78,140,90,0.28);
+      color: #1a2e1e;
+      font-weight: 600;
+    }
+    .person-count {
+      display: inline-block;
+      min-width: 18px;
+      padding: 0 5px;
+      margin-left: 4px;
+      border-radius: 999px;
+      background: rgba(26,46,30,0.08);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-align: center;
+      color: #2d3a2e;
+    }
+    .sidebar-row-value.doi {
+      color: var(--green, #4e8c5a);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      border-bottom: 1px solid rgba(78,140,90,0.35);
+    }
+    .sidebar-row-value.doi:hover { border-bottom-color: var(--green, #4e8c5a); }

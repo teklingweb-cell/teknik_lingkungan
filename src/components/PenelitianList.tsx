@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { Penelitian } from '@/lib/types';
-import { slugOf } from '@/lib/utils';
+import { slugOf, contributorsOf } from '@/lib/utils';
 
 const CATEGORIES = [
   'all',
@@ -28,6 +28,7 @@ function ResearchCard({ item }: { item: Penelitian }) {
   const color = CAT_COLORS[item.category] ?? '#6b7a6c';
   const statusLabel = item.status || 'Aktif';
   const statusClass = statusLabel.toLowerCase() === 'sedang berjalan' ? 'wip' : 'aktif';
+  const people = contributorsOf(item);
   const abstract = item.abstract
     ? item.abstract.substring(0, ABSTRACT_LIMIT) + (item.abstract.length > ABSTRACT_LIMIT ? '…' : '')
     : '';
@@ -42,7 +43,14 @@ function ResearchCard({ item }: { item: Penelitian }) {
             <span className="research-card-year">{item.year}</span>
           </div>
           <div className="research-card-title">{item.title}</div>
-          <div className="research-card-author">{item.author}</div>
+          {/* Lead plus a count: the full list of names overflowed the card
+              and pushed the abstract out of alignment across the grid. */}
+          <div className="research-card-author">
+            {people[0] ?? item.author}
+            {people.length > 1 && (
+              <span className="research-card-more"> +{people.length - 1} kontributor</span>
+            )}
+          </div>
           {abstract ? (
             <div className="research-card-abstract">{abstract}</div>
           ) : (

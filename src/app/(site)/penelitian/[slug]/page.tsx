@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { Penelitian } from '@/lib/types';
 import { resolvePenelitian } from '@/lib/content';
+import { contributorsOf } from '@/lib/utils';
 import { FileTextIcon } from '@/components/icons';
 import { pageMetadata } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
@@ -105,6 +106,16 @@ export default async function PenelitianDetailPage({
   const keywords = deriveKeywords(item);
   const showKeywords = keywords.length > 1;
 
+  // The lead is whoever is named first; everyone after is a contributor.
+  const people = contributorsOf(item);
+  const lead = people[0] ?? item.author ?? '–';
+  const others = people.slice(1);
+
+  const doiUrl = item.doi?.trim()
+    ? `https://doi.org/${item.doi.trim().replace(/^https?:\/\/doi\.org\//i, '')}`
+    : null;
+  const publicationUrl = item.publication_url?.trim() || doiUrl;
+
   return (
     <>
       <JsonLd
@@ -114,7 +125,7 @@ export default async function PenelitianDetailPage({
             description: item.abstract,
             path: `/penelitian/${found.slug}`,
             year: item.year,
-            author: item.author,
+            authors: people,
             keywords,
           }),
           breadcrumbJsonLd([
@@ -142,7 +153,10 @@ export default async function PenelitianDetailPage({
                     <circle cx="12" cy="7" r="4" />
                   </>
                 )}
-                <span>{item.author}</span>
+                <span>
+                  {lead}
+                  {others.length > 0 && ` +${others.length} kontributor`}
+                </span>
               </div>
               <div className="detail-meta-item">
                 {metaIcon(
@@ -204,13 +218,13 @@ export default async function PenelitianDetailPage({
                 <FileTextIcon size={12} style={{ verticalAlign: '-2px', marginRight: 6 }} />
                 Publikasi &amp; Karya
               </div>
-              {item.publication_url ? (
+              {publicationUrl ? (
                 <>
                   <div className="detail-pub-card-title">
                     Akses full text atau data pendukung penelitian ini
                   </div>
                   <a
-                    href={item.publication_url}
+                    href={publicationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="detail-pub-btn"
@@ -251,10 +265,26 @@ export default async function PenelitianDetailPage({
         <div className="detail-sidebar">
           <div className="sidebar-card fade-up">
             <div className="sidebar-card-title">Informasi Penelitian</div>
-            <div className="sidebar-row">
+            <div className="sidebar-row stacked">
               <span className="sidebar-row-label">Peneliti Utama</span>
-              <span className="sidebar-row-value">{item.author}</span>
+              <span className="person-chip lead">{lead}</span>
             </div>
+            {others.length > 0 && (
+              <div className="sidebar-row stacked">
+                <span className="sidebar-row-label">
+                  Kontributor <span className="person-count">{others.length}</span>
+                </span>
+                {/* One chip each: a plain string of names wrapped into an
+                    unreadable block once there were more than two. */}
+                <div className="person-chips">
+                  {others.map((name) => (
+                    <span key={name} className="person-chip">
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="sidebar-row">
               <span className="sidebar-row-label">Tahun</span>
               <span className="sidebar-row-value">{item.year}</span>
@@ -263,17 +293,42 @@ export default async function PenelitianDetailPage({
               <span className="sidebar-row-label">Kategori</span>
               <span className="sidebar-row-value">{item.category}</span>
             </div>
+            {item.journal?.trim() && (
+              <div className="sidebar-row stacked">
+                <span className="sidebar-row-label">Dipublikasikan di</span>
+                <span className="sidebar-row-value">{item.journal}</span>
+              </div>
+            )}
+            {item.doi?.trim() && (
+              <div className="sidebar-row stacked">
+                <span className="sidebar-row-label">DOI</span>
+                <a
+                  className="sidebar-row-value doi"
+                  href={doiUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {item.doi}
+                </a>
+              </div>
+            )}
             <div className="sidebar-row">
               <span className="sidebar-row-label">Dana Penelitian</span>
               <span className="sidebar-row-value funded">{item.funding || '–'}</span>
             </div>
+            {item.funding_source?.trim() && (
+              <div className="sidebar-row stacked">
+                <span className="sidebar-row-label">Sumber Dana</span>
+                <span className="sidebar-row-value">{item.funding_source}</span>
+              </div>
+            )}
             <div className="sidebar-row">
               <span className="sidebar-row-label">Status</span>
               <span className={`sidebar-row-value ${statusClass}`}>{statusLabel}</span>
             </div>
           </div>
 
-          {item.publication_url && (
+          {publicationUrl && (
             <div
               className="sidebar-card fade-up"
               style={{ textAlign: 'center', background: 'var(--navy)' }}
@@ -320,7 +375,7 @@ export default async function PenelitianDetailPage({
                 Publikasi tersedia
               </div>
               <a
-                href={item.publication_url}
+                href={publicationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="detail-pub-btn"

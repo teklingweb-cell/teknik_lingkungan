@@ -1983,3 +1983,6 @@ textarea.form-input { resize: none; }
   .news-title { font-size: 1rem; }
   .news-excerpt { -webkit-line-clamp: 3; }
 }
+
+/* Contributor count beside the lead researcher on a penelitian card. */
+.research-card-more { color: rgba(45,58,46,0.45); font-weight: 400; }

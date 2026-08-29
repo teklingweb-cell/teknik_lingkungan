@@ -127,3 +127,48 @@ export function slugOf(row: { id: number; slug?: string | null; title?: string |
   if (stored) return stored;
   return slugify(row.title) || String(row.id);
 }
+
+/**
+ * Splits a list of people written as one string into individual names.
+ *
+ * `penelitian.author` holds every contributor in a single field, written by
+ * whoever entered it — "A, B, C", "A; B", "A dan B", "A & B" all occur. Printed
+ * verbatim that becomes one long unbroken line; split, each name can be shown
+ * as its own chip.
+ *
+ * Only separators between names are split on. A comma inside a degree — "Ir.
+ * Ulli Kadaria, S.T., M.T." — must not break the name apart, so a fragment that
+ * is just an academic suffix is glued back onto the name before it.
+ */
+const DEGREE_FRAGMENT =
+  /^(?:s\.?\s?(?:t|si|pd|kom|e|h|sos|ars|p)\.?|m\.?\s?(?:t|si|eng|sc|pd|kom|m|hum|p)\.?|ph\.?\s?d\.?|dr\.?|drs\.?|ir\.?|prof\.?|m\.?a\.?|b\.?sc\.?|apt\.?)$/i;
+
+export function parsePeople(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+
+  const pieces = raw
+    .split(/\s*(?:[;,&]|\bdan\b)\s*/i)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const names: string[] = [];
+  for (const piece of pieces) {
+    if (names.length && DEGREE_FRAGMENT.test(piece)) {
+      // A trailing degree, not a new person — put it back on the previous name.
+      names[names.length - 1] = `${names[names.length - 1]}, ${piece}`;
+      continue;
+    }
+    names.push(piece);
+  }
+  return names;
+}
+
+/** Everyone credited on a penelitian row: the lead author, then contributors. */
+export function contributorsOf(row: {
+  author?: string | null;
+  contributors?: string | null;
+}): string[] {
+  const all = [...parsePeople(row.author), ...parsePeople(row.contributors)];
+  // Someone listed in both fields should still appear once.
+  return all.filter((name, i) => all.findIndex((n) => n.toLowerCase() === name.toLowerCase()) === i);
+}

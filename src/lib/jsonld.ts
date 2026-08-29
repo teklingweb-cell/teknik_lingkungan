@@ -122,7 +122,8 @@ export function scholarlyArticleJsonLd(input: {
   description?: string | null;
   path: string;
   year?: number | string | null;
-  author?: string | null;
+  /** Every credited researcher, lead first. */
+  authors?: string[];
   keywords?: string[];
 }): Json {
   return {
@@ -134,7 +135,10 @@ export function scholarlyArticleJsonLd(input: {
     datePublished: input.year ? String(input.year) : undefined,
     keywords: input.keywords?.length ? input.keywords.join(', ') : undefined,
     mainEntityOfPage: { '@type': 'WebPage', '@id': absoluteUrl(input.path) },
-    author: input.author ? { '@type': 'Person', name: input.author } : undefined,
+    // A list, so co-authors are credited rather than folded into one name.
+    author: input.authors?.length
+      ? input.authors.map((name) => ({ '@type': 'Person', name }))
+      : undefined,
     publisher: { '@id': `${SITE.url}/#organization` },
   };
 }

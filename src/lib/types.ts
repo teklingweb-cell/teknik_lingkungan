@@ -45,6 +45,17 @@ export type Penelitian = {
   status: 'Aktif' | 'Selesai' | null;
   publication_url: string | null;
   abstract: string | null;
+  /**
+   * Everyone credited besides the lead in `author`, written as one string.
+   * Optional columns: the page renders fine without any of them.
+   */
+  contributors?: string | null;
+  /** Bare DOI, e.g. "10.1234/abcd" — linked via doi.org. */
+  doi?: string | null;
+  /** Where it appeared: journal, conference or publisher. */
+  journal?: string | null;
+  /** Who paid for it. `funding` holds the amount, this the source. */
+  funding_source?: string | null;
   /** Comma-separated. Not in the documented schema; read defensively. */
   keywords?: string | null;
   /** URL segment. Optional: rows created before slugs derive one from title. */

@@ -157,10 +157,39 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
       ],
     },
     {
-      kind: 'url',
-      name: 'publication_url',
-      label: 'URL Publikasi',
-      placeholder: 'https://doi.org/...',
+      kind: 'text',
+      name: 'contributors',
+      label: 'Kontributor Lain',
+      placeholder: 'Pisahkan dengan koma: Dr. Andi Wijaya, M.T., Rina Kartika, M.Si.',
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'text',
+          name: 'journal',
+          label: 'Dipublikasikan di',
+          placeholder: 'cth: Jurnal Teknik Lingkungan Vol. 12 No. 2',
+        },
+        { kind: 'text', name: 'doi', label: 'DOI', placeholder: 'cth: 10.1234/jtl.2025.001' },
+      ],
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'text',
+          name: 'funding_source',
+          label: 'Sumber Dana',
+          placeholder: 'cth: DIPA Untan / Kemendikbudristek',
+        },
+        {
+          kind: 'url',
+          name: 'publication_url',
+          label: 'URL Publikasi',
+          placeholder: 'https://...',
+        },
+      ],
     },
     {
       kind: 'textarea',
@@ -196,6 +225,10 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
         publication_url: '',
         abstract: '',
         keywords: '',
+        contributors: '',
+        doi: '',
+        journal: '',
+        funding_source: '',
         image_url: '',
         image_url_raw: '',
       }}
@@ -209,6 +242,10 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
         publication_url: str(row.publication_url),
         abstract: str(row.abstract),
         keywords: str(row.keywords),
+        contributors: str(row.contributors),
+        doi: str(row.doi),
+        journal: str(row.journal),
+        funding_source: str(row.funding_source),
         image_url: str(row.image_url),
         image_url_raw: str(row.image_url),
       })}
@@ -222,6 +259,10 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
         publication_url: orNull(v.publication_url),
         abstract: orNull(v.abstract),
         keywords: orNull(v.keywords),
+        contributors: orNull(v.contributors),
+        doi: orNull(v.doi),
+        journal: orNull(v.journal),
+        funding_source: orNull(v.funding_source),
         image_url: orNull(v.image_url),
       })}
       validate={(v) => {
