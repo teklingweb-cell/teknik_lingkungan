@@ -10,20 +10,17 @@ import { Badge } from './AdminList';
 import { AlertBox, useAlert } from './useAlert';
 
 const TIERS = [
-  { key: 'rektor', label: 'Rektor', color: '#1a2e1e' },
-  { key: 'wakil', label: 'Wakil Rektor', color: '#2d6a40' },
-  { key: 'dekan', label: 'Dekan / Ketua Lembaga', color: '#4e8c5a' },
+  { key: 'rektor', label: 'Ketua Jurusan', color: '#1a2e1e' },
+  { key: 'wakil', label: 'Koordinator Program Studi', color: '#2d6a40' },
   { key: 'dosen', label: 'Dosen / Profesor', color: '#2563eb' },
   { key: 'staf', label: 'Staf Administrasi', color: '#9333ea' },
 ];
 
+const TIER_KEYS = new Set(TIERS.map((t) => t.key));
+
 const LEVEL_OPTIONS = [
   { value: '', label: '— Tidak tampil di bagan —' },
-  { value: 'rektor', label: 'Rektor' },
-  { value: 'wakil', label: 'Wakil Rektor' },
-  { value: 'dekan', label: 'Dekan / Ketua Lembaga' },
-  { value: 'dosen', label: 'Dosen / Profesor' },
-  { value: 'staf', label: 'Staf Administrasi' },
+  ...TIERS.map((t) => ({ value: t.key, label: t.label })),
 ];
 
 const TYPE_LABELS: Record<string, string> = { dosen: 'Dosen', alumni: 'Alumni', staf: 'Staf' };
@@ -216,7 +213,9 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
     await load();
   }
 
-  const unassigned = staff.filter((s) => !s.org_level);
+  // Level lama yang sudah dihapus (mis. "dekan") ikut masuk ke daftar ini
+  // supaya orangnya tidak hilang dari admin.
+  const unassigned = staff.filter((s) => !s.org_level || !TIER_KEYS.has(s.org_level));
 
   return (
     <AdminShell
@@ -279,18 +278,7 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
       <div className="unassigned-card">
         <div className="unassigned-header">
           <span className="unassigned-title">Tidak Tampil di Bagan</span>
-          <span
-            className="tier-count"
-            style={{
-              fontSize: '0.72rem',
-              color: 'var(--muted)',
-              background: 'var(--cream)',
-              padding: '2px 10px',
-              borderRadius: 999,
-            }}
-          >
-            {loading ? '—' : `${unassigned.length} orang`}
-          </span>
+          <span className="tier-count">{loading ? '—' : `${unassigned.length} orang`}</span>
         </div>
         {loading ? (
           <div className="tier-empty">Memuat data…</div>

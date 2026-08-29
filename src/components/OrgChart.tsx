@@ -6,17 +6,16 @@ import type { Staff } from '@/lib/types';
 type Tier = {
   key: string;
   label: string;
-  sz: string;
   cssClass: string;
   color: string;
 };
 
+// Semua tier memakai ukuran kartu yang sama; hierarki dibedakan lewat warna saja.
 const TIERS: Tier[] = [
-  { key: 'rektor', label: 'Rektor', sz: 'sz-xl', cssClass: 'tier-rektor', color: '#1a2e1e' },
-  { key: 'wakil', label: 'Wakil Rektor', sz: 'sz-lg', cssClass: 'tier-wakil', color: '#2d6a40' },
-  { key: 'dekan', label: 'Dekan', sz: '', cssClass: 'tier-dekan', color: '#4e8c5a' },
-  { key: 'dosen', label: 'Dosen / Profesor', sz: 'sz-sm', cssClass: 'tier-dosen', color: '#2563eb' },
-  { key: 'staf', label: 'Staf Administrasi', sz: 'sz-sm', cssClass: 'tier-staf', color: '#9333ea' },
+  { key: 'rektor', label: 'Ketua Jurusan', cssClass: 'tier-ketua', color: '#1a2e1e' },
+  { key: 'wakil', label: 'Koordinator Program Studi', cssClass: 'tier-koorprodi', color: '#2d6a40' },
+  { key: 'dosen', label: 'Dosen / Profesor', cssClass: 'tier-dosen', color: '#2563eb' },
+  { key: 'staf', label: 'Staf Administrasi', cssClass: 'tier-staf', color: '#9333ea' },
 ];
 
 const TYPE_LABELS: Record<string, string> = { dosen: 'Dosen', alumni: 'Alumni', staf: 'Staf' };
@@ -233,7 +232,7 @@ export default function OrgChart({ people }: { people: Staff[] }) {
                   {tierPeople.map((person) => (
                     <div
                       key={person.id}
-                      className={`org-node ${tier.cssClass} ${tier.sz}`.trim()}
+                      className={`org-node ${tier.cssClass}`}
                       tabIndex={0}
                       role="button"
                       onClick={() => setSelected({ person, tier })}

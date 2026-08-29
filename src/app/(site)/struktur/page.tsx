@@ -14,9 +14,8 @@ export const metadata: Metadata = {
 };
 
 const LEGEND = [
-  { color: '#1a2e1e', label: 'Rektor' },
-  { color: '#2d6a40', label: 'Wakil Rektor' },
-  { color: '#4e8c5a', label: 'Dekan' },
+  { color: '#1a2e1e', label: 'Ketua Jurusan' },
+  { color: '#2d6a40', label: 'Koordinator Program Studi' },
   { color: '#2563eb', label: 'Dosen / Profesor' },
   { color: '#9333ea', label: 'Staf Administrasi' },
 ];

@@ -86,6 +86,16 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   transition: background 0.3s;
 }
 .navbar.scrolled .nav-logo-icon { background: var(--navy); }
+/* Logo lambang — PNG transparan, tanpa latar belakang */
+.nav-logo-img {
+  height: 44px;
+  width: 44px;
+  object-fit: contain;
+  background: transparent;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.35));
+  transition: filter 0.3s;
+}
+.navbar.scrolled .nav-logo-img { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.18)); }
 .nav-logo-text { display: none; }
 @media(min-width:640px){ .nav-logo-text { display: block; } }
 .nav-logo-name {
@@ -516,6 +526,11 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   border-radius: 16px;
   border: 1px solid rgba(26,46,30,0.08);
   transition: all 0.3s ease;
+  /* Column layout so every card in a grid row is the same height and the
+     "Selengkapnya" link always sits on the same baseline. */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .card:hover {
   transform: translateY(-4px);
@@ -526,12 +541,16 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   border: 1px solid rgba(242,245,239,0.1);
   border-radius: 16px;
   transition: background 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .card-dark:hover { background: rgba(242,245,239,0.1); }
 
 /* card icon */
 .card-icon {
   width: 40px; height: 40px;
+  flex-shrink: 0;
   background: rgba(78,140,90,0.1);
   border-radius: 10px;
   display: flex;
@@ -554,12 +573,14 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   color: rgba(45,58,46,0.6);
   line-height: 1.6;
   font-family: var(--font-body);
+  flex: 1;
 }
 .card-link {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 16px;
   color: var(--gold-light);
   font-size: 0.75rem;
   font-weight: 500;

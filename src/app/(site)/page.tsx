@@ -228,7 +228,7 @@ export default async function HomePage() {
                 key={f.title}
                 href={f.href}
                 className="card"
-                style={{ padding: 24, textDecoration: 'none', display: 'block' }}
+                style={{ padding: 24, textDecoration: 'none' }}
               >
                 <div className="card-icon">
                   <svg

@@ -36,15 +36,7 @@ export default function Navbar() {
             <img
               src="/logo-untan.png"
               alt="Logo Universitas Tanjungpura"
-              style={{
-                height: 44,
-                width: 44,
-                objectFit: 'contain',
-                borderRadius: '50%',
-                background: 'white',
-                padding: 3,
-                filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.18))',
-              }}
+              className="nav-logo-img"
             />
             <div className="nav-logo-text">
               <div className="nav-logo-name">Teknik Lingkungan</div>

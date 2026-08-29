@@ -299,9 +299,8 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const ORG_LEVELS: Record<string, { label: string; color: string }> = {
-  rektor: { label: 'Rektor', color: '#1a2e1e' },
-  wakil: { label: 'Wakil Rektor', color: '#2d6a40' },
-  dekan: { label: 'Dekan', color: '#4e8c5a' },
+  rektor: { label: 'Ketua Jurusan', color: '#1a2e1e' },
+  wakil: { label: 'Koord. Prodi', color: '#2d6a40' },
   dosen: { label: 'Dosen/Prof.', color: '#2563eb' },
   staf: { label: 'Staf Admin', color: '#9333ea' },
 };

@@ -377,9 +377,8 @@ export function StaffForm({ editId }: { editId: number | null }) {
           label: 'Level Bagan Organisasi',
           options: [
             { value: '', label: '— Tidak tampil di bagan organisasi —' },
-            { value: 'rektor', label: 'Rektor' },
-            { value: 'wakil', label: 'Wakil Rektor' },
-            { value: 'dekan', label: 'Dekan' },
+            { value: 'rektor', label: 'Ketua Jurusan' },
+            { value: 'wakil', label: 'Koordinator Program Studi' },
             { value: 'dosen', label: 'Dosen / Profesor' },
             { value: 'staf', label: 'Staf Administrasi' },
           ],
