@@ -1,0 +1,270 @@
+
+    /* ── KONTAK PAGE OVERRIDES ── */
+    .kontak-main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+    }
+    @media(min-width:1024px){
+      .kontak-main-grid { grid-template-columns: 1fr 1fr; gap: 80px; }
+    }
+
+    /* Info cards */
+    .kinfo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    @media(max-width:480px){
+      .kinfo-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .kinfo-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(26,46,30,0.08);
+      padding: 24px 20px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .kinfo-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(14,22,40,0.09); }
+    .kinfo-icon {
+      width: 40px; height: 40px;
+      background: rgba(122,171,110,0.12);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .kinfo-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .kinfo-line {
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+    .kinfo-line:first-of-type { color: var(--navy); font-weight: 500; }
+
+    /* Map block */
+    .kmap-block {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(26,46,30,0.1);
+      box-shadow: 0 8px 32px rgba(14,22,40,0.08);
+    }
+    .kmap-footer {
+      padding: 16px 20px;
+      background: var(--navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .kmap-addr {
+      font-size: 0.8rem;
+      color: rgba(242,245,239,0.55);
+      font-family: var(--font-body);
+      line-height: 1.4;
+    }
+    .kmap-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-family: var(--font-body);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 7px 14px;
+      border: 1px solid rgba(104,176,119,0.35);
+      border-radius: 8px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .kmap-link:hover { background: rgba(104,176,119,0.12); border-color: var(--gold-light); }
+
+    /* Social */
+    .ksocial-wrap {
+      margin-top: 40px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(26,46,30,0.08);
+    }
+    .ksocial-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(45,58,46,0.45);
+      font-family: var(--font-body);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .ksocial-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ksocial-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(26,46,30,0.1);
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      font-family: var(--font-body);
+      text-decoration: none;
+      background: #fff;
+      transition: all 0.2s;
+    }
+    .ksocial-btn:hover { border-color: var(--gold); color: var(--navy); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(14,22,40,0.07); }
+
+    /* Form card */
+    .kform-card {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid rgba(26,46,30,0.08);
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(14,22,40,0.07);
+    }
+    .kform-header {
+      background: var(--navy);
+      padding: 28px 32px;
+    }
+    .kform-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--cream);
+      font-weight: 300;
+      margin-bottom: 6px;
+    }
+    .kform-header p {
+      color: rgba(242,245,239,0.45);
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+    }
+    .kform-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    @media(max-width:480px){ .kform-body { padding: 24px 20px; } }
+    .kform-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media(max-width:540px){ .kform-row { grid-template-columns: 1fr; gap: 24px; } }
+    .kform-field { display: flex; flex-direction: column; gap: 8px; }
+    .kform-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--navy);
+      font-family: var(--font-body);
+    }
+    .kform-field input,
+    .kform-field select,
+    .kform-field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(26,46,30,0.12);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      color: var(--navy);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .kform-field input:focus,
+    .kform-field select:focus,
+    .kform-field textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(78,140,90,0.12);
+      background: #fff;
+    }
+    .kform-field input::placeholder,
+    .kform-field textarea::placeholder { color: rgba(45,58,46,0.3); }
+    .kform-field select { cursor: pointer; }
+    .kform-field textarea { resize: none; }
+    .kform-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+    }
+    .kform-note { font-size: 0.75rem; color: rgba(45,58,46,0.35); font-family: var(--font-body); }
+    .kform-success {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 14px 18px;
+      border-radius: 12px;
+    }
+    .kform-success.show { display: flex; }
+
+    /* Direktori */
+    .kdir-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media(min-width:540px){ .kdir-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width:1024px){ .kdir-grid { grid-template-columns: repeat(3, 1fr); } }
+    .kdir-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(26,46,30,0.08);
+      padding: 24px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .kdir-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(14,22,40,0.08); }
+    .kdir-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      font-family: var(--font-body);
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(26,46,30,0.07);
+    }
+    .kdir-contacts { display: flex; flex-direction: column; gap: 10px; }
+    .kdir-link {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.82rem;
+      color: rgba(45,58,46,0.65);
+      text-decoration: none;
+      font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+    .kdir-link:hover { color: var(--forest); }
+    .kdir-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: rgba(122,171,110,0.1);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Help banner */
+    .khelp-banner {
+      background: var(--navy);
+      border-radius: 20px;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .khelp-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(104,176,119,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    @media(max-width:480px){ .khelp-banner { padding: 32px 24px; } }
+  
