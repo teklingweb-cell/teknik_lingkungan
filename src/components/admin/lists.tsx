@@ -8,6 +8,7 @@ import {
   isAktif,
   jenisLabel,
 } from '@/lib/mitra';
+import { PENCAPAIAN_COLORS, TINGKAT_COLORS } from '@/lib/pencapaian';
 import AdminList, { Badge, type Column } from './AdminList';
 
 const muted: React.CSSProperties = { color: 'var(--muted)' };
@@ -22,15 +23,6 @@ function initialOf(name: string | null): string {
 }
 
 /* ─────────────────────────── Pencapaian ─────────────────────────── */
-
-const PENCAPAIAN_COLORS: Record<string, string> = {
-  Riset: '#2563eb',
-  Akreditasi: '#16a34a',
-  Prestasi: '#d97706',
-  Hibah: '#9333ea',
-  Ranking: '#0891b2',
-  Lainnya: '#6b7a6c',
-};
 
 export function PencapaianList({ flash }: { flash?: string }) {
   const columns: Column<Pencapaian>[] = [
@@ -74,9 +66,10 @@ export function PencapaianList({ flash }: { flash?: string }) {
       header: 'Judul',
       cell: (item) => (
         <>
-          <div style={{ fontWeight: 500, color: 'var(--navy)', maxWidth: 300 }}>{item.title}</div>
-          <div style={{ fontSize: '0.75rem', ...muted, marginTop: 2, maxWidth: 300 }}>
-            {truncate(item.description, 80)}
+          <div style={{ fontWeight: 500, color: 'var(--navy)', maxWidth: 320 }}>{item.title}</div>
+          <div style={{ fontSize: '0.75rem', ...muted, marginTop: 2, maxWidth: 320 }}>
+            {[item.hasil, item.nama_pelaku].filter(Boolean).join(' · ') ||
+              truncate(item.description, 80)}
           </div>
         </>
       ),
@@ -89,10 +82,27 @@ export function PencapaianList({ flash }: { flash?: string }) {
       ),
     },
     {
-      header: 'Tahun',
+      header: 'Pelaku',
       hideMobile: true,
+      cellStyle: muted,
+      cell: (item) => [item.pelaku, item.jenis].filter(Boolean).join(' · ') || '–',
+    },
+    {
+      header: 'Tingkat',
+      hideMobile: true,
+      cell: (item) =>
+        item.tingkat ? (
+          <Badge color={TINGKAT_COLORS[item.tingkat] ?? '#6b7a6c'}>{item.tingkat}</Badge>
+        ) : (
+          <span style={muted}>–</span>
+        ),
+    },
+    {
+      header: 'Waktu',
       cellStyle: { ...muted, fontWeight: 500 },
-      cell: (item) => item.year,
+      // Sheet 4j tidak punya tanggal, hanya tahun — jadi tahun yang jadi
+      // pengganti, bukan tanda pisah kosong.
+      cell: (item) => (item.tanggal ? formatDateShort(item.tanggal) : item.year),
     },
   ];
 
@@ -106,8 +116,19 @@ export function PencapaianList({ flash }: { flash?: string }) {
       editHref={(row) => `/admin/pencapaian-form?edit=${row.id}`}
       orderBy={{ column: 'year', ascending: false }}
       columns={columns}
-      searchFields={(item) => [item.title, item.description, item.category, item.year]}
-      searchPlaceholder="Cari judul, deskripsi, kategori…"
+      searchFields={(item) => [
+        item.title,
+        item.description,
+        item.category,
+        item.hasil,
+        item.pelaku,
+        item.jenis,
+        item.tingkat,
+        item.nama_pelaku,
+        item.bidang,
+        item.year,
+      ]}
+      searchPlaceholder="Cari judul, hasil, nama dosen, tingkat…"
       labelOf={(item) => item.title}
       deleteTitle="Hapus Pencapaian?"
       emptyTitle="Belum ada pencapaian"

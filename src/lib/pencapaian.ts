@@ -46,13 +46,10 @@ export const TINGKAT_COLORS: Record<string, string> = {
 };
 
 /**
- * Emoji default per jenis, dipakai kalau baris belum punya `icon` sendiri.
- * Kolom `icon` sudah ada sejak skema awal tapi tidak pernah dirender; sekarang
- * dipakai sebagai lencana kartu.
+ * Warna lencana kartu. Sengaja tidak memakai emoji: emoji ikut tersimpan ke
+ * dalam file SQL dan rusak begitu file itu dibuka atau ditempel lewat editor
+ * yang bukan UTF-8. Bentuknya digambar sebagai SVG di komponen.
  */
-export function iconOf(item: { icon?: string | null; jenis?: string | null }): string {
-  if (item.icon) return item.icon;
-  if (item.jenis === 'Non-akademik') return '🏅';
-  if (item.jenis === 'Penghargaan') return '📜';
-  return '🏆';
+export function colorOf(item: { category?: string | null }): string {
+  return PENCAPAIAN_COLORS[item.category ?? ''] ?? '#6b7a6c';
 }

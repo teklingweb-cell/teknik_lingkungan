@@ -8,6 +8,12 @@ import {
   MITRA_STATUS,
   MITRA_TINGKAT,
 } from '@/lib/mitra';
+import {
+  PENCAPAIAN_CATEGORIES,
+  PENCAPAIAN_JENIS,
+  PENCAPAIAN_PELAKU,
+  PENCAPAIAN_TINGKAT,
+} from '@/lib/pencapaian';
 import EntityForm, { type FieldDef, type Values } from './EntityForm';
 
 const str = (v: unknown) => (v === null || v === undefined ? '' : String(v));
@@ -31,17 +37,84 @@ function durasiTahun(awal: string, akhir: string): number | null {
 
 /* ─────────────────────────── Pencapaian ─────────────────────────── */
 
-const PENCAPAIAN_CATEGORIES = ['Riset', 'Akreditasi', 'Prestasi', 'Hibah', 'Ranking', 'Lainnya'];
-
+/**
+ * Urutan field mengikuti kolom LKPS sheet 6c1/6c2 (prestasi mahasiswa) dan 4j
+ * (rekognisi dosen). `nama_pelaku` dan `bidang` hanya terisi untuk baris dosen
+ * — sheet prestasi mahasiswa tidak mencatat nama mahasiswanya.
+ */
 export function PencapaianForm({ editId }: { editId: number | null }) {
   const fields: FieldDef[] = [
     {
       kind: 'text',
       name: 'title',
-      label: 'Judul Pencapaian',
+      label: 'Judul Pencapaian / Nama Kegiatan',
       required: true,
-      placeholder: 'cth: Penghargaan Kampus Inovatif Terbaik 2024',
+      placeholder: 'cth: BIOSELOM National Essay Competition',
       maxLength: 300,
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'text',
+          name: 'hasil',
+          label: 'Prestasi yang Dicapai',
+          placeholder: 'cth: Juara I',
+          maxLength: 200,
+        },
+        {
+          kind: 'select',
+          name: 'tingkat',
+          label: 'Tingkat',
+          options: [
+            { value: '', label: '—' },
+            ...PENCAPAIAN_TINGKAT.map((c) => ({ value: c, label: c })),
+          ],
+        },
+      ],
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'select',
+          name: 'pelaku',
+          label: 'Diraih Oleh',
+          required: true,
+          options: [
+            { value: '', label: 'Pilih…' },
+            ...PENCAPAIAN_PELAKU.map((c) => ({ value: c, label: c })),
+          ],
+        },
+        {
+          kind: 'select',
+          name: 'jenis',
+          label: 'Jenis',
+          options: [
+            { value: '', label: '—' },
+            ...PENCAPAIAN_JENIS.map((c) => ({ value: c, label: c })),
+          ],
+        },
+      ],
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'text',
+          name: 'nama_pelaku',
+          label: 'Nama Dosen / Mahasiswa',
+          placeholder: 'Kosongkan bila tidak atas nama perorangan',
+          maxLength: 200,
+        },
+        {
+          kind: 'text',
+          name: 'bidang',
+          label: 'Bidang Keahlian',
+          placeholder: 'cth: Pengelolaan Kualitas Air',
+          maxLength: 200,
+        },
+      ],
     },
     {
       kind: 'textarea',
@@ -51,17 +124,22 @@ export function PencapaianForm({ editId }: { editId: number | null }) {
       placeholder: 'Deskripsi singkat pencapaian ini...',
     },
     {
+      kind: 'select',
+      name: 'category',
+      label: 'Kategori',
+      required: true,
+      options: [
+        { value: '', label: 'Pilih kategori…' },
+        ...PENCAPAIAN_CATEGORIES.map((c) => ({ value: c, label: c })),
+      ],
+    },
+    {
       kind: 'row',
       fields: [
         {
-          kind: 'select',
-          name: 'category',
-          label: 'Kategori',
-          required: true,
-          options: [
-            { value: '', label: 'Pilih kategori…' },
-            ...PENCAPAIAN_CATEGORIES.map((c) => ({ value: c, label: c })),
-          ],
+          kind: 'date',
+          name: 'tanggal',
+          label: 'Waktu Perolehan',
         },
         {
           kind: 'number',
@@ -74,6 +152,12 @@ export function PencapaianForm({ editId }: { editId: number | null }) {
         },
       ],
     },
+    {
+      kind: 'textarea',
+      name: 'bukti',
+      label: 'Bukti Pendukung',
+      placeholder: 'cth: Certificate of Reviewing – Sustainable Futures (Elsevier)',
+    },
   ];
 
   return (
@@ -84,28 +168,59 @@ export function PencapaianForm({ editId }: { editId: number | null }) {
       backHref="/admin/pencapaian"
       editId={editId}
       fields={fields}
-      initialValues={{ title: '', description: '', category: '', year: '' }}
+      initialValues={{
+        title: '',
+        description: '',
+        category: '',
+        year: '',
+        hasil: '',
+        jenis: '',
+        pelaku: '',
+        nama_pelaku: '',
+        bidang: '',
+        tingkat: '',
+        tanggal: '',
+        bukti: '',
+      }}
       fromRow={(row) => ({
         title: str(row.title),
         description: str(row.description),
         category: str(row.category),
         year: str(row.year),
+        hasil: str(row.hasil),
+        jenis: str(row.jenis),
+        pelaku: str(row.pelaku),
+        nama_pelaku: str(row.nama_pelaku),
+        bidang: str(row.bidang),
+        tingkat: str(row.tingkat),
+        tanggal: str(row.tanggal),
+        bukti: str(row.bukti),
       })}
-      // `icon` is deliberately omitted: the old form always sent null, which
-      // overrode the column's '🏆' default. Nothing renders it, so leaving it
-      // out lets the default stand.
       toPayload={(v) => ({
         title: v.title.trim(),
         description: v.description.trim(),
         category: v.category,
-        year: intOrNull(v.year),
+        // Tahun mengikuti tanggal kalau diisi, supaya keduanya tidak bisa
+        // saling bertentangan.
+        year: yearOf(v.tanggal) ?? intOrNull(v.year),
+        // `icon` sengaja tidak dikirim: lencana kartu digambar sebagai SVG
+        // berdasarkan kategori, jadi tidak ada emoji yang perlu disimpan.
+        hasil: orNull(v.hasil),
+        jenis: orNull(v.jenis),
+        pelaku: orNull(v.pelaku),
+        nama_pelaku: orNull(v.nama_pelaku),
+        bidang: orNull(v.bidang),
+        tingkat: orNull(v.tingkat),
+        tanggal: orNull(v.tanggal),
+        bukti: orNull(v.bukti),
       })}
       validate={(v) => {
         const errors: string[] = [];
         if (!v.title.trim()) errors.push('Judul wajib diisi.');
         if (!v.description.trim()) errors.push('Deskripsi wajib diisi.');
         if (!v.category) errors.push('Kategori wajib dipilih.');
-        if (!v.year.trim()) errors.push('Tahun wajib diisi.');
+        if (!v.pelaku) errors.push('Kolom "Diraih Oleh" wajib dipilih.');
+        if (!v.tanggal && !v.year.trim()) errors.push('Tahun wajib diisi bila tanggal dikosongkan.');
         return errors;
       }}
     />
