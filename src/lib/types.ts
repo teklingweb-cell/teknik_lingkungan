@@ -69,16 +69,39 @@ export type Pencapaian = {
   created_at: string | null;
 };
 
+/**
+ * Satu baris = satu kerja sama, mengikuti Tabel 2 LKPS (sheet 2a1/2a2/2a3 pada
+ * "LKPS TL - 14 Agustus 2026.xlsx"). Satu lembaga bisa muncul lebih dari sekali
+ * karena punya beberapa kerja sama.
+ */
 export type Mitra = {
   id: number;
+  /** Kolom Excel "Lembaga Mitra". */
   name: string;
+  /** Turunan dari nama lembaga — bukan kolom Excel. Lihat MITRA_CATEGORIES. */
   category: string;
-  description: string;
+  /** Ringkasan kartu; disalin dari `manfaat` saat impor. */
+  description: string | null;
   since_year: number | null;
   website_url: string | null;
   /** Not in the documented schema; read defensively. */
   logo_url?: string | null;
   created_at: string | null;
+
+  /* ── Kolom yang mengikuti Tabel 2 LKPS ── */
+  /** Pendidikan | Penelitian | Pengabdian kepada Masyarakat (dari sheet asal). */
+  jenis_kerjasama: string | null;
+  /** Internasional | Nasional | Lokal/Wilayah. */
+  tingkat: string | null;
+  judul_kegiatan: string | null;
+  manfaat: string | null;
+  /** ISO date, mis. "2026-08-01". */
+  tanggal_awal: string | null;
+  tanggal_akhir: string | null;
+  durasi_tahun: number | null;
+  /** Valid | Tidak Valid. */
+  status_kerjasama: string | null;
+  bukti_kerjasama: string | null;
 };
 
 export type ContactMessage = {

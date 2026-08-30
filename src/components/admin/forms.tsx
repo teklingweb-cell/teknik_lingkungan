@@ -1,11 +1,33 @@
 'use client';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import {
+  MITRA_BUKTI,
+  MITRA_CATEGORIES,
+  MITRA_JENIS,
+  MITRA_STATUS,
+  MITRA_TINGKAT,
+} from '@/lib/mitra';
 import EntityForm, { type FieldDef, type Values } from './EntityForm';
 
 const str = (v: unknown) => (v === null || v === undefined ? '' : String(v));
 const orNull = (v: string) => (v.trim() ? v.trim() : null);
 const intOrNull = (v: string) => (v.trim() ? parseInt(v, 10) : null);
+
+/** Tahun dari tanggal ISO "YYYY-MM-DD". */
+const yearOf = (iso: string) => (/^\d{4}-/.test(iso) ? parseInt(iso.slice(0, 4), 10) : null);
+
+/**
+ * Durasi kerja sama dalam tahun penuh, seperti kolom "Durasi" di LKPS:
+ * dibulatkan ke bawah, jadi kerja sama enam bulan tercatat 0.
+ */
+function durasiTahun(awal: string, akhir: string): number | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(awal) || !/^\d{4}-\d{2}-\d{2}$/.test(akhir)) return null;
+  let years = Number(akhir.slice(0, 4)) - Number(awal.slice(0, 4));
+  // Belum genap ulang tahunnya pada tanggal akhir → kurangi satu.
+  if (akhir.slice(5) < awal.slice(5)) years -= 1;
+  return Math.max(0, years);
+}
 
 /* ─────────────────────────── Pencapaian ─────────────────────────── */
 
@@ -244,22 +266,49 @@ export function PenelitianForm({ editId }: { editId: number | null }) {
 
 /* ───────────────────────────── Mitra ───────────────────────────── */
 
-const MITRA_CATEGORIES = ['Industri', 'Akademik', 'Pemerintah', 'Internasional'];
-
+/**
+ * Satu baris = satu kerja sama, mengikuti Tabel 2 LKPS (Kerjasama Tridharma).
+ * Urutan field di bawah menyalin urutan kolom pada sheet 2a1/2a2/2a3.
+ */
 export function MitraForm({ editId }: { editId: number | null }) {
   const fields: FieldDef[] = [
     {
       kind: 'text',
       name: 'name',
-      label: 'Nama Institusi / Perusahaan',
+      label: 'Lembaga Mitra',
       required: true,
-      placeholder: 'cth: PT Pertamina Persero',
-      maxLength: 150,
+      placeholder: 'cth: PT. Borneo Alumina Indonesia',
+      maxLength: 250,
+    },
+    {
+      kind: 'row',
+      fields: [
+        {
+          kind: 'select',
+          name: 'jenis_kerjasama',
+          label: 'Jenis Kerja Sama',
+          required: true,
+          options: [
+            { value: '', label: 'Pilih jenis…' },
+            ...MITRA_JENIS.map((c) => ({ value: c, label: c })),
+          ],
+        },
+        {
+          kind: 'select',
+          name: 'tingkat',
+          label: 'Tingkat',
+          required: true,
+          options: [
+            { value: '', label: 'Pilih tingkat…' },
+            ...MITRA_TINGKAT.map((c) => ({ value: c, label: c })),
+          ],
+        },
+      ],
     },
     {
       kind: 'select',
       name: 'category',
-      label: 'Kategori',
+      label: 'Kategori Lembaga',
       required: true,
       options: [
         { value: '', label: 'Pilih kategori…' },
@@ -268,21 +317,36 @@ export function MitraForm({ editId }: { editId: number | null }) {
     },
     {
       kind: 'textarea',
-      name: 'description',
-      label: 'Deskripsi Kerjasama',
+      name: 'judul_kegiatan',
+      label: 'Judul Kegiatan Kerja Sama',
       required: true,
-      placeholder: 'Deskripsi singkat bentuk kerjasama...',
+      placeholder: 'cth: Kerja Praktik Mahasiswa Program Studi Teknik Lingkungan',
+    },
+    {
+      kind: 'textarea',
+      name: 'manfaat',
+      label: 'Manfaat bagi Program Studi',
+      required: true,
+      placeholder: 'cth: Pengajaran, transfer ilmu pengetahuan, serta penguatan kompetensi…',
+    },
+    {
+      kind: 'row',
+      fields: [
+        { kind: 'date', name: 'tanggal_awal', label: 'Tanggal Awal', required: true },
+        { kind: 'date', name: 'tanggal_akhir', label: 'Tanggal Akhir', required: true },
+      ],
     },
     {
       kind: 'row',
       fields: [
         {
-          kind: 'number',
-          name: 'since_year',
-          label: 'Tahun Bergabung',
-          placeholder: '2015',
-          min: 1900,
-          max: 2100,
+          kind: 'select',
+          name: 'status_kerjasama',
+          label: 'Status Kerja Sama',
+          options: [
+            { value: '', label: '—' },
+            ...MITRA_STATUS.map((c) => ({ value: c, label: c })),
+          ],
         },
         {
           kind: 'url',
@@ -292,22 +356,37 @@ export function MitraForm({ editId }: { editId: number | null }) {
         },
       ],
     },
+    {
+      kind: 'select',
+      name: 'bukti_kerjasama',
+      label: 'Bukti Kerja Sama',
+      options: [
+        { value: '', label: '—' },
+        ...MITRA_BUKTI.map((c) => ({ value: c, label: c })),
+      ],
+    },
     { kind: 'gdrive', name: 'logo_url', label: 'Logo Mitra (Google Drive)' },
   ];
 
   return (
     <EntityForm
       table="mitra"
-      titles={{ create: 'Tambah Mitra', edit: 'Edit Mitra' }}
-      cardTitles={{ create: 'Mitra Baru', edit: 'Edit Mitra' }}
+      titles={{ create: 'Tambah Kerja Sama', edit: 'Edit Kerja Sama' }}
+      cardTitles={{ create: 'Kerja Sama Baru', edit: 'Edit Kerja Sama' }}
       backHref="/admin/mitra"
       editId={editId}
       fields={fields}
       initialValues={{
         name: '',
         category: '',
-        description: '',
-        since_year: '',
+        jenis_kerjasama: '',
+        tingkat: '',
+        judul_kegiatan: '',
+        manfaat: '',
+        tanggal_awal: '',
+        tanggal_akhir: '',
+        status_kerjasama: 'Valid',
+        bukti_kerjasama: '',
         website_url: '',
         logo_url: '',
         logo_url_raw: '',
@@ -315,8 +394,14 @@ export function MitraForm({ editId }: { editId: number | null }) {
       fromRow={(row) => ({
         name: str(row.name),
         category: str(row.category),
-        description: str(row.description),
-        since_year: str(row.since_year),
+        jenis_kerjasama: str(row.jenis_kerjasama),
+        tingkat: str(row.tingkat),
+        judul_kegiatan: str(row.judul_kegiatan),
+        manfaat: str(row.manfaat),
+        tanggal_awal: str(row.tanggal_awal),
+        tanggal_akhir: str(row.tanggal_akhir),
+        status_kerjasama: str(row.status_kerjasama),
+        bukti_kerjasama: str(row.bukti_kerjasama),
         website_url: str(row.website_url),
         logo_url: str(row.logo_url),
         logo_url_raw: str(row.logo_url),
@@ -324,16 +409,36 @@ export function MitraForm({ editId }: { editId: number | null }) {
       toPayload={(v) => ({
         name: v.name.trim(),
         category: v.category,
-        description: v.description.trim(),
-        since_year: intOrNull(v.since_year),
+        jenis_kerjasama: v.jenis_kerjasama,
+        tingkat: v.tingkat,
+        judul_kegiatan: v.judul_kegiatan.trim(),
+        manfaat: v.manfaat.trim(),
+        // Kolom lama; tetap diisi supaya tampilan yang masih membacanya
+        // menampilkan teks yang sama dengan `manfaat`.
+        description: v.manfaat.trim(),
+        tanggal_awal: orNull(v.tanggal_awal),
+        tanggal_akhir: orNull(v.tanggal_akhir),
+        // Diturunkan, bukan diketik: dua nilai ini selalu mengikuti tanggalnya.
+        since_year: yearOf(v.tanggal_awal),
+        durasi_tahun: durasiTahun(v.tanggal_awal, v.tanggal_akhir),
+        status_kerjasama: orNull(v.status_kerjasama),
+        bukti_kerjasama: orNull(v.bukti_kerjasama),
         website_url: orNull(v.website_url),
         logo_url: orNull(v.logo_url),
       })}
       validate={(v) => {
         const errors: string[] = [];
-        if (!v.name.trim()) errors.push('Nama wajib diisi.');
-        if (!v.category) errors.push('Kategori wajib dipilih.');
-        if (!v.description.trim()) errors.push('Deskripsi wajib diisi.');
+        if (!v.name.trim()) errors.push('Lembaga mitra wajib diisi.');
+        if (!v.jenis_kerjasama) errors.push('Jenis kerja sama wajib dipilih.');
+        if (!v.tingkat) errors.push('Tingkat wajib dipilih.');
+        if (!v.category) errors.push('Kategori lembaga wajib dipilih.');
+        if (!v.judul_kegiatan.trim()) errors.push('Judul kegiatan wajib diisi.');
+        if (!v.manfaat.trim()) errors.push('Manfaat bagi program studi wajib diisi.');
+        if (!v.tanggal_awal) errors.push('Tanggal awal wajib diisi.');
+        if (!v.tanggal_akhir) errors.push('Tanggal akhir wajib diisi.');
+        if (v.tanggal_awal && v.tanggal_akhir && v.tanggal_akhir < v.tanggal_awal) {
+          errors.push('Tanggal akhir tidak boleh mendahului tanggal awal.');
+        }
         return errors;
       }}
     />

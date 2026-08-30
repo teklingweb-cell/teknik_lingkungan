@@ -15,7 +15,7 @@ export type Values = Record<string, string>;
 
 export type FieldDef =
   | {
-      kind: 'text' | 'url' | 'email';
+      kind: 'text' | 'url' | 'email' | 'date';
       name: string;
       label: React.ReactNode;
       required?: boolean;

@@ -3,9 +3,15 @@
 import { useMemo, useState } from 'react';
 import PublicSearch from './PublicSearch';
 import type { Mitra } from '@/lib/types';
-import { toGDriveImg } from '@/lib/utils';
+import { toGDriveImg, formatDateShort } from '@/lib/utils';
+import { MITRA_JENIS, MITRA_JENIS_COLORS, jenisLabel } from '@/lib/mitra';
 
-const CATEGORIES = ['all', 'Industri', 'Akademik', 'Pemerintah', 'Internasional'] as const;
+/**
+ * Tab utama memakai *jenis kerja sama* (sesuai Tabel 2 LKPS), bukan kategori
+ * lembaga — itulah pembagian yang dipakai di dokumen sumbernya. Kategori dan
+ * tingkat tetap bisa dicari lewat kotak pencarian.
+ */
+const TABS = ['all', ...MITRA_JENIS] as const;
 
 /** Staggers the reveal across each row of three cards. */
 function delayClass(i: number): string {
@@ -67,16 +73,43 @@ function PartnerLogo({ item }: { item: Mitra }) {
   );
 }
 
+function Chip({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        fontSize: '0.62rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        fontFamily: 'var(--font-body)',
+        fontWeight: 600,
+        color,
+        background: `${color}14`,
+        border: `1px solid ${color}33`,
+        borderRadius: 999,
+        padding: '3px 9px',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
 export default function MitraList({ items }: { items: Mitra[] }) {
   const [filter, setFilter] = useState<string>('all');
   const [query, setQuery] = useState('');
 
   const visible = useMemo(() => {
-    const byCat = filter === 'all' ? items : items.filter((d) => d.category === filter);
+    const byJenis =
+      filter === 'all' ? items : items.filter((d) => d.jenis_kerjasama === filter);
     const q = query.trim().toLowerCase();
-    if (!q) return byCat;
-    return byCat.filter((d) =>
-      [d.name, d.category, d.description, String(d.since_year ?? '')].filter(Boolean).join(' ').toLowerCase().includes(q)
+    if (!q) return byJenis;
+    return byJenis.filter((d) =>
+      [d.name, d.category, d.tingkat, d.jenis_kerjasama, d.judul_kegiatan, d.manfaat]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+        .includes(q)
     );
   }, [items, filter, query]);
 
@@ -85,19 +118,19 @@ export default function MitraList({ items }: { items: Mitra[] }) {
       <PublicSearch
         value={query}
         onChange={setQuery}
-        placeholder="Cari nama mitra atau bidang kerja sama…"
+        placeholder="Cari lembaga, kegiatan, atau bidang kerja sama…"
         resultCount={visible.length}
         totalCount={items.length}
       />
 
       <div className="tab-bar fade-up" style={{ marginBottom: 36 }}>
-        {CATEGORIES.map((c) => (
+        {TABS.map((c) => (
           <button
             key={c}
             className={`tab-btn${filter === c ? ' active' : ''}`}
             onClick={() => setFilter(c)}
           >
-            {c === 'all' ? 'Semua' : c}
+            {c === 'all' ? 'Semua' : jenisLabel(c)}
           </button>
         ))}
       </div>
@@ -105,7 +138,7 @@ export default function MitraList({ items }: { items: Mitra[] }) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))',
+          gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))',
           gap: 24,
           minHeight: 200,
         }}
@@ -113,26 +146,43 @@ export default function MitraList({ items }: { items: Mitra[] }) {
         {visible.length ? (
           visible.map((item, i) => (
             <div key={item.id} className={`partner-card fade-up${delayClass(i)}`}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
                 <PartnerLogo item={item} />
-                <span
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {item.jenis_kerjasama && (
+                    <Chip color={MITRA_JENIS_COLORS[item.jenis_kerjasama] ?? '#6b7a6c'}>
+                      {jenisLabel(item.jenis_kerjasama)}
+                    </Chip>
+                  )}
+                  {item.tingkat && <Chip color="#6b7a6c">{item.tingkat}</Chip>}
+                </div>
+              </div>
+
+              <div className="partner-name">{item.name}</div>
+
+              {item.judul_kegiatan && (
+                <div
                   style={{
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    color: 'var(--moss)',
-                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.82rem',
+                    lineHeight: 1.5,
+                    color: 'var(--navy)',
                     fontWeight: 500,
+                    margin: '6px 0 8px',
                   }}
                 >
-                  {item.category ?? ''}
-                </span>
-              </div>
-              <div className="partner-name">{item.name}</div>
-              <div className="partner-desc">{item.description ?? ''}</div>
+                  {item.judul_kegiatan}
+                </div>
+              )}
+
+              <div className="partner-desc">{item.manfaat ?? item.description ?? ''}</div>
+
               <div className="partner-footer">
                 <span className="partner-since">
-                  {item.since_year ? `Mitra sejak ${item.since_year}` : ''}
+                  {item.tanggal_awal
+                    ? `${formatDateShort(item.tanggal_awal)} – ${formatDateShort(item.tanggal_akhir)}`
+                    : item.since_year
+                      ? `Mitra sejak ${item.since_year}`
+                      : ''}
                 </span>
                 {item.website_url && (
                   <a
@@ -156,7 +206,7 @@ export default function MitraList({ items }: { items: Mitra[] }) {
               color: 'rgba(45,58,46,0.5)',
             }}
           >
-            Tidak ada mitra ditemukan.
+            Tidak ada kerja sama ditemukan.
           </div>
         )}
       </div>

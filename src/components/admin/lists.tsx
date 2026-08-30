@@ -1,6 +1,13 @@
 'use client';
 
 import type { Mitra, Pencapaian, Penelitian, Staff } from '@/lib/types';
+import { formatDateShort } from '@/lib/utils';
+import {
+  MITRA_CATEGORY_COLORS,
+  MITRA_JENIS_COLORS,
+  isAktif,
+  jenisLabel,
+} from '@/lib/mitra';
 import AdminList, { Badge, type Column } from './AdminList';
 
 const muted: React.CSSProperties = { color: 'var(--muted)' };
@@ -194,55 +201,65 @@ export function PenelitianAdminList({ flash }: { flash?: string }) {
 
 /* ───────────────────────────── Mitra ───────────────────────────── */
 
-const MITRA_COLORS: Record<string, string> = {
-  Industri: '#2563eb',
-  Akademik: '#16a34a',
-  Pemerintah: '#d97706',
-  Internasional: '#9333ea',
-};
-
 export function MitraAdminList({ flash }: { flash?: string }) {
   const columns: Column<Mitra>[] = [
     {
-      header: 'Nama',
+      header: 'Lembaga Mitra',
       cell: (item) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div className="partner-avatar">{initialOf(item.name)}</div>
           <div>
             <div style={{ fontWeight: 500, color: 'var(--navy)' }}>{item.name}</div>
-            <div style={{ fontSize: '0.75rem', ...muted, maxWidth: 280 }}>
-              {truncate(item.description, 60)}
+            <div style={{ fontSize: '0.75rem', ...muted, maxWidth: 320 }}>
+              {truncate(item.judul_kegiatan ?? item.description, 70)}
             </div>
           </div>
         </div>
       ),
     },
     {
-      header: 'Kategori',
-      hideMobile: true,
-      cell: (item) => <Badge color={MITRA_COLORS[item.category] ?? '#6b7a6c'}>{item.category}</Badge>,
-    },
-    {
-      header: 'Sejak',
-      hideMobile: true,
-      cellStyle: muted,
-      cell: (item) => `Sejak ${item.since_year ?? '–'}`,
-    },
-    {
-      header: 'Website',
+      header: 'Jenis',
       hideMobile: true,
       cell: (item) =>
-        item.website_url ? (
-          <a
-            href={item.website_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--green)', fontSize: '0.78rem' }}
-          >
-            Website →
-          </a>
+        item.jenis_kerjasama ? (
+          <Badge color={MITRA_JENIS_COLORS[item.jenis_kerjasama] ?? '#6b7a6c'}>
+            {jenisLabel(item.jenis_kerjasama)}
+          </Badge>
         ) : (
           <span style={muted}>–</span>
+        ),
+    },
+    {
+      header: 'Kategori',
+      hideMobile: true,
+      cell: (item) => (
+        <Badge color={MITRA_CATEGORY_COLORS[item.category] ?? '#6b7a6c'}>{item.category}</Badge>
+      ),
+    },
+    {
+      header: 'Tingkat',
+      hideMobile: true,
+      cellStyle: muted,
+      cell: (item) => item.tingkat ?? '–',
+    },
+    {
+      header: 'Periode',
+      hideMobile: true,
+      cellStyle: muted,
+      cell: (item) =>
+        item.tanggal_awal
+          ? `${formatDateShort(item.tanggal_awal)} – ${formatDateShort(item.tanggal_akhir)}`
+          : '–',
+    },
+    {
+      // Berlaku/berakhir dihitung dari tanggal, bukan dari kolom "Status
+      // Kerjasama" Excel — kolom itu menandai keabsahan bukti, bukan masa aktif.
+      header: 'Status',
+      cell: (item) =>
+        isAktif(item) ? (
+          <Badge color="#16a34a">Berlaku</Badge>
+        ) : (
+          <Badge color="#94a3b8">Berakhir</Badge>
         ),
     },
   ];
@@ -250,28 +267,32 @@ export function MitraAdminList({ flash }: { flash?: string }) {
   return (
     <AdminList<Mitra>
       table="mitra"
-      title="Manajemen Mitra"
-      cardTitle="Daftar Mitra"
+      title="Manajemen Kerja Sama & Mitra"
+      cardTitle="Daftar Kerja Sama"
       addHref="/admin/mitra-form"
-      addLabel="Tambah Mitra"
+      addLabel="Tambah Kerja Sama"
       editHref={(row) => `/admin/mitra-form?edit=${row.id}`}
-      orderBy={{ column: 'since_year', ascending: true }}
+      orderBy={{ column: 'tanggal_akhir', ascending: false }}
       columns={columns}
       searchFields={(item) => [
         item.name,
         item.category,
-        item.description,
-        item.since_year,
+        item.jenis_kerjasama,
+        item.tingkat,
+        item.judul_kegiatan,
+        item.manfaat,
+        item.tanggal_awal,
+        item.tanggal_akhir,
         item.website_url,
       ]}
-      searchPlaceholder="Cari nama, kategori, deskripsi…"
+      searchPlaceholder="Cari lembaga, kegiatan, jenis, tingkat…"
       labelOf={(item) => item.name}
-      deleteTitle="Hapus Mitra?"
-      emptyTitle="Belum ada mitra"
+      deleteTitle="Hapus Kerja Sama?"
+      emptyTitle="Belum ada kerja sama"
       flash={flash}
       flashMessages={{
-        added: '✓ Mitra berhasil ditambahkan.',
-        updated: '✓ Mitra berhasil diperbarui.',
+        added: '✓ Kerja sama berhasil ditambahkan.',
+        updated: '✓ Kerja sama berhasil diperbarui.',
       }}
     />
   );
