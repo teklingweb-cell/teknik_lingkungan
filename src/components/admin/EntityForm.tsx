@@ -8,7 +8,7 @@ import AdminShell from './AdminShell';
 import FormCard, { ErrorList } from './FormCard';
 import GDriveField from './GDriveField';
 import { uniqueSlug } from './uniqueSlug';
-import { slugOf } from '@/lib/utils';
+import { slugOf, parsePeople } from '@/lib/utils';
 import { revalidatePublic, type RevalidateEntity } from './revalidate';
 
 export type Values = Record<string, string>;
@@ -146,10 +146,12 @@ function Field({
   // Beberapa nama sekaligus. Disimpan sebagai satu string dipisah koma, sama
   // seperti sebelumnya, jadi data lama tetap terbaca.
   if (def.kind === 'people') {
-    const chosen = (values[def.name] ?? '')
-      .split(',')
-      .map((v) => v.trim())
-      .filter(Boolean);
+    // parsePeople, bukan split(','): nama dosen mengandung koma di dalam
+    // gelarnya ("Dr. Rizki Purnaini, S.T., M.T."), sedangkan penyimpanannya
+    // juga dipisah koma. Memecah mentah membuat satu nama jadi tiga potongan,
+    // sehingga tidak ada kapsul yang pernah tampak terpilih dan klik kedua
+    // tidak bisa membatalkannya.
+    const chosen = parsePeople(values[def.name]);
 
     const toggle = (name: string) => {
       const next = chosen.includes(name)
@@ -160,7 +162,10 @@ function Field({
 
     return (
       <div className="field">
-        <label>{def.label}</label>
+        <label>
+          {def.label}
+          {chosen.length > 0 && <span className="people-count">{chosen.length} dipilih</span>}
+        </label>
         <div className="people-picker">
           {staff.map((n) => {
             const on = chosen.includes(n);
@@ -170,8 +175,10 @@ function Field({
                 key={n}
                 className={`people-chip${on ? ' on' : ''}`}
                 aria-pressed={on}
+                title={on ? 'Klik untuk melepas' : 'Klik untuk menambah'}
                 onClick={() => toggle(n)}
               >
+                {on && <span className="people-chip-tick">✓</span>}
                 {n}
               </button>
             );

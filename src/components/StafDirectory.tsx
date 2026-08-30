@@ -57,7 +57,6 @@ function DosenCard({ person }: { person: Staff }) {
       </div>
       <div className="staff-expertise">{person.expertise_desc ?? ''}</div>
       <div className="staff-footer">
-        <span className="staff-pubs">{person.publications_count ?? 0} Publikasi</span>
         <div className="staff-actions">
           {person.email && (
             <a href={`mailto:${person.email}`} className="staff-btn" aria-label="Email">

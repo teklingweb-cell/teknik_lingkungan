@@ -90,9 +90,6 @@ function BioModal({
   }, [onClose]);
 
   const stats: { label: string; value: string | number }[] = [];
-  if ((person.publications_count ?? 0) > 0) {
-    stats.push({ label: 'Publikasi', value: person.publications_count! });
-  }
   if (person.email) stats.push({ label: 'Email', value: person.email });
   if (person.graduation_year) stats.push({ label: 'Tahun Lulus', value: person.graduation_year });
   if (person.type) {

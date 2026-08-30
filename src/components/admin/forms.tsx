@@ -397,13 +397,6 @@ export function StaffForm({ editId }: { editId: number | null }) {
       kind: 'row',
       fields: [
         { kind: 'email', name: 'email', label: 'Email' },
-        {
-          kind: 'number',
-          name: 'publications_count',
-          label: 'Jumlah Publikasi',
-          placeholder: '0',
-          min: 0,
-        },
       ],
     },
     {
@@ -462,7 +455,6 @@ export function StaffForm({ editId }: { editId: number | null }) {
         org_level: '',
         expertise_desc: '',
         email: '',
-        publications_count: '0',
         linkedin_url: '',
         graduation_year: '',
         photo_url: '',
@@ -477,7 +469,6 @@ export function StaffForm({ editId }: { editId: number | null }) {
         org_level: str(row.org_level),
         expertise_desc: str(row.expertise_desc),
         email: str(row.email),
-        publications_count: str(row.publications_count ?? 0),
         linkedin_url: str(row.linkedin_url),
         graduation_year: str(row.graduation_year),
         photo_url: str(row.photo_url),
@@ -491,7 +482,6 @@ export function StaffForm({ editId }: { editId: number | null }) {
         bidang: v.bidang.trim(),
         expertise_desc: v.expertise_desc.trim(),
         email: orNull(v.email),
-        publications_count: parseInt(v.publications_count, 10) || 0,
         linkedin_url: orNull(v.linkedin_url),
         graduation_year: intOrNull(v.graduation_year),
         photo_url: orNull(v.photo_url),

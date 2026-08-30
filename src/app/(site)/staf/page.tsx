@@ -19,7 +19,7 @@ export default async function StafPage() {
   const { data } = await supabasePublic
     .from('staff')
     .select('*')
-    .order('publications_count', { ascending: false })
+    .order('name', { ascending: true })
     .limit(100);
 
   const people = (data ?? []) as Staff[];

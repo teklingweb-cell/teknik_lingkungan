@@ -26,7 +26,6 @@ export type Staff = {
   bidang: string;
   expertise_desc: string | null;
   email: string | null;
-  publications_count: number | null;
   linkedin_url: string | null;
   photo_url: string | null;
   nim_nip: string | null;

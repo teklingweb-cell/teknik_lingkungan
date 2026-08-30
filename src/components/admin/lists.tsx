@@ -349,12 +349,6 @@ export function StaffAdminList({ flash }: { flash?: string }) {
       },
     },
     {
-      header: 'Publikasi',
-      hideMobile: true,
-      cellStyle: muted,
-      cell: (item) => `${item.publications_count ?? 0} pub`,
-    },
-    {
       header: 'Email',
       hideMobile: true,
       cellStyle: { ...muted, fontSize: '0.78rem' },
