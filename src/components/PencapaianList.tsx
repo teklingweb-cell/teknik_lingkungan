@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import PublicSearch from './PublicSearch';
+import DetailModal, { DetailRow } from './DetailModal';
 import type { Pencapaian } from '@/lib/types';
-import { formatDateShort } from '@/lib/utils';
+import { formatDate, formatDateShort } from '@/lib/utils';
 import { PENCAPAIAN_CATEGORIES, TINGKAT_COLORS, colorOf } from '@/lib/pencapaian';
 
 const TABS = ['all', ...PENCAPAIAN_CATEGORIES] as const;
@@ -23,13 +24,13 @@ function delayClass(i: number): string {
 }
 
 /** Lencana piala. SVG, bukan emoji — lihat catatan di lib/pencapaian.ts. */
-function AwardBadge({ color }: { color: string }) {
+function AwardBadge({ color, size = 36 }: { color: string; size?: number }) {
   return (
     <span
       style={{
-        width: 36,
-        height: 36,
-        borderRadius: 10,
+        width: size,
+        height: size,
+        borderRadius: size / 3.5,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -40,8 +41,8 @@ function AwardBadge({ color }: { color: string }) {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
+        width={size / 2}
+        height={size / 2}
         viewBox="0 0 24 24"
         fill="none"
         stroke={color}
@@ -80,6 +81,7 @@ function Chip({ color, children }: { color: string; children: React.ReactNode })
 export default function PencapaianList({ items }: { items: Pencapaian[] }) {
   const [filter, setFilter] = useState<string>('all');
   const [query, setQuery] = useState('');
+  const [active, setActive] = useState<Pencapaian | null>(null);
 
   // Tab hanya menampilkan kategori yang benar-benar ada isinya — daftar
   // kategori memuat beberapa yang baru terpakai kalau diinput manual.
@@ -133,9 +135,14 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
       >
         {visible.length ? (
           visible.map((item, i) => (
-            <div
+            <button
               key={item.id}
-              className={`achievement-card fade-up${delayClass(i)}`}
+              type="button"
+              // <button>, bukan <div onClick>: kartu jadi bisa dijangkau Tab
+              // dan dibuka dengan Enter/Spasi tanpa penanganan tambahan.
+              className={`achievement-card card-button fade-up${delayClass(i)}`}
+              onClick={() => setActive(item)}
+              aria-haspopup="dialog"
               // Kolom flex supaya baris lencana selalu menempel ke dasar kartu
               // dan semua kartu dalam satu baris grid berakhir rata.
               style={{ display: 'flex', flexDirection: 'column' }}
@@ -162,7 +169,7 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
                   style={{
                     fontSize: '0.92rem',
                     fontWeight: 600,
-                    color: 'var(--green)',
+                    color: 'var(--forest)',
                     lineHeight: 1.4,
                     marginBottom: 6,
                   }}
@@ -197,6 +204,7 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
                   paddingTop: 14,
                   display: 'flex',
                   flexWrap: 'wrap',
+                  alignItems: 'center',
                   gap: 6,
                 }}
               >
@@ -204,8 +212,19 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
                 {item.tingkat && (
                   <Chip color={TINGKAT_COLORS[item.tingkat] ?? '#6b7a6c'}>{item.tingkat}</Chip>
                 )}
+                <span
+                  style={{
+                    marginLeft: 'auto',
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
+                    color: 'var(--gold)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Detail →
+                </span>
               </div>
-            </div>
+            </button>
           ))
         ) : (
           <div
@@ -220,6 +239,46 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
           </div>
         )}
       </div>
+
+      <DetailModal
+        open={active !== null}
+        title={active?.title ?? ''}
+        onClose={() => setActive(null)}
+      >
+        {active && (
+          <>
+            <div style={{ marginBottom: 16 }}>
+              <AwardBadge color={colorOf(active)} size={44} />
+            </div>
+
+            <h2 className="detail-title">{active.title}</h2>
+
+            {active.hasil && <div className="detail-lead">{active.hasil}</div>}
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 18 }}>
+              <Chip color={colorOf(active)}>{active.category}</Chip>
+              {active.tingkat && (
+                <Chip color={TINGKAT_COLORS[active.tingkat] ?? '#6b7a6c'}>{active.tingkat}</Chip>
+              )}
+            </div>
+
+            <div className="detail-desc">{active.description}</div>
+
+            <div className="detail-rows">
+              <DetailRow label="Diraih oleh" value={active.pelaku} />
+              <DetailRow label="Nama" value={active.nama_pelaku} />
+              <DetailRow label="Bidang Keahlian" value={active.bidang} />
+              <DetailRow label="Jenis" value={active.jenis} />
+              <DetailRow label="Tingkat" value={active.tingkat} />
+              <DetailRow
+                label="Waktu Perolehan"
+                value={active.tanggal ? formatDate(active.tanggal) : `Tahun ${active.year}`}
+              />
+              <DetailRow label="Bukti Pendukung" value={active.bukti} />
+            </div>
+          </>
+        )}
+      </DetailModal>
     </>
   );
 }
