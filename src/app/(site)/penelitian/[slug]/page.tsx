@@ -174,14 +174,17 @@ export default async function PenelitianDetailPage({
         </div>
       </div>
 
-      <div style={{ background: '#fff', borderBottom: '1px solid rgba(26,46,30,0.06)' }}>
-        <div className="container" style={{ padding: '12px 24px' }}>
+      {/* Latar dan padding pindah ke detail.css: `.breadcrumb` global diwarnai
+          untuk hero gelap, dan hanya halaman ini yang menaruhnya di bar putih —
+          jadi pembalikan warnanya perlu selektor, bukan gaya inline. */}
+      <div className="breadcrumb-bar">
+        <div className="container">
           <div className="breadcrumb">
             <Link href="/">Beranda</Link>
             <span>›</span>
             <Link href="/penelitian">Penelitian</Link>
             <span>›</span>
-            <span>{shortTitle}</span>
+            <span className="breadcrumb-current">{shortTitle}</span>
           </div>
         </div>
       </div>
