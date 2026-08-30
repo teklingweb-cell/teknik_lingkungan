@@ -59,14 +59,38 @@ export type Penelitian = {
   created_at: string | null;
 };
 
+/**
+ * Satu baris = satu pencapaian. Kolom di bawah mengikuti LKPS sheet 6c1
+ * (Prestasi Akademik Mahasiswa), 6c2 (Prestasi Non-akademik Mahasiswa), dan 4j
+ * (Rekognisi DTPS) pada "LKPS TL - 14 Agustus 2026.xlsx".
+ */
 export type Pencapaian = {
   id: number;
+  /** "Nama Kegiatan" (6c1/6c2) atau nama sertifikat penghargaan (4j). */
   title: string;
   description: string;
   category: string;
   year: number;
   icon: string | null;
   created_at: string | null;
+
+  /* ── Kolom yang mengikuti LKPS ── */
+  /** "Prestasi yang Dicapai", mis. "Juara I", "Medali Perak kategori Environment". */
+  hasil: string | null;
+  /** Akademik | Non-akademik | Penghargaan. */
+  jenis: string | null;
+  /** Mahasiswa | Dosen | Institusi. */
+  pelaku: string | null;
+  /** Nama DTPS — hanya terisi untuk baris dari sheet 4j. */
+  nama_pelaku: string | null;
+  /** "Bidang Keahlian" (sheet 4j). */
+  bidang: string | null;
+  /** Lokal/Wilayah | Nasional | Internasional. */
+  tingkat: string | null;
+  /** "Waktu Perolehan" (6c1/6c2). Kosong untuk 4j, yang hanya mencatat tahun. */
+  tanggal: string | null;
+  /** "Bukti Pendukung" (sheet 4j). */
+  bukti: string | null;
 };
 
 /**
