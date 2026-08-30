@@ -78,20 +78,20 @@ export default function DetailModal({
 
   return (
     <div
-      className="detail-overlay"
+      className="dm-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className="detail-panel"
+        className="dm-panel"
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
       >
-        <button className="detail-close" onClick={onClose} aria-label="Tutup">
+        <button className="dm-close" onClick={onClose} aria-label="Tutup">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -115,9 +115,9 @@ export default function DetailModal({
 export function DetailRow({ label, value }: { label: string; value?: React.ReactNode }) {
   if (value === null || value === undefined || value === '') return null;
   return (
-    <div className="detail-row">
-      <div className="detail-row-label">{label}</div>
-      <div className="detail-row-value">{value}</div>
+    <div className="dm-row">
+      <div className="dm-row-label">{label}</div>
+      <div className="dm-row-value">{value}</div>
     </div>
   );
 }

@@ -251,9 +251,9 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
               <AwardBadge color={colorOf(active)} size={44} />
             </div>
 
-            <h2 className="detail-title">{active.title}</h2>
+            <h2 className="dm-title">{active.title}</h2>
 
-            {active.hasil && <div className="detail-lead">{active.hasil}</div>}
+            {active.hasil && <div className="dm-lead">{active.hasil}</div>}
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 18 }}>
               <Chip color={colorOf(active)}>{active.category}</Chip>
@@ -262,9 +262,9 @@ export default function PencapaianList({ items }: { items: Pencapaian[] }) {
               )}
             </div>
 
-            <div className="detail-desc">{active.description}</div>
+            <div className="dm-desc">{active.description}</div>
 
-            <div className="detail-rows">
+            <div className="dm-rows">
               <DetailRow label="Diraih oleh" value={active.pelaku} />
               <DetailRow label="Nama" value={active.nama_pelaku} />
               <DetailRow label="Bidang Keahlian" value={active.bidang} />
