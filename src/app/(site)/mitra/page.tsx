@@ -3,6 +3,7 @@ import { pageMetadata } from '@/lib/seo';
 import './mitra.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { Mitra } from '@/lib/types';
+import { todayISO } from '@/lib/utils';
 import PageHero from '@/components/PageHero';
 import MitraList from '@/components/MitraList';
 
@@ -32,39 +33,28 @@ const statLabel: React.CSSProperties = {
   marginTop: 4,
 };
 
-/**
- * Mean partnership length in years. Rows with a missing, future, or absurdly old
- * `since_year` are excluded rather than skewing the average.
- */
-function averagePartnershipYears(items: Mitra[]): string {
-  const currentYear = new Date().getFullYear();
-  const valid = items.filter(
-    (d) => d.since_year && d.since_year >= 1900 && d.since_year <= currentYear
-  );
-  if (!valid.length) return '–';
-
-  const total = valid.reduce((sum, d) => sum + Math.max(0, currentYear - d.since_year!), 0);
-  return String(Math.round(total / valid.length));
-}
-
 export default async function MitraPage() {
+  // Hanya kerja sama yang masih berlaku. Yang sudah lewat tanggal akhirnya
+  // tetap tersimpan untuk keperluan LKPS dan bisa dilihat di halaman admin.
   const { data } = await supabasePublic
     .from('mitra')
     .select('*')
-    .order('since_year', { ascending: true })
-    .limit(100);
+    .or(`tanggal_akhir.gte.${todayISO()},tanggal_akhir.is.null`)
+    .order('tanggal_akhir', { ascending: false })
+    .limit(500);
 
   const items = (data ?? []) as Mitra[];
 
+  // Satu lembaga bisa punya beberapa kerja sama; hitungan "mitra" pakai nama unik.
+  const lembaga = new Set(items.map((d) => d.name));
+  const countJenis = (jenis: string) =>
+    String(items.filter((d) => d.jenis_kerjasama === jenis).length);
+
   const stats = [
-    { value: String(items.length), label: 'Total Mitra' },
-    {
-      value: String(items.filter((d) => d.category === 'Internasional').length),
-      label: 'Mitra Internasional',
-    },
-    // Every row in the table represents a live partnership, so this mirrors the total.
-    { value: String(items.length), label: 'MoU Aktif' },
-    { value: averagePartnershipYears(items), label: 'Tahun Kemitraan Rata-rata' },
+    { value: String(lembaga.size), label: 'Lembaga Mitra' },
+    { value: countJenis('Pendidikan'), label: 'Kerja Sama Pendidikan' },
+    { value: countJenis('Penelitian'), label: 'Kerja Sama Penelitian' },
+    { value: countJenis('Pengabdian kepada Masyarakat'), label: 'Kerja Sama PkM' },
   ];
 
   return (
