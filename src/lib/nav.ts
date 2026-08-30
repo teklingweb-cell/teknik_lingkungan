@@ -12,6 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
       { href: '/sejarah', label: 'Sejarah' },
       { href: '/visi-misi', label: 'Visi & Misi' },
       { href: '/struktur', label: 'Struktur Organisasi' },
+      { href: '/advisory-board', label: 'Advisory Board' },
       { href: '/fasilitas', label: 'Fasilitas' },
     ],
   },

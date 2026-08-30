@@ -29,6 +29,7 @@ const STATIC_ROUTES: StaticRoute[] = [
   { path: '/pencapaian', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/fasilitas', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/struktur', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/advisory-board', priority: 0.6, changeFrequency: 'yearly' },
   { path: '/mitra', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/visi-misi', priority: 0.6, changeFrequency: 'yearly' },
   { path: '/sejarah', priority: 0.6, changeFrequency: 'yearly' },
