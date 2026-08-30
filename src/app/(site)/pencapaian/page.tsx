@@ -36,17 +36,23 @@ export default async function PencapaianPage() {
   const { data } = await supabasePublic
     .from('pencapaian')
     .select('*')
+    // Sheet 4j hanya mencatat tahun, jadi `tanggal` jadi pengurut kedua dan
+    // baris tanpa tanggal jatuh ke bawah dalam tahunnya masing-masing.
     .order('year', { ascending: false })
-    .limit(100);
+    .order('tanggal', { ascending: false, nullsFirst: false })
+    .limit(200);
 
   const items = (data ?? []) as Pencapaian[];
-  const countOf = (category: string) => items.filter((d) => d.category === category).length;
+  const count = (fn: (d: Pencapaian) => boolean) => items.filter(fn).length;
 
+  // Dulu tiga dari empat angka ini menghitung kategori yang labelnya tidak
+  // cocok — "Penghargaan Internasional" membaca kategori Ranking, dan "Alumni
+  // Berprestasi" membaca kategori Prestasi yang isinya mahasiswa aktif.
   const stats = [
-    { value: items.length, label: 'Total Penghargaan' },
-    { value: countOf('Ranking'), label: 'Penghargaan Internasional' },
-    { value: countOf('Akreditasi'), label: 'Akreditasi A/Unggul' },
-    { value: countOf('Prestasi'), label: 'Alumni Berprestasi' },
+    { value: items.length, label: 'Total Pencapaian' },
+    { value: count((d) => d.tingkat === 'Internasional'), label: 'Tingkat Internasional' },
+    { value: count((d) => d.pelaku === 'Mahasiswa'), label: 'Prestasi Mahasiswa' },
+    { value: count((d) => d.pelaku === 'Dosen'), label: 'Rekognisi Dosen' },
   ];
 
   return (
