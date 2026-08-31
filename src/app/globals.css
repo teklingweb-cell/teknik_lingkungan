@@ -1798,9 +1798,11 @@ textarea.form-input { resize: none; }
 
 /* ─── Page hero: tighter on very small screens ─── */
 @media(max-width:479px) {
-  /* BUG-007 FIX: was 16px, increased to 24px to match content sections below */
+  /* Keduanya 24px supaya tepi kirinya segaris. Perbaikan sebelumnya hanya
+     menaikkan hero ke 24px sementara .section tetap 16px, jadi judul hero dan
+     konten di bawahnya meleset 8px — persis hal yang hendak diperbaiki. */
   .page-hero { padding: 110px 24px 60px; }
-  .section    { padding: 60px 16px; }
+  .section    { padding: 60px 24px; }
 }
 
 /* ─── Responsive utility grids used by inline styles ─── */
