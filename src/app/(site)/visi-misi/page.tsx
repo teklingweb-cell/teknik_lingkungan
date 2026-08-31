@@ -26,8 +26,11 @@ export default function VisiMisiPage() {
       <section className="section bg-navy">
         <div className="container">
           <div className="fade-up" style={{ marginBottom: '40px' }}>
+            {/* Judulnya dulu "Visi & Misi" — sama persis dengan <h1> di hero
+                tepat di atasnya, jadi kata yang sama muncul dua kali berurutan.
+                Sekarang menyebutkan isi seksinya: tiga tingkat kelembagaan. */}
             <div className="section-tag">— Hierarki Kelembagaan</div>
-            <h2 className="section-title light">Visi &amp; Misi</h2>
+            <h2 className="section-title light">Universitas, Fakultas, dan Program Studi</h2>
             <p style={{ color: 'rgba(242,245,239,0.5)', fontFamily: 'var(--font-body)', fontSize: '0.9rem', marginTop: '8px' }}>Dari tingkat universitas hingga jurusan — satu arah, satu tujuan.</p>
           </div>
 
