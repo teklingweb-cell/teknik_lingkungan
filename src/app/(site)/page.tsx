@@ -96,7 +96,7 @@ const FOKUS = [
 const STATS = [
   { value: '20+', label: 'Tahun Berdiri' },
   { value: '480+', label: 'Mahasiswa Aktif' },
-  { value: '28', label: 'Dosen Pengampu' },
+  { value: '22', label: 'Dosen Pengampu' },
   { value: '94%', label: 'Tingkat Kelulusan' },
 ];
 
