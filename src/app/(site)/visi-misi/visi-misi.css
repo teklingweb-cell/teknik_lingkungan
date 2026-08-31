@@ -1,36 +1,170 @@
-/* Kartu visi/misi.
+/* Halaman Visi & Misi.
 
-   Gaya ini dulunya ditulis sebagai `style={{...}}` inline di setiap kartu.
-   Masalahnya bukan sekadar pengulangan: gaya inline tidak bisa ditimpa media
-   query, jadi padding 28-32px tetap dipakai di layar 375px — menyisakan lebar
-   isi hanya ~271px setelah dipotong padding section. Sebagai kelas, padding
-   itu bisa mengecil di layar sempit. */
+   Seksi hierarki dulu memakai `section bg-navy` — gelap, persis seperti hero
+   di atasnya, sehingga keduanya menyatu jadi satu blok hijau. Setiap halaman
+   lain (profile, advisory-board, sejarah) memberi kontras terang setelah hero.
+   Seksi ini kini mengikuti pola itu, jadi seluruh gaya di bawah bertema terang.
 
-.vm-card {
-  background: rgba(242, 245, 239, 0.04);
-  border: 1px solid rgba(242, 245, 239, 0.08);
-  border-radius: 16px;
-  padding: 28px;
+   Semuanya ditulis sebagai kelas, bukan `style={{...}}` inline: gaya inline
+   tidak bisa ditimpa media query, sehingga ukuran desktop ikut terpakai di
+   layar ponsel. */
+
+/* ── Pengantar seksi ── */
+.vm-lead {
+  color: rgba(45, 58, 46, 0.55);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  margin-top: 8px;
+  line-height: 1.6;
 }
 
-/* Kartu tingkat program studi — diberi aksen hijau agar menonjol dari
-   dua tingkat di atasnya. */
+/* ── Penanda tingkat kelembagaan ── */
+.vm-tier {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.vm-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(45, 58, 46, 0.28);
+  flex-shrink: 0;
+}
+/* Tingkat program studi — fokus halaman ini, jadi diberi aksen. */
+.vm-dot.on {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+}
+.vm-tier-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(45, 58, 46, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.vm-tier-label.on {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── Kartu ── */
+.vm-card {
+  background: #fff;
+  border: 1px solid rgba(26, 46, 30, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  height: 100%;
+}
 .vm-card-prodi {
-  background: rgba(78, 140, 90, 0.12);
-  border-color: rgba(78, 140, 90, 0.3);
+  background: rgba(78, 140, 90, 0.07);
+  border-color: rgba(78, 140, 90, 0.22);
   padding: 32px;
 }
 .vm-card-prodi.soft {
-  background: rgba(78, 140, 90, 0.08);
-  border-color: rgba(78, 140, 90, 0.2);
+  background: rgba(78, 140, 90, 0.04);
+  border-color: rgba(78, 140, 90, 0.16);
 }
 
-/* Tiga kartu "Tujuan" memakai .card dari globals.css; hanya paddingnya
-   yang perlu diseragamkan dengan kartu di atasnya. */
-.vm-card-pad {
-  padding: 32px;
+.vm-card-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.vm-card-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--navy);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+.vm-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(78, 140, 90, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  color: var(--forest);
+  font-size: 1.3rem;
+  margin-bottom: 20px;
 }
 
+/* ── Kutipan visi ── */
+.vm-quote {
+  font-size: 0.875rem;
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  font-style: italic;
+}
+.vm-quote-lg {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--navy);
+  font-weight: 300;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── Daftar misi bernomor ── */
+.vm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vm-list.lg { gap: 14px; }
+
+.vm-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: rgba(45, 58, 46, 0.7);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+.vm-item.lg {
+  gap: 12px;
+  font-size: 0.875rem;
+  color: rgba(45, 58, 46, 0.78);
+}
+
+.vm-num {
+  flex-shrink: 0;
+  color: var(--gold);
+  font-size: 0.7rem;
+  margin-top: 3px;
+  font-weight: 600;
+}
+.vm-num-circle {
+  width: 22px;
+  height: 22px;
+  background: rgba(78, 140, 90, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--forest);
+  font-size: 0.7rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Tiga kartu "Tiga Pilar Keilmuan" memakai .card dari globals.css; hanya
+   paddingnya yang perlu diseragamkan dengan kartu di atasnya. */
+.vm-card-pad { padding: 32px; }
+
+/* ── Layar sempit ──
+   Padding 28-32px menyisakan lebar isi hanya ~271px pada layar 375px. */
 @media (max-width: 560px) {
   .vm-card,
   .vm-card-prodi,
@@ -38,4 +172,7 @@
     padding: 20px 18px;
     border-radius: 14px;
   }
+  .vm-card-title { font-size: 1.2rem; }
+  .vm-quote-lg { font-size: 1rem; }
+  .vm-icon { width: 40px; height: 40px; margin-bottom: 16px; }
 }

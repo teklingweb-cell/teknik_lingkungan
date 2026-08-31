@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { NAV_ITEMS } from '@/lib/nav';
@@ -32,10 +33,15 @@ export default function Navbar() {
       <nav className={`navbar${scrolled ? ' scrolled' : ''}`} id="navbar">
         <div className="nav-inner">
           <Link href="/" className="nav-logo">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            {/* Muncul di setiap halaman, jadi 167 KB versi 512x512 terbayar di
+                setiap kunjungan pertama. next/image menyajikannya seukuran
+                tampil (44px) dalam AVIF/WebP. */}
+            <Image
               src="/logo-untan.png"
               alt="Logo Universitas Tanjungpura"
+              width={44}
+              height={44}
+              priority
               className="nav-logo-img"
             />
             <div className="nav-logo-text">
