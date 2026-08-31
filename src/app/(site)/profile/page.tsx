@@ -62,7 +62,7 @@ export default function ProfilePage() {
         <div className="container">
           <div className="stats-grid" style={{ padding: '40px 0' }}>
             <div className="stat-item">
-              <div className="stat-value">2004</div>
+              <div className="stat-value">2007</div>
               <div className="stat-label">Tahun Berdiri</div>
             </div>
             <div className="stat-item">
