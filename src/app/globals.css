@@ -10,8 +10,10 @@
   --forest: #2d5a35;
   --moss: #7aab6e;
   --sage: #b8ceaf;
-  --font-display: 'Merriweather', Georgia, serif;
-  --font-body: 'Inter', Arial, sans-serif;
+  /* Nilainya datang dari next/font (lihat lib/fonts.ts), bukan nama keluarga
+     harfiah: next/font meng-hash nama font yang di-host sendiri. */
+  --font-display: var(--font-merriweather), Georgia, serif;
+  --font-body: var(--font-inter), Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

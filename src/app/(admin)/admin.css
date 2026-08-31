@@ -23,7 +23,7 @@
       --danger: #dc2626; --dangerBg: #fef2f2;
     }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', Arial, sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+body { font-family: var(--font-inter), Arial, sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 /* sidebar */
     .sidebar {
       position: fixed; top: 0; left: 0; height: 100vh; width: 220px;
@@ -53,7 +53,7 @@ body { font-family: 'Inter', Arial, sans-serif; background: var(--cream); color:
     .main { margin-left: 220px; min-height: 100vh; }
 .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 5; }
 .topbar-title { font-size: 1rem; font-weight: 600; color: var(--navy); }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-family: 'Inter', Arial, sans-serif; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-family: var(--font-inter), Arial, sans-serif; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
 .btn-green  { background: var(--green); color: #fff; }
 .btn-green:hover  { background: var(--light); }
 .btn-danger { background: var(--dangerBg); color: var(--danger); border: 1px solid #fecaca; }
@@ -80,7 +80,7 @@ body { font-family: 'Inter', Arial, sans-serif; background: var(--cream); color:
 /* Scoped to .search-box so it outranks the `input[type=search]` baseline
    above — otherwise that rule's symmetric padding wins on specificity and the
    magnifier icon sits on top of the placeholder text. */
-.search-box .search-input { width: 250px; height: 36px; padding: 0 12px 0 34px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Inter', Arial, sans-serif; font-size: 0.78rem; line-height: 36px; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; }
+.search-box .search-input { width: 250px; height: 36px; padding: 0 12px 0 34px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-inter), Arial, sans-serif; font-size: 0.78rem; line-height: 36px; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; }
 .search-box .search-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(78,140,90,0.12); }
 .search-box .search-input::placeholder { color: var(--muted); }
 .search-box .search-input::-webkit-search-cancel-button { cursor: pointer; }
@@ -139,7 +139,7 @@ input[type=text], input[type=date], input[type=email], input[type=url],
 input[type=number], input[type=tel], input[type=password], input[type=search],
 select, textarea {
       width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
-      font-size: 0.875rem; line-height: 1.4; color: var(--text); font-family: 'Inter', Arial, sans-serif;
+      font-size: 0.875rem; line-height: 1.4; color: var(--text); font-family: var(--font-inter), Arial, sans-serif;
       background: #fff; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
     }
 /* Keep every control on the same 42px baseline so rows line up. */
@@ -176,7 +176,7 @@ textarea { resize: vertical; min-height: 90px; }
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:start;}
 .form-row > .form-group{min-width:0;margin-bottom:0;}
 .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
-.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:'Inter', Arial, sans-serif;font-size:0.85rem;color:var(--text);background:var(--white);transition:border-color 0.2s;outline:none;}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:var(--font-inter), Arial, sans-serif;font-size:0.85rem;color:var(--text);background:var(--white);transition:border-color 0.2s;outline:none;}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);}
 .form-textarea{resize:vertical;min-height:90px;}
 .form-hint{font-size:0.72rem;color:var(--muted);}
@@ -198,7 +198,7 @@ textarea { resize: vertical; min-height: 90px; }
     .main{margin-left:220px;min-height:100vh;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 /* ── Buttons ── */
-    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:0.82rem;font-family:'Inter', Arial, sans-serif;font-weight:500;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:0.82rem;font-family:var(--font-inter), Arial, sans-serif;font-weight:500;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;}
 /* ── Alert ── */
     .alert{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:0.85rem;font-weight:500;}
 /* ── Info banner ── */
@@ -230,7 +230,7 @@ textarea { resize: vertical; min-height: 90px; }
     .modal-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(26,46,30,0.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
 .modal-sub{font-size:0.8rem;color:var(--muted);margin-bottom:20px;}
 .form-label{font-size:0.75rem;font-weight:600;color:var(--navy);display:block;margin-bottom:6px;letter-spacing:0.02em;}
-.form-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:'Inter', Arial, sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232d3a2e' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;}
+.form-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:var(--font-inter), Arial, sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color 0.2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232d3a2e' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;}
 .form-select:focus{border-color:var(--green);}
 /* ── Delete modal ── */
     .modal-icon{font-size:2rem;margin-bottom:12px;}
@@ -270,13 +270,13 @@ textarea { resize: vertical; min-height: 90px; }
 .login-card label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .login-card input {
   width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 8px;
-  font-size: 0.875rem; color: var(--text); font-family: 'Inter', Arial, sans-serif;
+  font-size: 0.875rem; color: var(--text); font-family: var(--font-inter), Arial, sans-serif;
   outline: none; transition: border-color 0.2s, box-shadow 0.2s;
 }
 .login-card input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(78,140,90,0.15); }
 .login-card .btn {
   width: 100%; padding: 11px; border-radius: 8px; font-size: 0.9rem;
-  font-family: 'Inter', Arial, sans-serif; font-weight: 600; cursor: pointer;
+  font-family: var(--font-inter), Arial, sans-serif; font-weight: 600; cursor: pointer;
   border: none; background: var(--navy); color: #fff; transition: background 0.2s;
   margin-top: 8px; display: block;
 }
@@ -320,7 +320,7 @@ textarea { resize: vertical; min-height: 90px; }
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--white);
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: var(--font-inter), Arial, sans-serif;
   font-size: 0.78rem;
   color: var(--text);
   cursor: pointer;

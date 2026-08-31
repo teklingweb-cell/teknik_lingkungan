@@ -1,10 +1,20 @@
 
 .hero {
   background: linear-gradient(135deg, #0d1f10 0%, #1a2e1e 50%, #122418 100%);
-  background-image: url('/banner.png');
-  background-size: cover;
-  background-position: center 30%;
-  background-blend-mode: normal;
+}
+/* Banner dulunya `background-image` di sini. Sebagai latar CSS, browser baru
+   menemukannya setelah CSS diunduh dan elemennya di-layout — pada pengukuran
+   ia baru mulai diunduh pada md ke-3592, padahal ia elemen LCP. Sekarang
+   dirender sebagai <Image priority>, jadi ikut di-preload sejak awal dan
+   disajikan sebagai AVIF/WebP seukuran layar.
+
+   z-index tetap 0, sama seperti overlay dan lapisan glow. Elemen dirender
+   sebagai anak pertama .hero, dan di antara sesama z-index 0 urutan lukis
+   mengikuti urutan DOM — jadi susunan lapisan hero tidak berubah sedikit pun. */
+.hero-banner-img {
+  object-fit: cover;
+  object-position: center 30%;
+  z-index: 0;
 }
 .hero-banner-overlay {
   position: absolute;

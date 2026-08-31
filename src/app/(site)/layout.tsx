@@ -5,6 +5,7 @@ import SiteFooter from '@/components/SiteFooter';
 import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
 import { SITE } from '@/lib/seo';
+import { fontVariables } from '@/lib/fonts';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/jsonld';
 
 export const metadata: Metadata = {
@@ -31,9 +32,15 @@ export const metadata: Metadata = {
   creator: SITE.name,
   publisher: SITE.name,
   alternates: { canonical: SITE.url },
+  // Ikon berukuran benar. Sebelumnya keduanya menunjuk ke logo-untan.png yang
+  // 512x512 seberat 167 KB — terunduh di setiap kunjungan pertama hanya untuk
+  // ditampilkan 32px di tab browser.
   icons: {
-    icon: '/logo-untan.png',
-    apple: '/logo-untan.png',
+    icon: [
+      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
   },
   openGraph: {
     type: 'website',
@@ -82,16 +89,11 @@ export const viewport: Viewport = {
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id">
+    <html lang="id" className={fontVariables}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        {/* Kept as a plain <link> rather than next/font: next/font renames the
-            family, and style.css refers to 'Merriweather' / 'Inter' by name. */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
-        />
+        {/* Font tidak lagi diambil dari fonts.googleapis.com — lihat
+            lib/fonts.ts. Dua permintaan lintas-domain yang memblokir render
+            hilang dari jalur kritis. */}
         {/* .fade-up starts at opacity:0 and is revealed by ScrollReveal. Now
             that content is server-rendered, a visitor without JS would receive
             the markup but never see it — so reveal everything up front. */}
