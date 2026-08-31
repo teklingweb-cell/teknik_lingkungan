@@ -136,13 +136,9 @@ export default function MitraList({ items }: { items: Mitra[] }) {
       </div>
 
       <div
-        // minmax(min(Npx,100%),1fr), bukan minmax(Npx,1fr): tanpa min()
-        // trek grid menolak menyusut di bawah N piksel, sehingga di layar
-        // ~320px kartu jadi lebih lebar dari ruang yang tersedia dan
-        // halaman meluber ke samping.
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill,minmax(min(320px,100%),1fr))',
+          gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))',
           gap: 24,
           minHeight: 200,
         }}
