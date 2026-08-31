@@ -10,10 +10,8 @@
   --forest: #2d5a35;
   --moss: #7aab6e;
   --sage: #b8ceaf;
-  /* Nilainya datang dari next/font (lihat lib/fonts.ts), bukan nama keluarga
-     harfiah: next/font meng-hash nama font yang di-host sendiri. */
-  --font-display: var(--font-merriweather), Georgia, serif;
-  --font-body: var(--font-inter), Arial, sans-serif;
+  --font-display: 'Merriweather', Georgia, serif;
+  --font-body: 'Inter', Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1798,11 +1796,9 @@ textarea.form-input { resize: none; }
 
 /* ─── Page hero: tighter on very small screens ─── */
 @media(max-width:479px) {
-  /* Keduanya 24px supaya tepi kirinya segaris. Perbaikan sebelumnya hanya
-     menaikkan hero ke 24px sementara .section tetap 16px, jadi judul hero dan
-     konten di bawahnya meleset 8px — persis hal yang hendak diperbaiki. */
+  /* BUG-007 FIX: was 16px, increased to 24px to match content sections below */
   .page-hero { padding: 110px 24px 60px; }
-  .section    { padding: 60px 24px; }
+  .section    { padding: 60px 16px; }
 }
 
 /* ─── Responsive utility grids used by inline styles ─── */

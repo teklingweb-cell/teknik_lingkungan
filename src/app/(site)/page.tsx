@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import './home.css';
 import { supabasePublic } from '@/lib/supabase/public';
 import type { News } from '@/lib/types';
@@ -115,16 +114,6 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="hero">
-        {/* Anak pertama: elemen LCP halaman ini. `priority` membuatnya
-            di-preload di <head> alih-alih baru ditemukan setelah CSS diurai. */}
-        <Image
-          src="/banner.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="hero-banner-img"
-        />
         <div className="hero-banner-overlay" />
         <div className="hero-bg-glow-1" />
         <div className="hero-bg-glow-2" />
@@ -140,15 +129,10 @@ export default async function HomePage() {
 
         <div className="hero-content">
           <div className="hero-logo-badge">
-            {/* Sumbernya 512x512 seberat 167 KB; ditampilkan 36-44px. next/image
-                menyajikan ulang seukuran tampilnya, jadi yang terunduh hanya
-                beberapa KB. */}
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/logo-untan.png"
               alt="Logo Universitas Tanjungpura"
-              width={44}
-              height={44}
-              priority
               className="hero-untan-logo"
             />
             <div className="hero-untan-text">

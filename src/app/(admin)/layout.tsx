@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import './admin.css';
-import { inter } from '@/lib/fonts';
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
-  icons: { icon: '/icon-32.png', apple: '/apple-icon.png' },
+  icons: { icon: '/logo-untan.png', apple: '/logo-untan.png' },
   robots: { index: false, follow: false },
 };
 
@@ -20,7 +19,15 @@ export const viewport: Viewport = {
  */
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={inter.variable}>
+    <html lang="id">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

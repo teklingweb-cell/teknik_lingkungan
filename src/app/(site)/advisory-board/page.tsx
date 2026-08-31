@@ -84,10 +84,8 @@ export default function AdvisoryBoardPage() {
       <section className="section">
         <div className="container">
           <div className="fade-up" style={{ marginBottom: 32 }}>
-            {/* Sama seperti di visi-misi: judulnya dulu mengulang <h1> hero
-                tepat di atasnya. Sekarang menyebutkan isi seksinya. */}
             <div className="section-tag">— Badan Penasihat Pendidikan</div>
-            <h2 className="section-title">Apa Itu dan Siapa Saja</h2>
+            <h2 className="section-title">Advisory Board</h2>
             <div className="gold-divider" />
           </div>
 
