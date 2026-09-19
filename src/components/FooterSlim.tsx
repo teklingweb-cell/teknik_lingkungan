@@ -1,3 +1,4 @@
+import './footer.css';
 import FooterYear from './FooterYear';
 
 const barStyle: React.CSSProperties = {
@@ -32,17 +33,14 @@ export default function FooterSlim() {
             © <FooterYear initialYear={new Date().getFullYear()} /> Prodi Teknik Lingkungan. Hak
             cipta dilindungi.
           </span>
-          <span style={textStyle}>
-            Powered by{' '}
-            <a
-              className="powered-link"
-              href="https://sayba.web.id"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Sayba Arc
-            </a>
-          </span>
+          <a
+            href="https://sayba.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-powered-link"
+          >
+            POWERED BY SAYBA ARC
+          </a>
         </div>
       </div>
     </footer>
