@@ -13,8 +13,12 @@ import { revalidatePublic } from './revalidate';
 const TIERS = [
   { key: 'rektor', label: 'Ketua Jurusan', color: '#1a2e1e' },
   { key: 'wakil', label: 'Koordinator Program Studi', color: '#2d6a40' },
-  { key: 'kbk', label: 'Ketua KBK (Kiri Bagan)', color: '#0f766e' },
-  { key: 'lab', label: 'Kepala Lab (Kanan Bagan)', color: '#b91c1c' },
+  { key: 'kbk_rekayasa', label: 'Ketua KBK Rekayasa Infrastruktur Lingkungan', color: '#0f766e' },
+  { key: 'kbk_manajemen', label: 'Ketua KBK Manajemen Lingkungan', color: '#0f766e' },
+  { key: 'kbk_pengendalian', label: 'Ketua KBK Pengendalian Pencemaran Lingkungan', color: '#0f766e' },
+  { key: 'lab_kualitas_air', label: 'Kepala Lab. Kualitas Air', color: '#b91c1c' },
+  { key: 'lab_mikrobiologi', label: 'Kepala Lab. Mikrobiologi', color: '#b91c1c' },
+  { key: 'lab_kualitas_udara', label: 'Kepala Lab. Kualitas Udara', color: '#b91c1c' },
   { key: 'dosen', label: 'Dosen / Profesor', color: '#2563eb' },
   { key: 'staf', label: 'Staf Administrasi', color: '#9333ea' },
 ];

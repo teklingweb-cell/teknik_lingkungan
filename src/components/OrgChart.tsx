@@ -14,6 +14,12 @@ export type Tier = {
 const TIERS: Tier[] = [
   { key: 'rektor', label: 'Ketua Jurusan', cssClass: 'tier-ketua', color: '#1a2e1e' },
   { key: 'wakil', label: 'Koordinator Program Studi', cssClass: 'tier-koorprodi', color: '#2d6a40' },
+  { key: 'kbk_rekayasa', label: 'Ketua KBK Rekayasa Infrastruktur Lingkungan', cssClass: 'tier-dosen', color: '#0f766e' },
+  { key: 'kbk_manajemen', label: 'Ketua KBK Manajemen Lingkungan', cssClass: 'tier-dosen', color: '#0f766e' },
+  { key: 'kbk_pengendalian', label: 'Ketua KBK Pengendalian Pencemaran Lingkungan', cssClass: 'tier-dosen', color: '#0f766e' },
+  { key: 'lab_kualitas_air', label: 'Kepala Lab. Kualitas Air', cssClass: 'tier-dosen', color: '#b91c1c' },
+  { key: 'lab_mikrobiologi', label: 'Kepala Lab. Mikrobiologi', cssClass: 'tier-dosen', color: '#b91c1c' },
+  { key: 'lab_kualitas_udara', label: 'Kepala Lab. Kualitas Udara', cssClass: 'tier-dosen', color: '#b91c1c' },
   { key: 'dosen', label: 'Dosen / Profesor', cssClass: 'tier-dosen', color: '#2563eb' },
   { key: 'staf', label: 'Staf Administrasi', cssClass: 'tier-staf', color: '#9333ea' },
 ];
@@ -198,17 +204,26 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
     if (levels.includes('wakil') || levels.includes('koordinator')) {
       korprodiNodes.push(p);
     }
-    if (levels.includes('kbk')) {
+    if (levels.some(l => l.startsWith('kbk'))) {
       leftNodes.push(p);
     }
-    if (levels.includes('lab')) {
+    if (levels.some(l => l.startsWith('lab'))) {
       rightNodes.push(p);
     }
   });
 
-  const TIER_KETUA = TIERS[0] || { cssClass: 'tier-ketua', color: '#1a2e1e', label: 'Ketua' };
-  const TIER_KORPRODI = TIERS[1] || { cssClass: 'tier-koorprodi', color: '#2d6a40', label: 'Koordinator' };
-  const TIER_DOSEN = TIERS[2] || { cssClass: 'tier-dosen', color: '#2563eb', label: 'Dosen' };
+  const getPrimaryTier = (person: Staff) => {
+    const levels = (person.org_level || '').toLowerCase().split(',');
+    for (const tier of TIERS) {
+      if (levels.includes(tier.key)) {
+        return tier;
+      }
+    }
+    return TIERS.find(t => t.key === 'dosen') || { cssClass: 'tier-dosen', color: '#2563eb', label: 'Dosen', key: 'dosen' };
+  };
+
+  const TIER_KETUA = TIERS[0] || { cssClass: 'tier-ketua', color: '#1a2e1e', label: 'Ketua', key: 'rektor' };
+  const TIER_KORPRODI = TIERS[1] || { cssClass: 'tier-koorprodi', color: '#2d6a40', label: 'Koordinator', key: 'wakil' };
 
   if (kajurNodes.length === 0 && korprodiNodes.length === 0 && leftNodes.length === 0 && rightNodes.length === 0) {
     return (
@@ -230,28 +245,30 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-tier">
             <div className="org-tier-label">KETUA JURUSAN</div>
             <div className="org-tier-nodes">
-              {kajurNodes.map(person => (
+              {kajurNodes.map(person => {
+                const primaryTier = getPrimaryTier(person);
+                return (
                 <div
                   key={person.id}
-                  className={`org-node ${TIER_KETUA.cssClass}`}
+                  className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
-                  onClick={() => setSelected({ person, tier: TIER_KETUA })}
+                  onClick={() => setSelected({ person, tier: primaryTier })}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setSelected({ person, tier: TIER_KETUA });
+                      setSelected({ person, tier: primaryTier });
                     }
                   }}
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">Ketua Jurusan</div>
+                    <div className="org-node-role">{primaryTier.label}</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         )}
@@ -265,28 +282,30 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column">
             {leftNodes.length > 0 && <div className="org-column-label">Ketua KBK</div>}
             <div className="org-side-nodes">
-              {leftNodes.map((person) => (
+              {leftNodes.map((person) => {
+                const primaryTier = getPrimaryTier(person);
+                return (
                 <div
                   key={person.id}
-                  className={`org-node ${TIER_DOSEN.cssClass}`}
+                  className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
-                  onClick={() => setSelected({ person, tier: TIER_DOSEN })}
+                  onClick={() => setSelected({ person, tier: primaryTier })}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setSelected({ person, tier: TIER_DOSEN });
+                      setSelected({ person, tier: primaryTier });
                     }
                   }}
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">Ketua KBK</div>
+                    <div className="org-node-role">{primaryTier.label}</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
 
@@ -294,28 +313,30 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column org-center-column">
             {korprodiNodes.length > 0 && <div className="org-column-label">Koordinator<br/>Program Studi</div>}
             <div className="org-side-nodes">
-              {korprodiNodes.map(person => (
+              {korprodiNodes.map(person => {
+                const primaryTier = getPrimaryTier(person);
+                return (
                 <div
                   key={person.id}
-                  className={`org-node ${TIER_KORPRODI.cssClass}`}
+                  className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
-                  onClick={() => setSelected({ person, tier: TIER_KORPRODI })}
+                  onClick={() => setSelected({ person, tier: primaryTier })}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setSelected({ person, tier: TIER_KORPRODI });
+                      setSelected({ person, tier: primaryTier });
                     }
                   }}
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">Koordinator Program Studi</div>
+                    <div className="org-node-role">{primaryTier.label}</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
 
@@ -323,28 +344,30 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column">
             {rightNodes.length > 0 && <div className="org-column-label">Kepala Lab</div>}
             <div className="org-side-nodes">
-              {rightNodes.map((person) => (
+              {rightNodes.map((person) => {
+                const primaryTier = getPrimaryTier(person);
+                return (
                 <div
                   key={person.id}
-                  className={`org-node ${TIER_DOSEN.cssClass}`}
+                  className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
-                  onClick={() => setSelected({ person, tier: TIER_DOSEN })}
+                  onClick={() => setSelected({ person, tier: primaryTier })}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setSelected({ person, tier: TIER_DOSEN });
+                      setSelected({ person, tier: primaryTier });
                     }
                   }}
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">Kepala Lab</div>
+                    <div className="org-node-role">{primaryTier.label}</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         </div>
