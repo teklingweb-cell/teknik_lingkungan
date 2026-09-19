@@ -139,17 +139,14 @@ export default function FooterFull() {
               <Link href="/terms-of-use" className="legal-link">Syarat &amp; Ketentuan</Link>
               <Link href="/disclaimer" className="legal-link">Sanggahan</Link>
             </div>
-            <span className="footer-powered">
-              Powered by{' '}
-              <a
-                className="powered-link"
-                href="https://sayba.id"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Sayba Arc
-              </a>
-            </span>
+            <a
+              href="https://sayba.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-powered-link"
+            >
+              POWERED BY SAYBA ARC
+            </a>
           </div>
         </div>
       </div>

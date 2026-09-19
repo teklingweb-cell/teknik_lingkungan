@@ -16,9 +16,18 @@
   justify-content: center;
 }
 
-.footer-powered {
-  color: rgba(242,245,239,0.4);
-  font-size: 0.75rem;
+.footer-powered-link {
+  color: rgba(242,245,239,0.6);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  font-family: var(--font-display);
+  transition: color 0.2s ease;
+}
+
+.footer-powered-link:hover {
+  color: rgba(242,245,239,0.9);
 }
 
 @media(max-width:768px){
