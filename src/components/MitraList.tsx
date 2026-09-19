@@ -3,33 +3,14 @@
 import { useMemo, useState } from 'react';
 import PublicSearch from './PublicSearch';
 import type { Mitra } from '@/lib/types';
-import { toGDriveImg, formatDateShort } from '@/lib/utils';
+import { formatDateShort } from '@/lib/utils';
 import { jenisLabel } from '@/lib/mitra';
-
-function initialOf(name: string | null): string {
-  return (name || '?')[0].toUpperCase();
-}
-
 function categoryOf(item: Mitra): string {
   return item.mitra_kategori?.name ?? item.category ?? 'Lainnya';
 }
 
 function categoryColor(item: Mitra): string {
   return item.mitra_kategori?.color ?? '#4e8c5a';
-}
-
-function PartnerLogo({ item }: { item: Mitra }) {
-  const [failed, setFailed] = useState(false);
-  const src = toGDriveImg(item.logo_url, 400);
-
-  if (!src || failed) return <div className="partner-avatar">{initialOf(item.name)}</div>;
-
-  return (
-    <div className="partner-logo">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={item.name} loading="lazy" onError={() => setFailed(true)} />
-    </div>
-  );
 }
 
 export default function MitraList({ items }: { items: Mitra[] }) {
@@ -74,7 +55,7 @@ export default function MitraList({ items }: { items: Mitra[] }) {
           const color = categoryColor(item);
           return (
             <article key={item.id} className="partner-row fade-up">
-              <PartnerLogo item={item} />
+
               <div className="partner-main">
                 <div className="partner-tags">
                   <span className="partner-category" style={{ color, backgroundColor: `${color}14`, borderColor: `${color}40` }}>{categoryOf(item)}</span>
