@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Fragment } from 'react';
 import JsonLd from './JsonLd';
 import { absoluteUrl } from '@/lib/seo';
@@ -17,6 +18,7 @@ export default function PageHero({
   subtitle?: React.ReactNode;
   /** Omit the leading "Beranda" crumb — it is always prepended. */
   breadcrumb?: Crumb[];
+  bgImage?: string;
 }) {
   const crumbs: Crumb[] = breadcrumb ? [{ label: 'Beranda', href: '/' }, ...breadcrumb] : [];
 
@@ -41,10 +43,16 @@ export default function PageHero({
       : null;
 
   return (
-    <div className="page-hero">
+    <div className={`page-hero ${bgImage ? 'has-bg-image' : ''}`}>
       {breadcrumbLd && <JsonLd data={breadcrumbLd} />}
+      {bgImage && (
+        <>
+          <Image src={bgImage} alt="" fill priority style={{ objectFit: 'cover', objectPosition: 'center 30%', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(26, 46, 30, 0.75)', zIndex: 0 }} />
+        </>
+      )}
       <div className="page-hero-glow" />
-      <div className="container" style={{ position: 'relative' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="page-hero-tag">{tag}</div>
         <h1 className="page-hero-title">{title}</h1>
         {subtitle && <p className="page-hero-subtitle">{subtitle}</p>}

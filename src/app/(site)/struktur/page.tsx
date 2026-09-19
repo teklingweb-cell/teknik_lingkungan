@@ -52,6 +52,7 @@ export default async function StrukturPage() {
         title="Struktur Organisasi"
         subtitle="Kepemimpinan dan susunan organisasi institusi kami yang berdedikasi pada kemajuan pendidikan."
         breadcrumb={[{ label: 'Tentang Prodi', href: '/profile' }, { label: 'Struktur Organisasi' }]}
+        bgImage="/dosen-group.png"
       />
 
       <section className="org-section">

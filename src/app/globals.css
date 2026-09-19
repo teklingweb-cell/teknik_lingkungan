@@ -681,6 +681,7 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); }
   position: relative;
   overflow: hidden;
 }
+.page-hero.has-bg-image { background: none; }
 @media(min-width:768px){ .page-hero { padding: 140px 48px 80px; } }
 .page-hero-glow {
   position: absolute;
