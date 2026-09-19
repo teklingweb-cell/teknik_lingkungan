@@ -1,0 +1,11 @@
+.alumni-directory { max-width: 880px; }
+.alumni-filter { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 28px; }
+.alumni-filter label { display: block; color: var(--navy); font-family: var(--font-body); font-size: .88rem; font-weight: 650; }
+.alumni-filter select { display: block; min-height: 44px; min-width: 200px; margin-top: 7px; padding: 0 12px; border: 1px solid rgba(26,46,30,.22); border-radius: 8px; background: #fff; color: var(--charcoal); font: inherit; }
+.alumni-filter select:focus-visible { outline: 3px solid rgba(78,140,90,.35); outline-offset: 2px; }
+.alumni-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(26,46,30,.14); }
+.alumni-list li { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 19px 4px; border-bottom: 1px solid rgba(26,46,30,.14); }
+.alumni-name { color: var(--navy); font-family: var(--font-body); font-size: 1rem; font-weight: 650; overflow-wrap: anywhere; }
+.alumni-year { color: var(--text-muted); font-family: var(--font-body); font-size: .86rem; white-space: nowrap; }
+.alumni-empty { color: var(--text-muted); font-family: var(--font-body); justify-content: center; min-height: 150px; }
+@media (max-width: 640px) { .alumni-filter { align-items: stretch; flex-direction: column; } .alumni-filter select { width: 100%; } .alumni-list li { align-items: flex-start; flex-direction: column; gap: 5px; } }

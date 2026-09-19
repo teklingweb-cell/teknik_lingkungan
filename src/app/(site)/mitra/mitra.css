@@ -1,0 +1,23 @@
+@media(min-width:768px){.mitra-stats{grid-template-columns:repeat(4,1fr)!important;}}
+
+.mitra-tabs { margin-bottom: 28px; }
+.partner-directory { display: grid; gap: 12px; min-height: 200px; }
+.partner-row { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; align-items: start; padding: 20px; background: #fff; border: 1px solid rgba(26,46,30,.12); border-radius: 12px; }
+.partner-logo,.partner-row .partner-avatar { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.partner-logo { padding: 7px; border: 1px solid rgba(26,46,30,.1); border-radius: 9px; }
+.partner-logo img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+.partner-row .partner-avatar { border-radius: 9px; font-size: 1.15rem; }
+.partner-main { min-width: 0; }
+.partner-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.partner-category,.partner-type { border: 1px solid; border-radius: 999px; padding: 3px 8px; font: 600 .65rem var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
+.partner-type { color: var(--muted); border-color: rgba(45,58,46,.18); background: rgba(45,58,46,.04); }
+.partner-main h2 { margin: 0; color: var(--navy); font: 600 1.05rem/1.35 var(--font-body); }
+.partner-activity { margin: 6px 0 0; color: var(--navy); font-size: .86rem; font-weight: 600; line-height: 1.5; }
+.partner-desc { margin: 5px 0 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+.partner-side { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.partner-period { color: var(--muted); font-size: .76rem; }
+.partner-link { color: var(--green); font-size: .8rem; font-weight: 700; text-decoration: none; }
+.partner-link:hover { text-decoration: underline; }
+.partner-link:focus-visible,.tab-btn:focus-visible { outline: 3px solid var(--gold-light); outline-offset: 3px; }
+.partner-empty { margin: 0; padding: 56px 20px; text-align: center; color: var(--muted); background: #fff; border: 1px solid rgba(26,46,30,.12); border-radius: 12px; }
+@media (min-width: 760px) { .partner-row { grid-template-columns: 64px minmax(0, 1fr) minmax(145px, 190px); gap: 20px; padding: 22px 24px; } .partner-logo,.partner-row .partner-avatar { width: 64px; height: 64px; } .partner-side { grid-column: 3; justify-self: end; align-self: center; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; } }
