@@ -5,7 +5,7 @@
     .org-tree{display:flex;flex-direction:column;align-items:center;gap:0;position:relative;}
     .org-tier{display:flex;flex-direction:column;align-items:center;width:100%;position:relative;}
     .org-tier-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--text-muted);font-family:var(--font-body);margin-bottom:12px;opacity:0.7;}
-    .org-tier-nodes{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:stretch;}
+    .org-tier-nodes{display:flex;flex-wrap:nowrap;gap:12px;justify-content:center;align-items:stretch;}
     .org-connector{width:2px;height:36px;background:linear-gradient(to bottom,rgba(78,140,90,0.4),rgba(78,140,90,0.15));margin:0 auto;}
     .org-connector-spread{height:20px;width:calc(100% - 120px);max-width:1400px;margin:0 auto;position:relative;}
     .org-connector-spread::before{content:'';position:absolute;top:0;left:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
@@ -14,11 +14,11 @@
     .org-connector-gather::before{content:'';position:absolute;bottom:0;left:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
     .org-connector-gather::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:rgba(78,140,90,0.25);}
     /* --- Kartu anggota: satu ukuran untuk semua tingkat --- */
-    .org-node{display:flex;flex-direction:column;align-items:stretch;width:170px;cursor:pointer;position:relative;transition:transform 0.22s cubic-bezier(.34,1.56,.64,1);}
+    .org-node{display:flex;flex-direction:column;align-items:stretch;width:130px;cursor:pointer;position:relative;transition:transform 0.22s cubic-bezier(.34,1.56,.64,1);}
     .org-node:hover{transform:translateY(-4px);}
     .org-node:focus-visible{outline:2px solid rgba(78,140,90,0.7);outline-offset:4px;border-radius:16px;}
     .org-node:hover .org-node-card{box-shadow:0 12px 36px rgba(26,46,30,0.18);border-color:rgba(78,140,90,0.45);}
-    .org-node-card{background:#fff;border:1.5px solid rgba(78,140,90,0.18);border-radius:16px;padding:20px 16px 30px;text-align:center;width:100%;height:100%;min-height:220px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;transition:box-shadow 0.22s,border-color 0.22s;position:relative;overflow:hidden;}
+    .org-node-card{background:#fff;border:1.5px solid rgba(78,140,90,0.18);border-radius:16px;padding:16px 10px 24px;text-align:center;width:100%;height:100%;min-height:190px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;transition:box-shadow 0.22s,border-color 0.22s;position:relative;overflow:hidden;}
     .org-node-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;}
     .org-node-photo{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto 12px;border:2px solid rgba(78,140,90,0.2);display:block;flex-shrink:0;}
     .org-node-initials{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;margin:0 auto 12px;letter-spacing:-0.02em;flex-shrink:0;}
@@ -35,11 +35,11 @@
 .tier-staf{--tier-color:#9333ea;}
 
 /* --- Custom Complex Row (KBK, Korprodi, Lab) --- */
-.org-complex-row { display: flex; align-items: flex-start; justify-content: space-between; width: 95%; max-width: 1400px; margin: 0 auto; gap: 20px; position: relative; padding-top: 16px; }
-.org-side-column { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 170px; position: relative; }
-.org-center-column { width: 170px; flex: 0 0 170px; }
+.org-complex-row { display: flex; align-items: flex-start; justify-content: space-between; width: 95%; max-width: 1400px; margin: 0 auto; gap: 12px; position: relative; padding-top: 16px; }
+.org-side-column { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 130px; position: relative; }
+.org-center-column { width: 130px; flex: 0 0 130px; }
 .org-column-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-family: var(--font-body); margin-bottom: 24px; opacity: 0.8; text-align: center; line-height: 1.4; height: 28px; display: flex; align-items: flex-end; justify-content: center; width: 100%; }
-.org-side-nodes { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; position: relative; width: 100%; }
+.org-side-nodes { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; gap: 12px; position: relative; width: 100%; }
 .org-side-nodes::before { content: ''; position: absolute; top: -16px; left: 50%; width: 2px; height: 16px; background: rgba(78,140,90,0.25); transform: translateX(-50%); }
 
 /* Route Button */
@@ -120,8 +120,8 @@
       /* A fixed width, not 50%: a tier with one person would otherwise get a
          half-width card while a tier with four got something else again. Two
          fit per row from 340px up. */
-      .org-node{width:150px;}
-      .org-node-card{min-height:208px;padding:16px 12px 26px;}
+      .org-node{width:130px;}
+      .org-node-card{min-height:190px;padding:14px 10px 22px;}
       .org-node-photo,.org-node-initials{width:54px;height:54px;font-size:1.2rem;margin-bottom:10px;}
       .org-node-role{font-size:0.54rem;letter-spacing:0.06em;}
       .org-node-name{font-size:0.76rem;}

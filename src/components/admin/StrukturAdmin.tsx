@@ -23,13 +23,6 @@ const TIER_KEYS = new Set(TIERS.map((t) => t.key));
 
 
 
-const TYPE_LABELS: Record<string, string> = { dosen: 'Dosen', alumni: 'Alumni', staf: 'Staf' };
-const TYPE_COLORS: Record<string, string> = {
-  dosen: '#2563eb',
-  alumni: '#16a34a',
-  staf: '#9333ea',
-};
-
 const UNASSIGNED_COLOR = '#9ca3af';
 
 function MemberTable({
@@ -50,7 +43,6 @@ function MemberTable({
           <tr>
             <th>Nama</th>
             <th className="hide-mobile">Jabatan</th>
-            <th className="hide-mobile">Tipe</th>
             <th style={{ textAlign: 'right' }}>Aksi</th>
           </tr>
         </thead>
@@ -72,11 +64,6 @@ function MemberTable({
               </td>
               <td className="hide-mobile" style={{ color: 'var(--muted)', fontSize: '0.82rem' }}>
                 {m.position || '—'}
-              </td>
-              <td className="hide-mobile">
-                <Badge color={TYPE_COLORS[m.type] ?? '#6b7a6c'}>
-                  {TYPE_LABELS[m.type] ?? m.type ?? '—'}
-                </Badge>
               </td>
               <td>
                 <div className="actions-cell">

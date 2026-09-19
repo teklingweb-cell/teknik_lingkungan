@@ -18,7 +18,6 @@ const TIERS: Tier[] = [
   { key: 'staf', label: 'Staf Administrasi', cssClass: 'tier-staf', color: '#9333ea' },
 ];
 
-const TYPE_LABELS: Record<string, string> = { dosen: 'Dosen', alumni: 'Alumni', staf: 'Staf' };
 
 function initialOf(name: string | null): string {
   return (name || '?')[0].toUpperCase();
@@ -92,9 +91,7 @@ function BioModal({
   const stats: { label: string; value: string | number }[] = [];
   if (person.email) stats.push({ label: 'Email', value: person.email });
   if (person.graduation_year) stats.push({ label: 'Tahun Lulus', value: person.graduation_year });
-  if (person.type) {
-    stats.push({ label: 'Tipe', value: TYPE_LABELS[person.type] ?? person.type });
-  }
+
 
   return (
     <div
@@ -117,7 +114,9 @@ function BioModal({
               {tier.label}
             </div>
             <div className="bio-name">{person.name ?? ''}</div>
-            <div className="bio-position">{person.position ?? ''}</div>
+            {person.type === 'staf' && person.position && (
+              <div className="bio-position">{person.position}</div>
+            )}
             <div className="bio-dept">{person.bidang ?? ''}</div>
           </div>
           <button className="bio-close" onClick={onClose} aria-label="Tutup">
@@ -247,7 +246,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">{person.position || 'Ketua Jurusan'}</div>
+                    <div className="org-node-role">Ketua Jurusan</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
@@ -311,7 +310,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">{person.position || 'Koordinator Program Studi'}</div>
+                    <div className="org-node-role">Koordinator Program Studi</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
