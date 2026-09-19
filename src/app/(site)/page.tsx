@@ -360,18 +360,21 @@ export default async function HomePage() {
               </svg>
             </div>
             <div style={{ position: 'relative' }}>
-              <div className="cta-banner-title">Bergabung &amp; Jadilah Bagian dari Solusi</div>
+              <div className="cta-banner-title">Website Terkait Teknik Lingkungan</div>
               <div className="cta-banner-sub">
-                Daftarkan dirimu dan jadilah insinyur lingkungan yang dibutuhkan Indonesia.
+                Akses publikasi jurnal penelitian dan portal himpunan mahasiswa (HMTL) Teknik Lingkungan UNTAN.
               </div>
             </div>
             <div className="cta-banner-btns">
-              <Link href="/kontak" className="btn-navy">
-                Daftar Sekarang →
-              </Link>
-              <Link href="/kontak" className="btn-white">
-                Hubungi Kami
-              </Link>
+              <a href="https://jurnal.untan.ac.id/index.php/jmtluntan" target="_blank" rel="noopener noreferrer" className="btn-navy" style={{ textAlign: 'center' }}>
+                Jurnal Teknologi Lingkungan Lahan Basah
+              </a>
+              <a href="https://jurnal.untan.ac.id/index.php/jurlis" target="_blank" rel="noopener noreferrer" className="btn-white" style={{ textAlign: 'center' }}>
+                Jurnal Rekayasa Lingkungan Tropis
+              </a>
+              <a href="https://hima.tekniklingkungan.com" target="_blank" rel="noopener noreferrer" className="btn-navy" style={{ textAlign: 'center' }}>
+                HMTL UNTAN
+              </a>
             </div>
           </div>
         </div>
