@@ -291,7 +291,8 @@ textarea { resize: vertical; min-height: 90px; }
 /* ─── responsive (media queries merged per breakpoint) ─── */
 @media (max-width:900px) {
   .stats-row { grid-template-columns: repeat(2,1fr); }
-  th.hide-mobile, td.hide-mobile { display: none; }
+  table { min-width: 700px; }
+  .tier-card table, .unassigned-card table { min-width: 700px; }
 }
 @media (max-width:640px) {
   .main { margin-left: 0; }

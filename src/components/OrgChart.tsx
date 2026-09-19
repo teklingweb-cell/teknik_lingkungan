@@ -261,7 +261,8 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
 
   return (
     <>
-      <div className="org-tree fade-up">
+      <div className="org-scroll-wrapper">
+        <div className="org-tree fade-up">
         {/* Tier 1: Ketua Jurusan */}
         {kajurNodes.length > 0 && (
           <div className="org-tier">
@@ -403,6 +404,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
             <path d="M6 9l6 6 6-6"/>
           </svg>
         </a>
+      </div>
       </div>
 
       {selected && (
