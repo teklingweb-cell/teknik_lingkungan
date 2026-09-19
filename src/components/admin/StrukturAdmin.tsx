@@ -83,7 +83,7 @@ function MemberTable({
                   <button className="btn btn-ghost btn-sm" onClick={() => onEdit(m)}>
                     Atur Level
                   </button>
-                  <Link href={`/admin/staff-form?edit=${m.id}`} className="btn btn-ghost btn-sm">
+                  <Link href={`/admin/${m.type === 'dosen' ? 'dosen' : 'staff'}-form?edit=${m.id}`} className="btn btn-ghost btn-sm">
                     Edit
                   </Link>
                   {m.org_level && (
