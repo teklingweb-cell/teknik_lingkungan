@@ -1,3 +1,5 @@
+.legal-link { color: rgba(242,245,239,0.5); font-size: 0.75rem; text-decoration: none; transition: color 0.2s ease; }
+.legal-link:hover { color: rgba(242,245,239,0.9); }
 
 @media(max-width:768px){
   .footer-main-grid { grid-template-columns: 1fr 1fr !important; }
