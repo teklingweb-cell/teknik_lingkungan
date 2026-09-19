@@ -54,7 +54,7 @@ export default async function StrukturPage() {
         breadcrumb={[{ label: 'Tentang Prodi', href: '/profile' }, { label: 'Struktur Organisasi' }]}
       />
 
-      <section style={{ padding: '60px 0 20px', background: 'var(--bg)' }}>
+      <section style={{ padding: '60px 24px 20px', background: 'var(--bg)' }}>
         <div className="container">
           <div style={{ position: 'relative', width: '100%', height: 'auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
             <img src="/dosen-group.png" alt="Dosen Teknik Lingkungan" style={{ width: '100%', height: 'auto', display: 'block' }} />
