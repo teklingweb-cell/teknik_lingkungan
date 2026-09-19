@@ -252,7 +252,7 @@ export default function ProfilePage() {
               <div className="card-desc" style={{ flex: '1' }}>Tiga laboratorium berstandar tinggi untuk mendukung riset mahasiswa.</div>
               <div className="card-link" style={{ justifyContent: 'center', marginTop: '16px' }}>Selengkapnya →</div>
             </Link>
-            <Link href="/staf" className="card fade-up delay-3" style={{ padding: '28px', textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <Link href="/struktur" className="card fade-up delay-3" style={{ padding: '28px', textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
               <div className="card-icon" style={{ margin: '0 auto 16px' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--moss)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
               </div>
