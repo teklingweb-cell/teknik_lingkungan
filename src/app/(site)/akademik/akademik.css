@@ -1,7 +1,8 @@
 .academic-jump { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid rgba(26,46,30,.12); background: rgba(255,255,255,.96); backdrop-filter: blur(10px); }
-.academic-jump-inner { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
-.academic-jump a { display: inline-flex; min-height: 44px; align-items: center; padding: 0 12px; border-radius: 8px; color: var(--navy); font-family: var(--font-body); font-size: .84rem; font-weight: 650; text-decoration: none; }
-.academic-jump a:hover { background: rgba(78,140,90,.1); color: var(--moss); }
+.academic-jump-inner { display: flex; flex-wrap: nowrap; gap: 8px; padding-top: 12px; padding-bottom: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.academic-jump-inner::-webkit-scrollbar { display: none; }
+.academic-jump a { display: inline-flex; min-height: 40px; align-items: center; padding: 0 16px; border-radius: 999px; background: rgba(78,140,90,.05); border: 1px solid rgba(78,140,90,.15); color: var(--navy); font-family: var(--font-body); font-size: .84rem; font-weight: 650; text-decoration: none; white-space: nowrap; transition: all 0.2s ease; }
+.academic-jump a:hover { background: rgba(78,140,90,.1); border-color: rgba(78,140,90,.3); color: var(--moss); }
 .academic-jump a:focus-visible, .academic-document:focus-visible { outline: 3px solid rgba(78,140,90,.35); outline-offset: 3px; }
 .academic-section { scroll-margin-top: 80px; background: #f7f8f5; }
 .academic-section-white { background: #fff; }
