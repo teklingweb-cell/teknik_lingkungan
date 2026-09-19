@@ -27,7 +27,7 @@
 }
 .poster-section { background: #fff; }
 .poster-carousel-wrap { max-width: 960px; margin: 36px auto 0; }
-.home-poster { position: relative; display: block; overflow: hidden; border-radius: 16px; background: var(--navy); box-shadow: 0 14px 34px rgba(26,46,30,.15); }
+.home-poster { position: relative; display: block; overflow: hidden; border-radius: 16px; background: #fff; border: 1px solid rgba(26,46,30,.1); box-shadow: 0 14px 34px rgba(26,46,30,.08); }
 .home-poster img { display: block; width: 100%; aspect-ratio: 16 / 7; object-fit: cover; transition: transform .25s ease; }
 .home-poster:hover img { transform: scale(1.015); }
 .home-poster-link { position: absolute; right: 16px; bottom: 16px; display: inline-flex; min-height: 44px; align-items: center; padding: 0 16px; border-radius: 999px; background: var(--cream); color: var(--navy); font-family: var(--font-body); font-size: .85rem; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,.16); }
