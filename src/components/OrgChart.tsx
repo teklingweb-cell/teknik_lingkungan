@@ -264,7 +264,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
         <div className="org-complex-row">
           {/* Left Column */}
           <div className="org-side-column">
-            {leftNodes.length > 0 && <div className="org-column-label">Posisi Struktural</div>}
+            {leftNodes.length > 0 && <div className="org-column-label">Ketua KBK</div>}
             <div className="org-side-nodes">
               {leftNodes.map((person) => (
                 <div
@@ -282,7 +282,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">{person.position || 'Posisi Struktural'}</div>
+                    <div className="org-node-role">Ketua KBK</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>
@@ -322,7 +322,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
 
           {/* Right Column */}
           <div className="org-side-column">
-            {rightNodes.length > 0 && <div className="org-column-label">Posisi Struktural</div>}
+            {rightNodes.length > 0 && <div className="org-column-label">Kepala Lab</div>}
             <div className="org-side-nodes">
               {rightNodes.map((person) => (
                 <div
@@ -340,7 +340,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
                 >
                   <div className="org-node-card">
                     <NodePhoto person={person} />
-                    <div className="org-node-role">{person.position || 'Posisi Struktural'}</div>
+                    <div className="org-node-role">Kepala Lab</div>
                     <div className="org-node-name">{person.name}</div>
                     <div className="org-node-click-hint">lihat profil ↗</div>
                   </div>

@@ -7,10 +7,10 @@
     .org-tier-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--text-muted);font-family:var(--font-body);margin-bottom:12px;opacity:0.7;}
     .org-tier-nodes{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:stretch;}
     .org-connector{width:2px;height:36px;background:linear-gradient(to bottom,rgba(78,140,90,0.4),rgba(78,140,90,0.15));margin:0 auto;}
-    .org-connector-spread{height:20px;width:calc(100% - 120px);max-width:900px;margin:0 auto;position:relative;}
+    .org-connector-spread{height:20px;width:calc(100% - 120px);max-width:1400px;margin:0 auto;position:relative;}
     .org-connector-spread::before{content:'';position:absolute;top:0;left:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
     .org-connector-spread::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(78,140,90,0.25);}
-    .org-connector-gather{height:20px;width:calc(100% - 120px);max-width:900px;margin:0 auto;position:relative;}
+    .org-connector-gather{height:20px;width:calc(100% - 120px);max-width:1400px;margin:0 auto;position:relative;}
     .org-connector-gather::before{content:'';position:absolute;bottom:0;left:50%;width:2px;height:100%;background:rgba(78,140,90,0.4);transform:translateX(-50%);}
     .org-connector-gather::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:rgba(78,140,90,0.25);}
     /* --- Kartu anggota: satu ukuran untuk semua tingkat --- */
@@ -35,7 +35,7 @@
 .tier-staf{--tier-color:#9333ea;}
 
 /* --- Custom Complex Row (KBK, Korprodi, Lab) --- */
-.org-complex-row { display: flex; align-items: flex-start; justify-content: space-between; width: 80%; max-width: 900px; margin: 0 auto; gap: 20px; position: relative; padding-top: 16px; }
+.org-complex-row { display: flex; align-items: flex-start; justify-content: space-between; width: 95%; max-width: 1400px; margin: 0 auto; gap: 20px; position: relative; padding-top: 16px; }
 .org-side-column { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 170px; position: relative; }
 .org-center-column { width: 170px; flex: 0 0 170px; }
 .org-column-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-family: var(--font-body); margin-bottom: 24px; opacity: 0.8; text-align: center; line-height: 1.4; height: 28px; display: flex; align-items: flex-end; justify-content: center; width: 100%; }
