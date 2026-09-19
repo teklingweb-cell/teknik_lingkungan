@@ -35,7 +35,7 @@ export default function Carousel({
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
   const [paused, setPaused] = useState(false);
-  const [manuallyPaused, setManuallyPaused] = useState(false);
+
 
   // The page we intend to be on. Kept in a ref as well as state so a click
   // decides the next target itself instead of waiting for a scroll event to
@@ -167,7 +167,7 @@ export default function Carousel({
   );
 
   useEffect(() => {
-    if (paused || manuallyPaused || pageCount < 2) return;
+    if (paused || pageCount < 2) return;
 
     const id = window.setInterval(() => {
       if (Date.now() < holdUntil.current) return;
@@ -177,7 +177,7 @@ export default function Carousel({
     }, interval);
 
     return () => window.clearInterval(id);
-  }, [paused, manuallyPaused, pageCount, interval, goTo]);
+  }, [paused, pageCount, interval, goTo]);
 
   return (
     <div
@@ -244,24 +244,7 @@ export default function Carousel({
             ))}
           </div>
 
-          <button
-            type="button"
-            className="carousel-arrow carousel-pause"
-            aria-label={manuallyPaused ? 'Putar carousel' : 'Jeda carousel'}
-            aria-pressed={manuallyPaused}
-            onClick={() => setManuallyPaused((value) => !value)}
-          >
-            {manuallyPaused ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="m8 5 11 7-11 7V5z" />
-              </svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <rect x="6" y="5" width="4" height="14" rx="1" />
-                <rect x="14" y="5" width="4" height="14" rx="1" />
-              </svg>
-            )}
-          </button>
+
 
           <button
             type="button"
