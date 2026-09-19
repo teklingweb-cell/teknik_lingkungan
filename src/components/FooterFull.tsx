@@ -133,13 +133,13 @@ export default function FooterFull() {
             © <FooterYear initialYear={new Date().getFullYear()} /> Prodi Teknik Lingkungan. Hak
             cipta dilindungi.
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', gap: 16 }}>
+          <div className="footer-bottom-right">
+            <div className="footer-legal-links">
               <Link href="/privacy-policy" className="legal-link">Kebijakan Privasi</Link>
               <Link href="/terms-of-use" className="legal-link">Syarat &amp; Ketentuan</Link>
               <Link href="/disclaimer" className="legal-link">Sanggahan</Link>
             </div>
-            <span style={{ color: 'rgba(242,245,239,0.4)', fontSize: '0.75rem' }}>
+            <span className="footer-powered">
               Powered by{' '}
               <a
                 className="powered-link"

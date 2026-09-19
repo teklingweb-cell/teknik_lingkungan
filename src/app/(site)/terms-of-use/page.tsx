@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function TermsOfUsePage() {
   return (
-    <div className="section" style={{ minHeight: '60vh', padding: '60px 20px', background: '#fff' }}>
+    <div className="section" style={{ minHeight: '60vh', padding: '120px 20px 60px', background: '#fff' }}>
       <div className="container" style={{ maxWidth: 800 }}>
         <h1 style={{ fontSize: '2rem', color: 'var(--navy)', marginBottom: '24px' }}>Syarat dan Ketentuan Penggunaan</h1>
         <div className="prose" style={{ color: 'var(--text-main)', lineHeight: 1.8 }}>

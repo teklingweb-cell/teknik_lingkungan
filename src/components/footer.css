@@ -1,6 +1,26 @@
 .legal-link { color: rgba(242,245,239,0.5); font-size: 0.75rem; text-decoration: none; transition: color 0.2s ease; }
 .legal-link:hover { color: rgba(242,245,239,0.9); }
 
+.footer-bottom-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-legal-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-powered {
+  color: rgba(242,245,239,0.4);
+  font-size: 0.75rem;
+}
+
 @media(max-width:768px){
   .footer-main-grid { grid-template-columns: 1fr 1fr !important; }
   .footer-brand { grid-column: 1 / -1; }
