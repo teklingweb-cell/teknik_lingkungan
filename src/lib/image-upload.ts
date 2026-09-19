@@ -2,6 +2,14 @@
 export const IMAGE_BUCKET = 'site-images';
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
+export function extractStoragePath(url: string | null): string | null {
+  if (!url) return null;
+  const marker = `/storage/v1/object/public/${IMAGE_BUCKET}/`;
+  const idx = url.indexOf(marker);
+  if (idx === -1) return null;
+  return url.slice(idx + marker.length);
+}
+
 const ACCEPTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 
 export function imageUploadError(file: File): string | null {

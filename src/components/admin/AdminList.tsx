@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { IMAGE_BUCKET, extractStoragePath } from '@/lib/image-upload';
 import AdminShell from './AdminShell';
 import DeleteModal from './DeleteModal';
 import EmptyState from './EmptyState';
@@ -148,6 +149,19 @@ export default function AdminList<T extends Row>({
     if (!data?.length) {
       show('error', 'Gagal menghapus: tidak punya izin atau data sudah terhapus.');
       return;
+    }
+
+    const deletedRow = data[0] as Record<string, unknown>;
+    const storagePathsToDelete: string[] = [];
+    for (const value of Object.values(deletedRow)) {
+      if (typeof value === 'string') {
+        const path = extractStoragePath(value);
+        if (path) storagePathsToDelete.push(path);
+      }
+    }
+
+    if (storagePathsToDelete.length > 0) {
+      await supabase.storage.from(IMAGE_BUCKET).remove(storagePathsToDelete);
     }
 
     show('success', '✓ Berhasil dihapus.');

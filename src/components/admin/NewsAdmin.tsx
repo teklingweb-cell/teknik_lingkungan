@@ -12,6 +12,7 @@ import SearchBox from './SearchBox';
 import { AlertBox, useAlert } from './useAlert';
 import { revalidatePublic } from './revalidate';
 import { slugOf } from '@/lib/utils';
+import { IMAGE_BUCKET, extractStoragePath } from '@/lib/image-upload';
 
 const CAT_COLORS: Record<string, string> = {
   Penelitian: '#2563eb',
@@ -134,6 +135,19 @@ export default function NewsAdmin({ flash }: { flash?: string }) {
     if (!data?.length) {
       show('error', 'Gagal menghapus: tidak punya izin atau data sudah terhapus.');
       return;
+    }
+
+    const deletedRow = data[0] as Record<string, unknown>;
+    const storagePathsToDelete: string[] = [];
+    for (const value of Object.values(deletedRow)) {
+      if (typeof value === 'string') {
+        const path = extractStoragePath(value);
+        if (path) storagePathsToDelete.push(path);
+      }
+    }
+
+    if (storagePathsToDelete.length > 0) {
+      await supabase.storage.from(IMAGE_BUCKET).remove(storagePathsToDelete);
     }
 
     show('success', '✓ Berita berhasil dihapus.');
