@@ -4,6 +4,7 @@ import { supabasePublic } from '@/lib/supabase/public';
 import type { KalenderAkademik, Kurikulum, MataKuliah, Pencapaian } from '@/lib/types';
 import PageHero from '@/components/PageHero';
 import PencapaianList from '@/components/PencapaianList';
+import CourseList from '@/components/CourseList';
 import './akademik.css';
 
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,6 @@ export default async function AkademikPage() {
 
     <section className="section academic-section" id="kurikulum" aria-labelledby="kurikulum-heading"><div className="container"><div className="academic-heading fade-up"><div className="section-tag">— Rencana Pembelajaran</div><h2 className="section-title" id="kurikulum-heading">Kurikulum</h2><p>Dokumen kurikulum yang menjadi acuan penyelenggaraan pembelajaran.</p></div>{curriculums.length ? <div className="curriculum-list">{curriculums.map((item) => <article key={item.id} className="curriculum-row"><div><div className="curriculum-meta">{item.academic_year || 'Tahun berlaku belum diisi'}</div><h3>{item.name}</h3>{item.description && <p>{item.description}</p>}</div><div className="curriculum-actions">{item.is_active && <span className="academic-status">Aktif</span>}{item.document_url && <a href={item.document_url} target="_blank" rel="noopener noreferrer" className="academic-document">Lihat dokumen<span aria-hidden="true"> ↗</span></a>}</div></article>)}</div> : <p className="academic-empty">Dokumen kurikulum belum tersedia.</p>}</div></section>
 
-    <section className="section academic-section academic-section-white" id="mata-kuliah" aria-labelledby="mata-kuliah-heading"><div className="container"><div className="academic-heading fade-up"><div className="section-tag">— Struktur Pembelajaran</div><h2 className="section-title" id="mata-kuliah-heading">Mata Kuliah</h2><p>Daftar mata kuliah yang disusun berdasarkan semester.</p></div>{courses.length ? <div className="course-list" role="list">{courses.map((course) => <article key={course.id} className="course-row" role="listitem"><span className="course-code">{course.code}</span><div className="course-content"><h3>{course.name}</h3>{course.description && <p>{course.description}</p>}</div><div className="course-values"><span>Semester {course.semester}</span><strong>{course.credits} SKS</strong>{course.category && <span>{course.category}</span>}</div></article>)}</div> : <p className="academic-empty">Daftar mata kuliah belum tersedia.</p>}</div></section>
+    <section className="section academic-section academic-section-white" id="mata-kuliah" aria-labelledby="mata-kuliah-heading"><div className="container"><div className="academic-heading fade-up"><div className="section-tag">— Struktur Pembelajaran</div><h2 className="section-title" id="mata-kuliah-heading">Mata Kuliah</h2><p>Daftar mata kuliah yang disusun berdasarkan semester.</p></div><CourseList courses={courses} /></div></section>
   </>;
 }
