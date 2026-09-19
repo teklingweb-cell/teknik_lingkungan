@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import type { Staff } from '@/lib/types';
 
 export type Tier = {
@@ -208,6 +208,21 @@ export function BioModal({
 
 export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
   const [selected, setSelected] = useState<{ person: Staff; tier: Tier } | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Gunakan timeout kecil agar memastikan DOM dan gaya CSS (width, flex) sudah ter-render penuh 
+    // sebelum menghitung scrollWidth
+    const timer = setTimeout(() => {
+      if (scrollRef.current) {
+        const { scrollWidth, clientWidth } = scrollRef.current;
+        if (scrollWidth > clientWidth) {
+          scrollRef.current.scrollLeft = (scrollWidth - clientWidth) / 2;
+        }
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [rawPeople]);
 
   // Hilangkan duplikat jika data staf/dosen masuk dua kali
   const people = Array.from(new Map(rawPeople.map(p => [p.id, p])).values());
@@ -261,7 +276,7 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
 
   return (
     <>
-      <div className="org-scroll-wrapper">
+      <div className="org-scroll-wrapper" ref={scrollRef}>
         <div className="org-tree fade-up">
         {/* Tier 1: Ketua Jurusan */}
         {kajurNodes.length > 0 && (
