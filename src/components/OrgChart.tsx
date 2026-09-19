@@ -244,23 +244,19 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
       korprodiNodes.push({ person: p, tier });
     }
     
-    const kbkLevels = levels.filter(l => l.startsWith('kbk'));
-    kbkLevels.forEach(kbk => {
-      let tier = TIERS.find(t => t.key === kbk);
-      if (!tier) {
-         tier = { key: kbk, label: 'Ketua KBK', cssClass: 'tier-dosen', color: '#0f766e' };
-      }
-      leftNodes.push({ person: p, tier });
-    });
+    // Untuk kolom kiri (KBK)
+    let personKbkTiers = TIERS.filter(t => t.key.startsWith('kbk') && levels.includes(t.key));
+    if (personKbkTiers.length === 0 && levels.includes('kbk')) {
+      personKbkTiers = [{ key: 'kbk', label: 'Ketua KBK', cssClass: 'tier-dosen', color: '#0f766e' }];
+    }
+    personKbkTiers.forEach(tier => leftNodes.push({ person: p, tier }));
 
-    const labLevels = levels.filter(l => l.startsWith('lab'));
-    labLevels.forEach(lab => {
-      let tier = TIERS.find(t => t.key === lab);
-      if (!tier) {
-         tier = { key: lab, label: 'Kepala Lab', cssClass: 'tier-dosen', color: '#b91c1c' };
-      }
-      rightNodes.push({ person: p, tier });
-    });
+    // Untuk kolom kanan (Lab)
+    let personLabTiers = TIERS.filter(t => t.key.startsWith('lab') && levels.includes(t.key));
+    if (personLabTiers.length === 0 && levels.includes('lab')) {
+      personLabTiers = [{ key: 'lab', label: 'Kepala Lab', cssClass: 'tier-dosen', color: '#b91c1c' }];
+    }
+    personLabTiers.forEach(tier => rightNodes.push({ person: p, tier }));
   });
 
   if (kajurNodes.length === 0 && korprodiNodes.length === 0 && leftNodes.length === 0 && rightNodes.length === 0) {
