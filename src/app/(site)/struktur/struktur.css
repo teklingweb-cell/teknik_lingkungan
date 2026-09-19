@@ -60,7 +60,9 @@
 .dosen-heading { max-width: 680px; margin-bottom: 28px; }
 .dosen-heading p { margin-top: 10px; color: var(--text-muted); font-family: var(--font-body); font-size: .92rem; line-height: 1.6; }
 .dosen-directory { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(26,46,30,.14); }
-.dosen-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 20px 8px; border-bottom: 1px solid rgba(26,46,30,.14); }
+.dosen-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 20px 8px; border-bottom: 1px solid rgba(26,46,30,.14); transition: background 0.2s; border-radius: 8px; }
+.dosen-row.clickable { cursor: pointer; }
+.dosen-row.clickable:hover, .dosen-row.clickable:focus-visible { background: rgba(78,140,90,0.04); outline: none; }
 .dosen-number { color: var(--moss); font-family: var(--font-display); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
 .dosen-details { min-width: 0; }
 .dosen-details h3 { margin: 0; color: var(--navy); font-family: var(--font-body); font-size: 1rem; font-weight: 650; overflow-wrap: anywhere; }
@@ -72,12 +74,19 @@
 .directory-empty { padding: 32px 0; color: var(--text-muted); font-family: var(--font-body); }
 .staff-section { padding: 72px 0 96px; background: #fff; }
 .staff-directory { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
-.staff-directory-row { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 18px; border: 1px solid rgba(26,46,30,.13); border-radius: 12px; background: #fff; }
+.staff-directory-row { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 18px; border: 1px solid rgba(26,46,30,.13); border-radius: 12px; background: #fff; transition: background 0.2s, border-color 0.2s, box-shadow 0.2s; }
+.staff-directory-row.clickable { cursor: pointer; }
+.staff-directory-row.clickable:hover, .staff-directory-row.clickable:focus-visible { border-color: rgba(78,140,90,0.4); box-shadow: 0 4px 12px rgba(26,46,30,0.06); outline: none; }
 .staff-directory-initial { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: rgba(147,51,234,.12); color: #7e22ce; font-family: var(--font-body); font-size: .9rem; font-weight: 700; }
 .staff-directory-row h3 { margin: 0; color: var(--navy); font-family: var(--font-body); font-size: .95rem; font-weight: 650; overflow-wrap: anywhere; }
 .staff-directory-row p { margin: 4px 0 0; color: var(--text-muted); font-family: var(--font-body); font-size: .82rem; line-height: 1.45; overflow-wrap: anywhere; }
-@media (max-width: 640px) { .dosen-section { padding: 56px 0 72px; } .dosen-row { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 18px 0; } .sinta-link, .sinta-missing { grid-column: 2; justify-self: start; } }
+@media (max-width: 640px) { .dosen-section { padding: 56px 0 72px; } .dosen-row { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; padding: 18px 8px; } .sinta-link, .sinta-missing { grid-column: 2; justify-self: start; } }
 @media (max-width: 640px) { .staff-section { padding: 56px 0 72px; } .staff-directory { grid-template-columns: 1fr; } }
+
+/* Shared List Avatar */
+.list-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; display: block; border: 1px solid rgba(0,0,0,0.05); }
+.list-avatar.initials { display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #fff; font-family: var(--font-body); }
+@media (max-width: 640px) { .list-avatar { width: 40px; height: 40px; font-size: 0.95rem; } }
     .org-node-card::before{background:var(--tier-color);}
     .org-node-initials{background:var(--tier-color);}
     .org-node-role{color:var(--tier-color);}

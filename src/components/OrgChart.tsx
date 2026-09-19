@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import type { Staff } from '@/lib/types';
 
-type Tier = {
+export type Tier = {
   key: string;
   label: string;
   cssClass: string;
@@ -23,7 +23,7 @@ function initialOf(name: string | null): string {
   return (name || '?')[0].toUpperCase();
 }
 
-function NodePhoto({ person }: { person: Staff }) {
+export function NodePhoto({ person }: { person: Staff }) {
   const [failed, setFailed] = useState(false);
 
   if (!person.photo_url || failed) {
@@ -63,7 +63,7 @@ function BioPhoto({ person, color }: { person: Staff; color: string }) {
   );
 }
 
-function BioModal({
+export function BioModal({
   person,
   tier,
   onClose,
