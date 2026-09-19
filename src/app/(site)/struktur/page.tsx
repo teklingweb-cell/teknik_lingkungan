@@ -52,8 +52,15 @@ export default async function StrukturPage() {
         title="Struktur Organisasi"
         subtitle="Kepemimpinan dan susunan organisasi institusi kami yang berdedikasi pada kemajuan pendidikan."
         breadcrumb={[{ label: 'Tentang Prodi', href: '/profile' }, { label: 'Struktur Organisasi' }]}
-        bgImage="/dosen-group.png"
       />
+
+      <section style={{ padding: '60px 0 20px', background: 'var(--bg)' }}>
+        <div className="container">
+          <div style={{ position: 'relative', width: '100%', height: 'auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+            <img src="/dosen-group.png" alt="Dosen Teknik Lingkungan" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          </div>
+        </div>
+      </section>
 
       <section className="org-section">
         <div className="container">
