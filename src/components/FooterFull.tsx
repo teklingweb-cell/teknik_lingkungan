@@ -138,7 +138,7 @@ export default function FooterFull() {
               Powered by{' '}
               <a
                 className="powered-link"
-                href="https://sayba.web.id"
+                href="https://sayba.id"
                 target="_blank"
                 rel="noopener noreferrer"
               >
