@@ -1,5 +1,6 @@
 import './footer.css';
 import Link from 'next/link';
+import Image from 'next/image';
 import FooterYear from './FooterYear';
 import { FacebookIcon, InstagramIcon, YoutubeIcon, TiktokIcon } from './BrandIcons';
 
@@ -44,24 +45,13 @@ export default function FooterFull() {
         >
           <div className="footer-brand">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  background: 'var(--gold)',
-                  borderRadius: 8,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  color: 'var(--navy)',
-                  fontSize: '0.65rem',
-                  letterSpacing: '-0.5px',
-                }}
-              >
-                TL
-              </div>
+              <Image
+                src="/logo-untan.png"
+                alt="Logo Universitas Tanjungpura"
+                width={40}
+                height={40}
+                style={{ objectFit: 'contain' }}
+              />
               <div>
                 <div
                   style={{
