@@ -12,6 +12,7 @@ export default function PageHero({
   title,
   subtitle,
   breadcrumb,
+  bgImage,
 }: {
   tag: string;
   title: React.ReactNode;
