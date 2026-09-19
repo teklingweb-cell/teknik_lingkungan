@@ -185,8 +185,8 @@ export default function KontakPage() {
                 </div>
               </div>
 
-              {/* Siteplan — replace /siteplan.jpg with the real file in /public */}
-              <SiteplanLightbox src="/siteplan.jpg" />
+              {/* Siteplan — replace /siteplan.webp with the real file in /public */}
+              <SiteplanLightbox src="/siteplan.webp" />
 
               <div className="ksocial-wrap fade-up delay-2">
                 <div className="ksocial-label">Media Sosial</div>

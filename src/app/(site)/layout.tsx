@@ -32,15 +32,15 @@ export const metadata: Metadata = {
   creator: SITE.name,
   publisher: SITE.name,
   alternates: { canonical: SITE.url },
-  // Ikon berukuran benar. Sebelumnya keduanya menunjuk ke logo-untan.png yang
+  // Ikon berukuran benar. Sebelumnya keduanya menunjuk ke logo-untan.webp yang
   // 512x512 seberat 167 KB — terunduh di setiap kunjungan pertama hanya untuk
   // ditampilkan 32px di tab browser.
   icons: {
     icon: [
-      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-32.webp', sizes: '32x32', type: 'image/webp' },
+      { url: '/icon-192.webp', sizes: '192x192', type: 'image/webp' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/apple-icon.webp',
   },
   openGraph: {
     type: 'website',

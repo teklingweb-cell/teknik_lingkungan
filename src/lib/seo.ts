@@ -34,7 +34,7 @@ export const SITE = {
     'pencapaian, dan berita prodi.',
 
   /** Shared social card, and the fallback for any page without its own image. */
-  ogImage: '/og-image.png',
+  ogImage: '/og-image.webp',
   ogImageAlt: 'Lambang Universitas Tanjungpura — Program Studi Teknik Lingkungan',
 
   /**

@@ -29,7 +29,7 @@ export function organizationJsonLd(): Json {
       'Prodi Teknik Lingkungan Untan',
     ],
     url: SITE.url,
-    logo: absoluteUrl('/logo-untan.png'),
+    logo: absoluteUrl('/logo-untan.webp'),
     image: absoluteUrl(SITE.ogImage),
     description: SITE.description,
     email: 'tl.ft@untan.ac.id',

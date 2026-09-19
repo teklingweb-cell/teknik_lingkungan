@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface Props {
-  /** Path to siteplan image inside /public, e.g. "/siteplan.jpg" */
+  /** Path to siteplan image inside /public, e.g. "/siteplan.webp" */
   src: string;
   /** Alt text for accessibility */
   alt?: string;

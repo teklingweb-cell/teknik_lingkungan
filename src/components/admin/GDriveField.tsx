@@ -84,7 +84,7 @@ export default function GDriveField({
           id={`image-upload-${folder}`}
           className="image-upload-input"
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
+          accept="image/webp,image/webp,image/webp,image/gif"
           disabled={uploading}
           onChange={(e) => {
             const file = e.target.files?.[0];

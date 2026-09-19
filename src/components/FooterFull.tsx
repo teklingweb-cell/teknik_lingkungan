@@ -46,7 +46,7 @@ export default function FooterFull() {
           <div className="footer-brand">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
               <Image
-                src="/logo-untan.png"
+                src="/logo-untan.webp"
                 alt="Logo Universitas Tanjungpura"
                 width={40}
                 height={40}

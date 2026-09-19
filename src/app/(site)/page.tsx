@@ -115,7 +115,7 @@ export default async function HomePage() {
         {/* Anak pertama: elemen LCP halaman ini. `priority` membuatnya
             di-preload di <head> alih-alih baru ditemukan setelah CSS diurai. */}
         <Image
-          src="/banner.png"
+          src="/banner.webp"
           alt=""
           fill
           priority
@@ -129,7 +129,7 @@ export default async function HomePage() {
                 menyajikan ulang seukuran tampilnya, jadi yang terunduh hanya
                 beberapa KB. */}
             <Image
-              src="/logo-untan.png"
+              src="/logo-untan.webp"
               alt="Logo Universitas Tanjungpura"
               width={44}
               height={44}

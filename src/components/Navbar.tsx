@@ -37,7 +37,7 @@ export default function Navbar() {
                 setiap kunjungan pertama. next/image menyajikannya seukuran
                 tampil (44px) dalam AVIF/WebP. */}
             <Image
-              src="/logo-untan.png"
+              src="/logo-untan.webp"
               alt="Logo Universitas Tanjungpura"
               width={44}
               height={44}

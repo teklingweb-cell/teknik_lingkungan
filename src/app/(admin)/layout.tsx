@@ -4,7 +4,7 @@ import { inter } from '@/lib/fonts';
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
-  icons: { icon: '/icon-32.png', apple: '/apple-icon.png' },
+  icons: { icon: '/icon-32.webp', apple: '/apple-icon.webp' },
   robots: { index: false, follow: false },
 };
 
