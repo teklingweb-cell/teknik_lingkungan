@@ -83,9 +83,7 @@ function MemberTable({
                   <button className="btn btn-ghost btn-sm" onClick={() => onEdit(m)}>
                     Atur Level
                   </button>
-                  <Link href={`/admin/${m.type === 'dosen' ? 'dosen' : 'staff'}-form?edit=${m.id}`} className="btn btn-ghost btn-sm">
-                    Edit
-                  </Link>
+
                   {m.org_level && (
                     <button className="btn btn-danger btn-sm" onClick={() => onRemove(m)}>
                       Keluarkan
@@ -237,22 +235,7 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
   return (
     <AdminShell
       title="Struktur Organisasi"
-      actions={
-        <Link href="/admin/staff-form" className="btn btn-green">
-          <svg
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            viewBox="0 0 24 24"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Tambah Anggota
-        </Link>
-      }
+      actions={null}
     >
       <AlertBox alert={alert} />
 
@@ -260,8 +243,7 @@ export default function StrukturAdmin({ flash }: { flash?: string }) {
         <span className="info-banner-icon">ℹ</span>
         <div className="info-banner-text">
           Halaman ini mengelola <strong>tampilan bagan organisasi</strong> di situs publik. Atur
-          posisi hierarki setiap anggota, atau klik <strong>Tambah Anggota</strong> untuk
-          mendaftarkan orang baru. Anggota tanpa level hierarki tidak akan muncul di bagan.
+          posisi hierarki setiap anggota yang sudah terdaftar. Anggota tanpa level hierarki tidak akan muncul di bagan.
           Hanya <strong>dosen</strong> dan <strong>staf</strong> yang bisa ditempatkan — alumni
           tidak ditampilkan di bagan organisasi.
         </div>
