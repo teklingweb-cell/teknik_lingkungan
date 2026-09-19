@@ -227,41 +227,7 @@ export default function KontakPage() {
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 48, paddingBottom: 80 }}>
-        <div className="container">
-          <div className="khelp-banner fade-up">
-            <div>
-              <div className="section-tag">— Butuh Bantuan Cepat?</div>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '1.9rem',
-                  color: 'var(--cream)',
-                  fontWeight: 300,
-                  marginTop: 8,
-                  marginBottom: 10,
-                }}
-              >
-                Kunjungi Pusat Bantuan Kami
-              </h3>
-              <p
-                style={{
-                  color: 'rgba(242,245,239,0.55)',
-                  fontSize: '0.9rem',
-                  fontFamily: 'var(--font-body)',
-                  maxWidth: 480,
-                  lineHeight: 1.7,
-                }}
-              >
-                Temukan jawaban atas pertanyaan umum Anda tanpa harus menunggu balasan.
-              </p>
-            </div>
-            <a href="#" className="btn-gold">
-              Buka Help Center
-            </a>
-          </div>
-        </div>
-      </section>
+
     </>
   );
 }
