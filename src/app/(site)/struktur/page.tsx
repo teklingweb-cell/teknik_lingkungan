@@ -81,6 +81,9 @@ export default async function StrukturPage() {
             >
               Klik kartu untuk melihat profil lengkap
             </p>
+            <div className="mobile-scroll-hint" style={{ display: 'none' }}>
+              Geser untuk melihat ↔
+            </div>
           </div>
 
           <div className="org-legend fade-up">

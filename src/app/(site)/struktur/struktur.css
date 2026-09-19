@@ -59,7 +59,19 @@
     scrollbar-color: rgba(78, 140, 90, 0.4) transparent;
   }
   .org-tree {
-    min-width: 900px;
+    min-width: max-content;
+    padding: 0 20px;
+  }
+  .mobile-scroll-hint {
+    display: inline-block !important;
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: var(--moss);
+    font-weight: 600;
+    font-family: var(--font-body);
+    background: rgba(78, 140, 90, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
   }
 }
 
