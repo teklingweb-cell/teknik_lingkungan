@@ -227,40 +227,41 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
   // Hilangkan duplikat jika data staf/dosen masuk dua kali
   const people = Array.from(new Map(rawPeople.map(p => [p.id, p])).values());
 
-  const kajurNodes: Staff[] = [];
-  const korprodiNodes: Staff[] = [];
-  const leftNodes: Staff[] = [];
-  const rightNodes: Staff[] = [];
+  const kajurNodes: { person: Staff; tier: Tier }[] = [];
+  const korprodiNodes: { person: Staff; tier: Tier }[] = [];
+  const leftNodes: { person: Staff; tier: Tier }[] = [];
+  const rightNodes: { person: Staff; tier: Tier }[] = [];
 
   people.forEach(p => {
-    const levels = (p.org_level || '').toLowerCase().split(',');
+    const levels = (p.org_level || '').toLowerCase().split(',').map(s => s.trim());
     
     if (levels.includes('rektor') || levels.includes('ketua')) {
-      kajurNodes.push(p);
+      const tier = TIERS.find(t => t.key === 'rektor' || levels.includes(t.key)) || TIERS[0];
+      kajurNodes.push({ person: p, tier });
     }
     if (levels.includes('wakil') || levels.includes('koordinator')) {
-      korprodiNodes.push(p);
+      const tier = TIERS.find(t => t.key === 'wakil' || levels.includes(t.key)) || TIERS[1];
+      korprodiNodes.push({ person: p, tier });
     }
-    if (levels.some(l => l.startsWith('kbk'))) {
-      leftNodes.push(p);
-    }
-    if (levels.some(l => l.startsWith('lab'))) {
-      rightNodes.push(p);
-    }
-  });
-
-  const getPrimaryTier = (person: Staff) => {
-    const levels = (person.org_level || '').toLowerCase().split(',');
-    for (const tier of TIERS) {
-      if (levels.includes(tier.key)) {
-        return tier;
+    
+    const kbkLevels = levels.filter(l => l.startsWith('kbk'));
+    kbkLevels.forEach(kbk => {
+      let tier = TIERS.find(t => t.key === kbk);
+      if (!tier) {
+         tier = { key: kbk, label: 'Ketua KBK', cssClass: 'tier-dosen', color: '#0f766e' };
       }
-    }
-    return TIERS.find(t => t.key === 'dosen') || { cssClass: 'tier-dosen', color: '#2563eb', label: 'Dosen', key: 'dosen' };
-  };
+      leftNodes.push({ person: p, tier });
+    });
 
-  const TIER_KETUA = TIERS[0] || { cssClass: 'tier-ketua', color: '#1a2e1e', label: 'Ketua', key: 'rektor' };
-  const TIER_KORPRODI = TIERS[1] || { cssClass: 'tier-koorprodi', color: '#2d6a40', label: 'Koordinator', key: 'wakil' };
+    const labLevels = levels.filter(l => l.startsWith('lab'));
+    labLevels.forEach(lab => {
+      let tier = TIERS.find(t => t.key === lab);
+      if (!tier) {
+         tier = { key: lab, label: 'Kepala Lab', cssClass: 'tier-dosen', color: '#b91c1c' };
+      }
+      rightNodes.push({ person: p, tier });
+    });
+  });
 
   if (kajurNodes.length === 0 && korprodiNodes.length === 0 && leftNodes.length === 0 && rightNodes.length === 0) {
     return (
@@ -283,11 +284,11 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-tier">
             <div className="org-tier-label">KETUA JURUSAN</div>
             <div className="org-tier-nodes">
-              {kajurNodes.map(person => {
-                const primaryTier = getPrimaryTier(person);
+              {kajurNodes.map((item, idx) => {
+                const { person, tier: primaryTier } = item;
                 return (
                 <div
-                  key={person.id}
+                  key={`${person.id}-${primaryTier.key}-${idx}`}
                   className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
@@ -320,11 +321,11 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column">
             {leftNodes.length > 0 && <div className="org-column-label">Ketua KBK</div>}
             <div className="org-side-nodes">
-              {leftNodes.map((person) => {
-                const primaryTier = getPrimaryTier(person);
+              {leftNodes.map((item, idx) => {
+                const { person, tier: primaryTier } = item;
                 return (
                 <div
-                  key={person.id}
+                  key={`${person.id}-${primaryTier.key}-${idx}`}
                   className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
@@ -351,11 +352,11 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column org-center-column">
             {korprodiNodes.length > 0 && <div className="org-column-label">Koordinator<br/>Program Studi</div>}
             <div className="org-side-nodes">
-              {korprodiNodes.map(person => {
-                const primaryTier = getPrimaryTier(person);
+              {korprodiNodes.map((item, idx) => {
+                const { person, tier: primaryTier } = item;
                 return (
                 <div
-                  key={person.id}
+                  key={`${person.id}-${primaryTier.key}-${idx}`}
                   className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
@@ -382,11 +383,11 @@ export default function OrgChart({ people: rawPeople }: { people: Staff[] }) {
           <div className="org-side-column">
             {rightNodes.length > 0 && <div className="org-column-label">Kepala Lab</div>}
             <div className="org-side-nodes">
-              {rightNodes.map((person) => {
-                const primaryTier = getPrimaryTier(person);
+              {rightNodes.map((item, idx) => {
+                const { person, tier: primaryTier } = item;
                 return (
                 <div
-                  key={person.id}
+                  key={`${person.id}-${primaryTier.key}-${idx}`}
                   className={`org-node ${primaryTier.cssClass}`}
                   tabIndex={0}
                   role="button"
