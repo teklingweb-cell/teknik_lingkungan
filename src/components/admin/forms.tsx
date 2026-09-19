@@ -597,6 +597,7 @@ export function DosenForm({ editId }: { editId: number | null }) {
     { kind: 'text', name: 'nim_nip', label: 'NIP', required: true, maxLength: 32 },
     { kind: 'text', name: 'bidang', label: 'KBK', required: true, maxLength: 200 },
     { kind: 'url', name: 'link_sinta', label: 'Link SINTA', maxLength: 500 },
+    { kind: 'gdrive', name: 'photo_url', label: 'Foto', folder: 'dosen' },
   ];
 
   async function checkNipConflict(values: Values, currentId: number | null) {
@@ -617,12 +618,14 @@ export function DosenForm({ editId }: { editId: number | null }) {
       backHref="/admin/dosen"
       editId={editId}
       fields={fields}
-      initialValues={{ name: '', nim_nip: '', bidang: '', link_sinta: '' }}
+      initialValues={{ name: '', nim_nip: '', bidang: '', link_sinta: '', photo_url: '', photo_url_raw: '' }}
       fromRow={(row) => ({
         name: str(row.name),
         nim_nip: str(row.nim_nip),
         bidang: str(row.bidang),
         link_sinta: str(row.link_sinta),
+        photo_url: str(row.photo_url),
+        photo_url_raw: str(row.photo_url),
       })}
       toPayload={(v) => ({
         name: v.name.trim(),
@@ -630,6 +633,7 @@ export function DosenForm({ editId }: { editId: number | null }) {
         nim_nip: v.nim_nip.trim(),
         bidang: v.bidang.trim(),
         link_sinta: orNull(v.link_sinta),
+        photo_url: orNull(v.photo_url),
         // Required by legacy rows, but not part of the lecturer workflow.
         position: '',
       })}
